@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCC Recoil Physics: Why Light Bullets + Fast Powder Win</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0c0f14;
+    --bg-card: #141820;
+    --bg-card-alt: #181d28;
+    --border: #2a3040;
+    --text: #c8cdd8;
+    --text-dim: #6b7590;
+    --text-bright: #e8ecf4;
+    --accent: #f59e0b;
+    --accent-dim: #b47008;
+    --blue: #3b82f6;
+    --blue-dim: #1e40af;
+    --green: #22c55e;
+    --red: #ef4444;
+    --red-dim: #991b1b;
+    --cyan: #06b6d4;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    width: 1100px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 60px 48px 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 50%, rgba(59,130,246,0.04) 100%);
+    pointer-events: none;
+  }
+  .header-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .header h1 {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 38px;
+    font-weight: 600;
+    color: var(--text-bright);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .header h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+  .header-sub {
+    font-size: 16px;
+    color: var(--text-dim);
+    max-width: 700px;
+    line-height: 1.5;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 44px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--accent-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section h2 {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 20px;
+    line-height: 1.3;
+  }
+  .section p {
+    margin-bottom: 16px;
+    max-width: 850px;
+  }
+
+  /* EQUATION BOX */
+  .eq-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 28px 32px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .eq-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .eq {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 22px;
+    color: var(--text-bright);
+    line-height: 1.8;
+  }
+  .eq .var {
+    font-style: italic;
+  }
+  .eq .highlight {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .eq .blue-hl {
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .eq-note {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    line-height: 1.7;
+  }
+  .eq-note span {
+    color: var(--text);
+  }
+
+  /* BARREL DIAGRAM */
+  .barrel-diagram {
+    margin: 32px 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 32px;
+  }
+  .barrel-diagram h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .barrel-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 20px;
+  }
+  .barrel-row:last-child { margin-bottom: 0; }
+  .barrel-label {
+    width: 100px;
+    flex-shrink: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: right;
+  }
+  .barrel-label.fast { color: var(--green); }
+  .barrel-label.slow { color: var(--red); }
+  .barrel-visual {
+    flex: 1;
+    height: 48px;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .barrel-burn {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: rgba(0,0,0,0.7);
+  }
+  .barrel-expansion {
+    position: absolute;
+    top: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .barrel-muzzle-zone {
+    position: absolute;
+    top: -6px; bottom: -6px; right: -2px;
+    width: 6px;
+    border-radius: 0 3px 3px 0;
+  }
+  .barrel-desc {
+    width: 200px;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* CALCULATION TABLE */
+  .calc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 14px;
+  }
+  .calc-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 10px 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .calc-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .calc-table tr:last-child td { border-bottom: none; }
+  .calc-table .row-fast td { background: rgba(34,197,94,0.04); }
+  .calc-table .row-slow td { background: rgba(239,68,68,0.04); }
+  .calc-table .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+  }
+  .calc-table .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .tag-red { background: rgba(239,68,68,0.15); color: var(--red); }
+  .tag-amber { background: rgba(245,158,11,0.15); color: var(--accent); }
+
+  /* FACTOR CARDS */
+  .factors-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .factor-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    position: relative;
+  }
+  .factor-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 6px 6px 0 0;
+  }
+  .factor-card.blast::before { background: var(--red); }
+  .factor-card.sound::before { background: var(--accent); }
+  .factor-card.impulse::before { background: var(--blue); }
+  .factor-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .factor-card h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-bright);
+    margin-bottom: 10px;
+  }
+  .factor-card p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+  .factor-verdict {
+    margin-top: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.03));
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 6px;
+    padding: 24px 28px;
+    margin: 28px 0;
+  }
+  .callout-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .callout p {
+    font-size: 15px;
+    color: var(--text-bright);
+    line-height: 1.6;
+  }
+
+  /* SOURCES */
+  .sources {
+    padding: 36px 48px 48px;
+    background: var(--bg-card);
+  }
+  .sources h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+  .source-item {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 6px;
+    padding-left: 16px;
+    position: relative;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+  .source-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .source-item .ref-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    color: var(--accent-dim);
+  }
+  .sup {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--accent-dim);
+    vertical-align: super;
+    font-weight: 600;
+  }
+
+  /* COMPARISON BAR */
+  .comparison-bars {
+    margin: 24px 0;
+  }
+  .comp-bar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 12px;
+  }
+  .comp-bar-label {
+    width: 140px;
+    flex-shrink: 0;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    text-align: right;
+  }
+  .comp-bar-track {
+    flex: 1;
+    height: 28px;
+    background: var(--bg-card);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .comp-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(0,0,0,0.8);
+  }
+  .comp-bar-value {
+    width: 80px;
+    flex-shrink: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  /* LEGEND */
+  .legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: 20px 0 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .legend-title {
+    grid-column: 1 / -1;
+    padding: 12px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card-alt);
+  }
+  .legend-item {
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .legend-item:nth-last-child(-n+2) { border-bottom: none; }
+  .legend-var {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 16px;
+    font-style: italic;
+    flex-shrink: 0;
+    min-width: 70px;
+    color: var(--text-bright);
+  }
+  .legend-def {
+    color: var(--text-dim);
+  }
+  .legend-def strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* PLAIN ENGLISH CALLOUT */
+  .plain-english {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .plain-english-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .plain-english p {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 15px;
+    color: var(--text-bright);
+    line-height: 1.65;
+    margin: 0;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-label">9×19mm Internal Ballistics · Practical Shooting Reference</div>
+  <h1>Why Light Bullets + Fast Powder = Less Felt Recoil <em>in PCCs</em></h1>
+  <div class="header-sub">
+    The physics of gas momentum, muzzle blast, and impulse shape — and why the optimal PCC competition load
+    is the opposite of the optimal pistol load.
+  </div>
+</div>
+
+<!-- SECTION 1: THE EQUATION -->
+<div class="section">
+  <div class="section-number">01 — The Recoil Equation</div>
+  <h2>Recoil is more than bullet momentum</h2>
+  <p>
+    When a round fires, two things fly out the front of the barrel: the bullet, and a blast of hot gas
+    from the burned powder. Both push the gun backward. Most shooters only think about the bullet — but
+    the gas matters too, especially in a long-barreled PCC.<span class="sup">[1][2][3]</span>
+  </p>
+
+  <div class="plain-english">
+    <div class="plain-english-icon">💡</div>
+    <p>
+      In plain terms: recoil = how hard the bullet pushes backward + how hard the gas pushes backward.
+      You can't change the bullet push (that's your Power Factor). But you CAN change the gas push
+      by choosing a different powder.
+    </p>
+  </div>
+
+  <div class="eq-box">
+    <div class="eq-label">Free Recoil Velocity (SAAMI / Hatcher / NRA)</div>
+    <div class="eq">
+      <span class="var">V</span><sub>gun</sub> &nbsp;=&nbsp;
+      ( <span class="highlight"><span class="var">m</span><sub>bullet</sub> × <span class="var">V</span><sub>muzzle</sub></span>
+      &nbsp;+&nbsp;
+      <span class="blue-hl"><span class="var">m</span><sub>charge</sub> × <span class="var">V</span><sub>gas</sub></span> )
+      &nbsp;÷&nbsp; <span class="var">M</span><sub>gun</sub>
+    </div>
+    <div class="eq-note">
+      Where <span class="var" style="color:var(--accent)">V</span><sub style="color:var(--accent)">gas</sub><span> = </span><span class="var">f</span><span> × </span><span class="var">V</span><sub>muzzle</sub><br>
+      <span>SAAMI gas factor </span><span class="var">f</span><span> ≈ 1.5 for handguns, 1.75 for rifles</span><span class="sup">[1]</span><br>
+      <span>British Textbook of Small Arms (1929): </span><span class="var">f</span><span> "lies between 1 and 2, with average value 1½"</span><span class="sup">[3]</span>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-title">Variable Legend</div>
+    <div class="legend-item">
+      <div class="legend-var">V<sub>gun</sub></div>
+      <div class="legend-def"><strong>Recoil velocity</strong> — how fast the gun moves backward. Higher = more kick.</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-var" style="color:var(--accent)">m<sub>bullet</sub></div>
+      <div class="legend-def"><strong>Bullet weight</strong> — mass of the projectile (in grains). Set by your bullet choice.</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-var" style="color:var(--accent)">V<sub>muzzle</sub></div>
+      <div class="legend-def"><strong>Muzzle velocity</strong> — speed of the bullet leaving the barrel (fps). Set by your load.</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-var" style="color:var(--blue)">m<sub>charge</sub></div>
+      <div class="legend-def"><strong>Powder charge weight</strong> — mass of the powder burned (grains). Fast powders need less.</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-var" style="color:var(--blue)">V<sub>gas</sub></div>
+      <div class="legend-def"><strong>Gas exit velocity</strong> — how fast burned gases leave the muzzle (fps). Drops when gas has more barrel length to expand through.</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-var">M<sub>gun</sub></div>
+      <div class="legend-def"><strong>Gun weight</strong> — total mass of the firearm. Heavier gun = less felt recoil for the same load.</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-var">f</div>
+      <div class="legend-def"><strong>Gas velocity factor</strong> — a multiplier that estimates gas speed relative to bullet speed. Varies with barrel length and powder burn rate (range: 1.0 – 2.0).<span class="sup">[3]</span></div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-var" style="color:var(--accent)">orange</div>
+      <div class="legend-def"><strong>Bullet momentum</strong> — fixed by Power Factor. You can't change this without changing your PF.</div>
+    </div>
+  </div>
+
+  <p>
+    The <span style="color:var(--accent);font-weight:600">orange term</span> (bullet push) is locked once you pick your bullet weight and PF target.
+    The <span style="color:var(--blue);font-weight:600">blue term</span> (gas push) is the only variable a handloader can manipulate — and in a PCC barrel,
+    it behaves very differently than in a pistol because the barrel is long enough for gas to expand and cool before exiting.
+  </p>
+</div>
+
+<!-- SECTION 2: THE BARREL DIAGRAM -->
+<div class="section">
+  <div class="section-number">02 — The Barrel as Expansion Chamber</div>
+  <h2>Fast powder "wastes" barrel length — that's the point</h2>
+  <p>
+    A fast powder finishes burning in the first 3–5″ of a 13″ PCC barrel. After that, the bullet is coasting
+    and the hot gas behind it is just expanding and cooling down as it fills the remaining 8–10″ of barrel.
+    By the time it reaches the muzzle, that gas has lost most of its energy — so it exits quietly with a gentle push.
+  </p>
+  <p>
+    A slow powder is still actively burning at 10–12″ down the barrel. The gas never gets a chance to expand
+    and cool. It exits the muzzle at high pressure, high velocity, and high temperature — creating a loud blast
+    and a sharp kick.<span class="sup">[4][5]</span>
+  </p>
+
+  <div class="barrel-diagram">
+    <h3>13″ PCC Barrel — Gas State at Muzzle</h3>
+
+    <!-- Fast powder -->
+    <div class="barrel-row">
+      <div class="barrel-label fast">Fast<br>Powder</div>
+      <div class="barrel-visual" style="background: #1a2010;">
+        <div class="barrel-burn" style="width: 26%; background: linear-gradient(90deg, #4ade80, #22c55e);">
+          BURN
+        </div>
+        <div class="barrel-expansion" style="left: 26%; right: 6px; background: repeating-linear-gradient(90deg, rgba(34,197,94,0.08) 0px, rgba(34,197,94,0.03) 8px, transparent 8px, transparent 16px);">
+          <span style="color: rgba(34,197,94,0.5);">← GAS EXPANDING · PRESSURE DROPPING →</span>
+        </div>
+        <div class="barrel-muzzle-zone" style="background: rgba(34,197,94,0.15);"></div>
+      </div>
+      <div class="barrel-desc">
+        <span style="color:var(--green);font-weight:600;">Low pressure at muzzle</span><br>
+        Gas has cooled and expanded<br>
+        Small powder charge = less gas
+      </div>
+    </div>
+
+    <!-- Slow powder -->
+    <div class="barrel-row">
+      <div class="barrel-label slow">Slow<br>Powder</div>
+      <div class="barrel-visual" style="background: #201010;">
+        <div class="barrel-burn" style="width: 78%; background: linear-gradient(90deg, #ef4444, #f87171, #ef4444);">
+          ACTIVE COMBUSTION
+        </div>
+        <div class="barrel-expansion" style="left: 78%; right: 6px; background: rgba(239,68,68,0.08);">
+          <span style="color: rgba(239,68,68,0.5); font-size:9px;">tiny<br>gap</span>
+        </div>
+        <div class="barrel-muzzle-zone" style="background: rgba(239,68,68,0.6);"></div>
+      </div>
+      <div class="barrel-desc">
+        <span style="color:var(--red);font-weight:600;">High pressure at muzzle</span><br>
+        Gas still hot and energetic<br>
+        Large powder charge = more gas
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: THE MATH -->
+<div class="section">
+  <div class="section-number">03 — Running the Numbers</div>
+  <h2>Quantified: 95gr at 130 PF from a 13″ barrel</h2>
+  <p>
+    Let's compare two loads that both deliver the same Power Factor (130 PF) from the same 13″ PCC — 
+    same bullet momentum, same scoring, same steel-knockdown energy. The only difference is the powder.
+  </p>
+
+  <div class="plain-english">
+    <div class="plain-english-icon">🔑</div>
+    <p>
+      The bullet push is identical in both loads — 95 grains at 1,368 fps. What changes is
+      how much gas exits the muzzle and how fast it's moving when it gets there.
+    </p>
+  </div>
+
+  <p>
+    The SAAMI gas factor <em>f</em> is a platform-wide average that doesn't account for burn rate differences.
+    The values below use estimated <em>f</em> values adjusted for muzzle pressure, bounded by the established
+    range of 1.0–2.0.<span class="sup">[3]</span>
+  </p>
+
+  <table class="calc-table">
+    <thead>
+      <tr>
+        <th style="width:180px;">What We're Measuring</th>
+        <th>Fast Powder (N310, ~4.0 gr)</th>
+        <th>Slow Powder (AutoComp, ~6.0 gr)</th>
+        <th style="width:100px;">Difference</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row-fast">
+        <td>Powder charge<br><span style="font-size:11px;color:var(--text-dim)">How much powder per round</span></td>
+        <td class="num">4.0 gr</td>
+        <td class="num">6.0 gr</td>
+        <td class="num" style="color:var(--green)">−33%</td>
+      </tr>
+      <tr>
+        <td>Powder finishes burning at<br><span style="font-size:11px;color:var(--text-dim)">Distance down the barrel</span></td>
+        <td class="num">~3″ <span style="font-size:11px;color:var(--text-dim)">(10″ left to expand)</span></td>
+        <td class="num">~10″ <span style="font-size:11px;color:var(--text-dim)">(only 3″ left)</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Gas velocity factor (<em>f</em>)<br><span style="font-size:11px;color:var(--text-dim)">How fast gas exits vs bullet</span></td>
+        <td class="num">~1.0 <span style="font-size:11px;color:var(--text-dim)">(fully cooled)</span></td>
+        <td class="num">~1.8 <span style="font-size:11px;color:var(--text-dim)">(still hot)</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Estimated gas exit speed<br><span style="font-size:11px;color:var(--text-dim)">V<sub>gas</sub> = f × 1,368 fps</span></td>
+        <td class="num">~1,368 fps</td>
+        <td class="num">~2,462 fps</td>
+        <td class="num" style="color:var(--red)">+80%</td>
+      </tr>
+      <tr style="background:var(--bg-card-alt);">
+        <td style="font-weight:600;">Gas push (gas momentum)<br><span style="font-size:11px;color:var(--text-dim)">charge × gas speed</span></td>
+        <td class="num" style="color:var(--green);font-weight:600;">5,472</td>
+        <td class="num" style="color:var(--red);font-weight:600;">14,774</td>
+        <td><span class="tag tag-red">2.7×</span></td>
+      </tr>
+      <tr>
+        <td>Bullet push (bullet momentum)<br><span style="font-size:11px;color:var(--text-dim)">Same in both — that's the point</span></td>
+        <td class="num" colspan="2" style="text-align:center;">129,960 &nbsp;(identical — both 130 PF)</td>
+        <td></td>
+      </tr>
+      <tr style="background:var(--bg-card-alt);">
+        <td style="font-weight:600;">Gas push as % of total recoil<br><span style="font-size:11px;color:var(--text-dim)">How much of the kick is from gas</span></td>
+        <td class="num" style="font-weight:600;">~4.0%</td>
+        <td class="num" style="font-weight:600;">~10.2%</td>
+        <td></td>
+      </tr>
+      <tr style="background:rgba(245,158,11,0.06);">
+        <td style="font-weight:700;color:var(--text-bright);">Net recoil difference<br><span style="font-size:11px;color:var(--text-dim);font-weight:400;">From momentum alone</span></td>
+        <td colspan="2" style="text-align:center;">
+          <span class="tag tag-amber" style="font-size:13px;padding:4px 12px;">~7–8% less total momentum with fast powder</span>
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="callout-title">Key Insight</div>
+    <p>
+      The gas momentum term <strong>triples</strong> between fast and slow powder — but since gas is only
+      4–10% of total recoil momentum, the net impulse reduction is <strong>~5–10%</strong>. That's real
+      and measurable, but it doesn't explain why shooters describe the difference as "dramatic."
+      The rest of the story is perceptual.
+    </p>
+  </div>
+
+  <h2 style="margin-top:40px;">Same analysis: 124gr and 147gr at 130 PF</h2>
+  <p>
+    The 95gr example above shows the biggest effect because light bullets need the highest velocity — 
+    and higher velocity means more gas speed at the muzzle. Here's how the same fast-vs-slow comparison
+    plays out with heavier bullets. All loads are 130 PF from a 13″ PCC.
+  </p>
+
+  <!-- 124gr TABLE -->
+  <div class="eq-box" style="border-left-color: var(--cyan); margin-top: 24px;">
+    <div class="eq-label">124gr at 130 PF — needs 1,049 fps from 13″ PCC</div>
+    <table class="calc-table" style="margin:12px 0 0;">
+      <thead>
+        <tr>
+          <th style="width:180px;">What We're Measuring</th>
+          <th>Fast (N320, ~3.5 gr)</th>
+          <th>Slow (HS-6, ~6.5 gr)</th>
+          <th style="width:80px;">Diff</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Powder charge</td>
+          <td class="num">3.5 gr</td>
+          <td class="num">6.5 gr</td>
+          <td class="num" style="color:var(--green)">−46%</td>
+        </tr>
+        <tr>
+          <td>Gas velocity factor (<em>f</em>)</td>
+          <td class="num">~1.0</td>
+          <td class="num">~1.8</td>
+          <td></td>
+        </tr>
+        <tr style="background:var(--bg-card-alt);">
+          <td style="font-weight:600;">Gas push (momentum)</td>
+          <td class="num" style="color:var(--green);font-weight:600;">3,672</td>
+          <td class="num" style="color:var(--red);font-weight:600;">12,272</td>
+          <td><span class="tag tag-red">3.3×</span></td>
+        </tr>
+        <tr>
+          <td>Bullet push (momentum)</td>
+          <td class="num" colspan="2" style="text-align:center;">130,076 (identical — both 130 PF)</td>
+          <td></td>
+        </tr>
+        <tr style="background:var(--bg-card-alt);">
+          <td>Gas as % of total</td>
+          <td class="num" style="font-weight:600;">2.7%</td>
+          <td class="num" style="font-weight:600;">8.6%</td>
+          <td></td>
+        </tr>
+        <tr style="background:rgba(6,182,212,0.06);">
+          <td style="font-weight:700;color:var(--text-bright);">Net recoil difference</td>
+          <td colspan="2" style="text-align:center;">
+            <span class="tag" style="background:rgba(6,182,212,0.15);color:var(--cyan);font-size:13px;padding:4px 12px;">~6% less total momentum with fast powder</span>
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 147gr TABLE -->
+  <div class="eq-box" style="border-left-color: var(--blue); margin-top: 20px;">
+    <div class="eq-label">147gr at 130 PF — needs 884 fps from 13″ PCC</div>
+    <table class="calc-table" style="margin:12px 0 0;">
+      <thead>
+        <tr>
+          <th style="width:180px;">What We're Measuring</th>
+          <th>Fast (N320, ~3.0 gr)</th>
+          <th>Slow (HS-6, ~5.8 gr)</th>
+          <th style="width:80px;">Diff</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Powder charge</td>
+          <td class="num">3.0 gr</td>
+          <td class="num">5.8 gr</td>
+          <td class="num" style="color:var(--green)">−48%</td>
+        </tr>
+        <tr>
+          <td>Gas velocity factor (<em>f</em>)</td>
+          <td class="num">~1.0</td>
+          <td class="num">~1.8</td>
+          <td></td>
+        </tr>
+        <tr style="background:var(--bg-card-alt);">
+          <td style="font-weight:600;">Gas push (momentum)</td>
+          <td class="num" style="color:var(--green);font-weight:600;">2,652</td>
+          <td class="num" style="color:var(--red);font-weight:600;">9,229</td>
+          <td><span class="tag tag-red">3.5×</span></td>
+        </tr>
+        <tr>
+          <td>Bullet push (momentum)</td>
+          <td class="num" colspan="2" style="text-align:center;">129,948 (identical — both 130 PF)</td>
+          <td></td>
+        </tr>
+        <tr style="background:var(--bg-card-alt);">
+          <td>Gas as % of total</td>
+          <td class="num" style="font-weight:600;">2.0%</td>
+          <td class="num" style="font-weight:600;">6.6%</td>
+          <td></td>
+        </tr>
+        <tr style="background:rgba(59,130,246,0.06);">
+          <td style="font-weight:700;color:var(--text-bright);">Net recoil difference</td>
+          <td colspan="2" style="text-align:center;">
+            <span class="tag" style="background:rgba(59,130,246,0.15);color:var(--blue);font-size:13px;padding:4px 12px;">~5% less total momentum with fast powder</span>
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CROSS-WEIGHT COMPARISON -->
+  <h2 style="margin-top:40px;">Across all three weights: lighter bullet = bigger gas effect</h2>
+  <p>
+    Lighter bullets need higher velocity to make the same PF — and higher velocity means the gas
+    exits faster too (V<sub>gas</sub> = f × V<sub>muzzle</sub>). So the gas momentum penalty from slow powder
+    is largest with light bullets and smallest with heavy ones. But the perceptual factors (blast, sound, impulse shape)
+    are dramatic at ALL weights.
+  </p>
+
+  <div style="margin:28px 0;">
+    <!-- Gas momentum comparison bars -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:28px 32px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:20px;">
+        Gas Momentum by Weight Class — Fast vs Slow Powder at 130 PF from 13″ PCC
+      </div>
+
+      <!-- 95gr -->
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--accent);margin-bottom:8px;">
+          95gr · 1,368 fps
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);">Fast</div>
+          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:37%;height:100%;background:var(--green);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">5,472</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);">Slow</div>
+          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:100%;height:100%;background:var(--red);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">14,774</div>
+          </div>
+        </div>
+        <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:4px;">
+          gas contributes 4% → 10% of total · <span style="color:var(--accent);">Δ recoil ≈ 7–8%</span>
+        </div>
+      </div>
+
+      <!-- 124gr -->
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--cyan);margin-bottom:8px;">
+          124gr · 1,049 fps
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);">Fast</div>
+          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:25%;height:100%;background:var(--green);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">3,672</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);">Slow</div>
+          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:83%;height:100%;background:var(--red);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">12,272</div>
+          </div>
+        </div>
+        <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:4px;">
+          gas contributes 3% → 9% of total · <span style="color:var(--cyan);">Δ recoil ≈ 6%</span>
+        </div>
+      </div>
+
+      <!-- 147gr -->
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--blue);margin-bottom:8px;">
+          147gr · 884 fps
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);">Fast</div>
+          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:18%;height:100%;background:var(--green);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">2,652</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);">Slow</div>
+          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:62%;height:100%;background:var(--red);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">9,229</div>
+          </div>
+        </div>
+        <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:4px;">
+          gas contributes 2% → 7% of total · <span style="color:var(--blue);">Δ recoil ≈ 5%</span>
+        </div>
+      </div>
+
+      <!-- Annotation -->
+      <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border);font-size:13px;color:var(--text-dim);line-height:1.6;">
+        <strong style="color:var(--text);">Pattern:</strong> The lighter the bullet, the more velocity is needed for the same PF, and the more
+        the gas term matters. But even at 147gr, the gas momentum still <em>triples</em> between fast and slow powder — 
+        the absolute recoil difference is just smaller because gas is a smaller fraction of the total.
+        The blast, sound, and kick-shape benefits of fast powder apply equally at all weights.
+      </div>
+    </div>
+  </div>
+
+  <div class="plain-english">
+    <div class="plain-english-icon">⚖️</div>
+    <p>
+      Bottom line: if you're shooting PCC, fast powder helps at every bullet weight. But the advantage
+      is most pronounced with light bullets (95gr) where gas momentum is the largest fraction of total
+      recoil. With 147gr, the momentum math says ~5% — but the blast and sound reduction still make a
+      noticeable difference in how the gun feels to shoot.
+    </p>
+  </div>
+</div>
+
+<!-- SECTION 4: PERCEPTUAL FACTORS -->
+<div class="section">
+  <div class="section-number">04 — The Other 80%: Why It Feels Bigger Than the Math Says</div>
+  <h2>Muzzle blast, sound, and impulse shape</h2>
+  <p>
+    The momentum equation says the recoil difference is ~5–10%. But shooters say it feels much bigger than that.
+    They're not wrong — "felt recoil" isn't just about momentum. Three other factors make a huge difference
+    in how a shot <em>feels</em>, and all three get dramatically worse when hot, high-pressure gas exits the muzzle.
+  </p>
+
+  <div class="factors-grid">
+    <div class="factor-card blast">
+      <div class="factor-icon">💥</div>
+      <h4>Muzzle Blast</h4>
+      <p>
+        High-pressure gas hitting open air creates a shockwave — a sharp
+        "punch" you feel on your face, hands, and chest. This isn't recoil
+        in the physics sense, but your body registers it as part of the kick.
+        Fast powder = low gas pressure at the muzzle = almost no blast.
+      </p>
+      <div class="factor-verdict" style="color:var(--red);">
+        Probably the single biggest factor in perceived difference
+      </div>
+    </div>
+    <div class="factor-card sound">
+      <div class="factor-icon">🔊</div>
+      <h4>Sound Level</h4>
+      <p>
+        Slow powder exiting a PCC barrel is LOUD — 5–10 dB louder than
+        fast powder, which sounds roughly twice as loud to human ears.
+        Our brains don't cleanly separate "loud" from "hard-kicking" —
+        a louder shot feels like it kicks harder, even if the momentum
+        is nearly the same.
+      </p>
+      <div class="factor-verdict" style="color:var(--accent);">
+        Your brain perceives louder as harder-kicking
+      </div>
+    </div>
+    <div class="factor-card impulse">
+      <div class="factor-icon">📈</div>
+      <h4>Kick Shape</h4>
+      <p>
+        Gas exits after the bullet, delivering a secondary push. With slow powder,
+        that push is sharp and sudden — like a slap. With fast powder, the gas
+        trickles out gently — like a nudge. Same total push, but the peak force
+        is lower, so it feels softer.
+      </p>
+      <div class="factor-verdict" style="color:var(--blue);">
+        Same total energy, spread over longer time = softer feel
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">The Complete Picture</div>
+    <p>
+      Fast powder in a PCC produces <strong>~5–10% less recoil momentum</strong> plus a
+      <strong>major reduction</strong> in muzzle blast, sound pressure, and secondary impulse sharpness.
+      The combination produces a subjective experience that feels like a 20–30% improvement.
+      The momentum reduction is real but modest; the perceptual factors are where most of the
+      "softness" lives.
+    </p>
+  </div>
+</div>
+
+<!-- SECTION 5: SUMMARY -->
+<div class="section">
+  <div class="section-number">05 — Pistol vs PCC: Opposite Strategies</div>
+  <h2>The best pistol load is the worst PCC load (and vice versa)</h2>
+  <p>
+    In a pistol with a 4–5″ barrel, there isn't enough barrel length for gas to expand much regardless of powder
+    choice — so the gas difference between powders is small. What matters most is how the bullet's weight and speed
+    affect slide timing and muzzle flip. Heavy, slow bullets (147gr) produce a gentle "push" instead of a sharp "snap."
+  </p>
+  <p>
+    In a PCC with a 13–16″ barrel, there's plenty of room for gas to expand — but only if the powder finishes
+    burning early enough to use it. Fast powders give the gas 8–10″ of runway to cool down. Slow powders use up
+    almost all of that barrel for combustion, leaving the gas hot and energetic at the muzzle. The result: more blast,
+    more noise, and a sharper kick — even at the same Power Factor.
+  </p>
+
+  <table class="calc-table" style="margin-top:24px;">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Optimal Strategy</th>
+        <th>Why</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text-bright)">Pistol (4–5″)</td>
+        <td>Heavy bullet (147gr) + fast powder</td>
+        <td>Short barrel = gas can't expand much either way. Heavy bullet produces a slower, gentler push on the slide.</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600;color:var(--text-bright)">PCC (13–16″)<br><span style="font-size:11px;color:var(--text-dim)">no compensator</span></td>
+        <td style="color:var(--green);font-weight:600;">Light bullet (90–100gr) + fast powder</td>
+        <td>Long barrel = gas expansion chamber. Small charge of fast powder = less gas, lower pressure, less blast and noise.</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600;color:var(--text-bright)">PCC compensated</td>
+        <td>Medium bullet (124gr) + medium powder</td>
+        <td>The comp needs hot gas at the muzzle to push the barrel down. Fast powder robs the comp of the gas energy it needs.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SOURCES -->
+<div class="sources">
+  <h3>Sources</h3>
+  <div class="source-item">
+    <span class="ref-num">[1]</span> SAAMI, "Free Recoil Energy" — <em>saami.org/faqs</em>. Provides the standard free recoil equation and gas velocity estimation method (V<sub>gas</sub> = f × V<sub>muzzle</sub>).
+  </div>
+  <div class="source-item">
+    <span class="ref-num">[2]</span> Hatcher, Julian S. <em>Hatcher's Notebook</em> (1947). Chapter on recoil — derives the momentum equation from Newton's third law. Primary reference for the gas momentum term in small arms.
+  </div>
+  <div class="source-item">
+    <span class="ref-num">[3]</span> British Textbook of Small Arms (1929). Proposed the proportional gas velocity factor <em>f</em>, noting it "lies between 1 and 2, with an average value of 1½." First known published treatment of variable gas velocity in recoil calculations.
+  </div>
+  <div class="source-item">
+    <span class="ref-num">[4]</span> FIRGELLI Engineering Calculators, "Recoil Energy Interactive Calculator" — documents gas velocity ranges of 1.2–1.75× muzzle velocity depending on barrel length, burn rate, and chamber pressure profile. Confirms short barrels exhibit higher gas velocity ratios.
+  </div>
+  <div class="source-item">
+    <span class="ref-num">[5]</span> NRA Fact Book (1988). Estimates average propellant gas velocity at ~4,000 fps for smokeless powder in small arms. Provides the alternative fixed-velocity method for recoil calculation.
+  </div>
+  <div class="source-item">
+    <span class="ref-num">[6]</span> Gas factor estimates for fast vs slow powder in PCC (f ≈ 1.0 vs f ≈ 1.8) are analytical extrapolations bounded by the British Textbook range [1, 2], not direct measurements. The momentum magnitude (~5–10% total recoil difference) follows from this extrapolation. The perceptual factors (blast, sound, impulse shape) are qualitative observations consistent with muzzle pressure physics but not quantified by controlled study for 9mm PCC specifically.
+  </div>
+</div>
+
+</body>
+</html>
