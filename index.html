@@ -619,7 +619,7 @@
   </p>
 
   <div class="barrel-diagram">
-    <h3>13″ PCC Barrel — Gas State at Muzzle</h3>
+    <h3>13″ PCC Barrel — Snapshot at the moment the bullet exits the muzzle</h3>
 
     <!-- Fast powder -->
     <div class="barrel-row">
@@ -632,8 +632,13 @@
           <span style="color: rgba(34,197,94,0.5);">← GAS EXPANDING · PRESSURE DROPPING →</span>
         </div>
         <div class="barrel-muzzle-zone" style="background: rgba(34,197,94,0.15);"></div>
+        <!-- Bullet exiting -->
+        <div style="position:absolute;right:-30px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:2px;">
+          <div style="width:10px;height:16px;background:var(--accent);border-radius:2px 6px 6px 2px;"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);font-weight:600;white-space:nowrap;">◀ BULLET</div>
+        </div>
       </div>
-      <div class="barrel-desc">
+      <div class="barrel-desc" style="margin-left:52px;">
         <span style="color:var(--green);font-weight:600;">Low pressure at muzzle</span><br>
         Gas has cooled and expanded<br>
         Small powder charge = less gas
@@ -651,19 +656,160 @@
           <span style="color: rgba(239,68,68,0.5); font-size:9px;">tiny<br>gap</span>
         </div>
         <div class="barrel-muzzle-zone" style="background: rgba(239,68,68,0.6);"></div>
+        <!-- Bullet exiting -->
+        <div style="position:absolute;right:-30px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:2px;">
+          <div style="width:10px;height:16px;background:var(--accent);border-radius:2px 6px 6px 2px;"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);font-weight:600;white-space:nowrap;">◀ BULLET</div>
+        </div>
       </div>
-      <div class="barrel-desc">
+      <div class="barrel-desc" style="margin-left:52px;">
         <span style="color:var(--red);font-weight:600;">High pressure at muzzle</span><br>
         Gas still hot and energetic<br>
         Large powder charge = more gas
       </div>
     </div>
+
+    <!-- Diagram note -->
+    <div style="margin-top:16px;font-size:12px;color:var(--text-dim);font-style:italic;line-height:1.5;">
+      Both diagrams show the same instant — the bullet leaving the muzzle at 130 PF. The bullet position and speed
+      are identical. What's different is everything behind it: how much gas, at what pressure, at what speed.
+    </div>
   </div>
 </div>
 
-<!-- SECTION 3: THE MATH -->
+<!-- SECTION 3: BARREL LENGTH DIMINISHING RETURNS -->
 <div class="section">
-  <div class="section-number">03 — Running the Numbers</div>
+  <div class="section-number">03 — How Much Barrel Do You Actually Need?</div>
+  <h2>Diminishing returns: the expansion chamber has a sweet spot</h2>
+  <p>
+    If longer barrel = more gas expansion = softer shooting, why not run a 24″ barrel? Because
+    the benefit follows a curve of diminishing returns — each additional inch of barrel matters less
+    than the one before it. And below a certain length, there's not enough barrel for the expansion
+    effect to work at all.
+  </p>
+
+  <div class="plain-english">
+    <div class="plain-english-icon">📐</div>
+    <p>
+      Think of it like opening a pressure cooker. Cracking the lid an inch releases a huge blast of steam.
+      Opening it another inch releases less. By the time it's fully open, more opening doesn't matter —
+      the steam has already escaped. Barrel length works the same way for gas expansion.
+    </p>
+  </div>
+
+  <!-- BARREL LENGTH ZONES -->
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:28px 32px;margin:28px 0;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:24px;">
+      Barrel Length Zones — Fast Powder with 95gr Bullet
+    </div>
+
+    <!-- Scale bar -->
+    <div style="position:relative;margin-bottom:8px;">
+      <div style="display:flex;height:12px;border-radius:6px;overflow:hidden;border:1px solid var(--border);">
+        <div style="width:15%;background:var(--red);"></div>
+        <div style="width:8%;background:linear-gradient(90deg,var(--red),var(--accent));"></div>
+        <div style="width:15%;background:var(--accent);"></div>
+        <div style="width:24%;background:linear-gradient(90deg,var(--accent),var(--green));"></div>
+        <div style="width:15%;background:var(--green);"></div>
+        <div style="width:23%;background:linear-gradient(90deg,var(--green),var(--text-dim));"></div>
+      </div>
+    </div>
+    <!-- Inch labels -->
+    <div style="display:flex;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:24px;">
+      <div style="width:0%;text-align:left;">3″</div>
+      <div style="width:15%;text-align:center;">5″</div>
+      <div style="width:23%;text-align:center;">7″</div>
+      <div style="width:24%;text-align:center;">10″</div>
+      <div style="width:15%;text-align:center;">13″</div>
+      <div style="flex:1;text-align:right;">16″+</div>
+    </div>
+
+    <!-- Zone descriptions -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+      <div style="padding:16px;background:var(--bg-card-alt);border-radius:6px;border-left:3px solid var(--red);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--red);margin-bottom:6px;">3–5″ · PISTOL TERRITORY</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6;">
+          Fast powder finishes burning right at the muzzle — there's <strong style="color:var(--text)">no expansion
+          length at all</strong>. Gas exits at high pressure regardless of powder choice. The fast-vs-slow
+          gas difference is minimal. Recoil is dominated by bullet momentum and slide timing.
+          This is where 147gr + fast powder wins (the pistol strategy).
+        </div>
+      </div>
+
+      <div style="padding:16px;background:var(--bg-card-alt);border-radius:6px;border-left:3px solid var(--accent);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);margin-bottom:6px;">5–10″ · TRANSITION ZONE</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6;">
+          Fast powder is done burning and gas is <strong style="color:var(--text)">starting to expand</strong> — but there's only
+          2–5″ of expansion volume. You're getting some benefit: lower muzzle pressure, less blast.
+          Slow powder is likely still burning. The advantage is real but <strong style="color:var(--text)">partial</strong> — 
+          you're capturing maybe 40–60% of the full expansion effect.
+          Common barrel lengths: SBR AR-9 (7.5″), Sig MPX-K (8″).
+        </div>
+      </div>
+
+      <div style="padding:16px;background:var(--bg-card-alt);border-radius:6px;border-left:3px solid var(--green);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--green);margin-bottom:6px;">10–16″ · THE SWEET SPOT</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6;">
+          Fast powder has 6–12″ of expansion length — gas pressure at the muzzle is <strong style="color:var(--text)">near
+          its minimum</strong>. This is where the full blast/sound/recoil benefit kicks in. Going from 10″ to
+          13″ is a meaningful improvement. Going from 13″ to 16″ helps, but less — you're on the flat
+          part of the curve. Most of the gas expansion has already happened by 12–13″.
+          Common barrel lengths: CMMG Banshee (10.5″), standard PCC (16″), your barrel (13″).
+        </div>
+      </div>
+
+      <div style="padding:16px;background:var(--bg-card-alt);border-radius:6px;border-left:3px solid var(--text-dim);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--text-dim);margin-bottom:6px;">16″+ · DIMINISHING RETURNS</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6;">
+          Gas is already at near-ambient pressure by 13–14″ with fast powder. Extra barrel length
+          adds <strong style="color:var(--text)">almost no additional expansion benefit</strong>. Worse: with light bullets (95gr),
+          bore friction may actually start <strong style="color:var(--text)">slowing the bullet down</strong> past ~14–16″ because
+          friction exceeds the tiny residual gas pressure still pushing it forward. You can lose
+          velocity — and therefore PF — with a barrel that's too long for the load.
+        </div>
+      </div>
+    </div>
+
+    <!-- The curve annotation -->
+    <div style="margin-top:20px;padding:16px 20px;border:1px dashed var(--border);border-radius:6px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">Why the curve flattens</div>
+      <div style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+        Gas expansion follows roughly <strong style="color:var(--text)">P ∝ V<sup style="font-size:10px;">−γ</sup></strong> (adiabatic expansion, where γ ≈ 1.2–1.25 for combustion gases).
+        In plain terms: doubling the volume doesn't halve the pressure — it drops it by about 55–60%.
+        The first doubling (4″ → 8″) matters a lot. The second (8″ → 16″) helps but less. By the third
+        doubling (16″ → 32″) you'd gain almost nothing. The curve flattens because you can't expand gas
+        below atmospheric pressure — once it's close to ambient, more barrel is just friction.
+      </div>
+    </div>
+  </div>
+
+  <!-- Short barrel callout -->
+  <div class="callout">
+    <div class="callout-title">What this means for short-barrel PCC builds</div>
+    <p>
+      If you're running a 7–8″ AR-9 or MPX-K, you're in the transition zone. Fast powder still wins
+      over slow powder (less gas mass is always less gas mass), but the expansion benefit is only partial.
+      The blast and sound reduction will be noticeable but not as dramatic as from a 13″+ barrel.
+      You're getting maybe <strong>half the perceptual benefit</strong> compared to a full-length PCC.
+      If minimum recoil is the goal and you're choosing between barrel lengths, the jump from
+      8″ to 10–11″ buys more than the jump from 13″ to 16″.
+    </p>
+  </div>
+
+  <div class="plain-english">
+    <div class="plain-english-icon">🎯</div>
+    <p>
+      Your 13″ barrel is right in the sweet spot — long enough for fast powder to fully expand,
+      short enough that you're not losing velocity to friction. If anything, it's close to the
+      ideal length for this application.
+    </p>
+  </div>
+</div>
+
+<!-- SECTION 4: THE MATH -->
+<div class="section">
+  <div class="section-number">04 — Running the Numbers</div>
   <h2>Quantified: 95gr at 130 PF from a 13″ barrel</h2>
   <p>
     Let's compare two loads that both deliver the same Power Factor (130 PF) from the same 13″ PCC — 
@@ -878,85 +1024,222 @@
   </p>
 
   <div style="margin:28px 0;">
-    <!-- Gas momentum comparison bars -->
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:28px 32px;">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:20px;">
-        Gas Momentum by Weight Class — Fast vs Slow Powder at 130 PF from 13″ PCC
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">
+        Total Recoil Composition — Fast vs Slow Powder at 130 PF from 13″ PCC
+      </div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:24px;line-height:1.5;">
+        Each bar shows total recoil momentum. The dark portion is bullet push (identical in both — that's your Power Factor).
+        The colored tail is gas push — the part that changes with powder selection.
       </div>
 
-      <!-- 95gr -->
-      <div style="margin-bottom:20px;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--accent);margin-bottom:8px;">
-          95gr · 1,368 fps
+      <!-- LEGEND -->
+      <div style="display:flex;gap:20px;margin-bottom:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:14px;height:14px;background:var(--text-dim);border-radius:2px;opacity:0.4;"></div>
+          <span style="color:var(--text-dim);">Bullet momentum (fixed by PF)</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);">Fast</div>
-          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
-            <div style="width:37%;height:100%;background:var(--green);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">5,472</div>
-          </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:14px;height:14px;background:var(--green);border-radius:2px;"></div>
+          <span style="color:var(--text-dim);">Gas momentum — fast powder</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);">Slow</div>
-          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
-            <div style="width:100%;height:100%;background:var(--red);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">14,774</div>
-          </div>
-        </div>
-        <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:4px;">
-          gas contributes 4% → 10% of total · <span style="color:var(--accent);">Δ recoil ≈ 7–8%</span>
-        </div>
-      </div>
-
-      <!-- 124gr -->
-      <div style="margin-bottom:20px;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--cyan);margin-bottom:8px;">
-          124gr · 1,049 fps
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);">Fast</div>
-          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
-            <div style="width:25%;height:100%;background:var(--green);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">3,672</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);">Slow</div>
-          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
-            <div style="width:83%;height:100%;background:var(--red);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">12,272</div>
-          </div>
-        </div>
-        <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:4px;">
-          gas contributes 3% → 9% of total · <span style="color:var(--cyan);">Δ recoil ≈ 6%</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:14px;height:14px;background:var(--red);border-radius:2px;"></div>
+          <span style="color:var(--text-dim);">Gas momentum — slow powder</span>
         </div>
       </div>
 
-      <!-- 147gr -->
+      <!-- ═══════════ 95gr ═══════════ -->
+      <div style="margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:var(--accent);">
+            95gr · 1,368 fps
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700;color:var(--accent);">
+            Δ 7–8%
+          </div>
+        </div>
+
+        <!-- Fast bar -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <div style="width:55px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);font-weight:600;">FAST</div>
+          <div style="flex:1;height:32px;display:flex;border-radius:4px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:90%;background:rgba(200,205,216,0.15);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);">
+              bullet: 129,960
+            </div>
+            <div style="width:10%;min-width:50px;background:var(--green);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:#000;">
+              4%
+            </div>
+          </div>
+          <div style="width:90px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">135,432</div>
+        </div>
+
+        <!-- Slow bar -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:55px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);font-weight:600;">SLOW</div>
+          <div style="flex:1;height:32px;display:flex;border-radius:4px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:83%;background:rgba(200,205,216,0.15);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);">
+              bullet: 129,960
+            </div>
+            <div style="width:17%;min-width:50px;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:#000;">
+              10%
+            </div>
+          </div>
+          <div style="width:90px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">144,734</div>
+        </div>
+
+        <!-- What it means -->
+        <div style="margin-left:65px;padding:10px 14px;background:rgba(245,158,11,0.06);border-radius:4px;border-left:2px solid var(--accent);">
+          <div style="font-size:13px;color:var(--text);line-height:1.6;">
+            <strong style="color:var(--accent);">What 7–8% means:</strong>
+            The gas push with slow powder is <strong>2.7× larger</strong> than with fast powder (14,774 vs 5,472).
+            That gas difference alone adds roughly the equivalent of switching from a 130 PF load to a 140 PF load —
+            a full division's worth of recoil penalty, just from powder choice. Combined with the blast, sound, and
+            kick-shape differences, this is where the fast-powder advantage is most dramatic.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ 124gr ═══════════ -->
+      <div style="margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:var(--cyan);">
+            124gr · 1,049 fps
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700;color:var(--cyan);">
+            Δ 6%
+          </div>
+        </div>
+
+        <!-- Fast bar -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <div style="width:55px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);font-weight:600;">FAST</div>
+          <div style="flex:1;height:32px;display:flex;border-radius:4px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:93%;background:rgba(200,205,216,0.15);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);">
+              bullet: 130,076
+            </div>
+            <div style="width:7%;min-width:40px;background:var(--green);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:#000;">
+              3%
+            </div>
+          </div>
+          <div style="width:90px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">133,748</div>
+        </div>
+
+        <!-- Slow bar -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:55px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);font-weight:600;">SLOW</div>
+          <div style="flex:1;height:32px;display:flex;border-radius:4px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:86%;background:rgba(200,205,216,0.15);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);">
+              bullet: 130,076
+            </div>
+            <div style="width:14%;min-width:42px;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:#000;">
+              9%
+            </div>
+          </div>
+          <div style="width:90px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">142,348</div>
+        </div>
+
+        <!-- What it means -->
+        <div style="margin-left:65px;padding:10px 14px;background:rgba(6,182,212,0.06);border-radius:4px;border-left:2px solid var(--cyan);">
+          <div style="font-size:13px;color:var(--text);line-height:1.6;">
+            <strong style="color:var(--cyan);">What 6% means:</strong>
+            The gas push triples (12,272 vs 3,672) but the bullet is heavier, so gas is a smaller
+            slice of total recoil. A 6% momentum difference is roughly equivalent to the recoil
+            difference between a 130 PF and 138 PF load — noticeable in back-to-back comparison,
+            but the real win at this weight is still the blast and sound reduction.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ 147gr ═══════════ -->
       <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--blue);margin-bottom:8px;">
-          147gr · 884 fps
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);">Fast</div>
-          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
-            <div style="width:18%;height:100%;background:var(--green);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">2,652</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:var(--blue);">
+            147gr · 884 fps
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700;color:var(--blue);">
+            Δ 5%
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:80px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);">Slow</div>
-          <div style="flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);">
-            <div style="width:62%;height:100%;background:var(--red);border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#000;">9,229</div>
+
+        <!-- Fast bar -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <div style="width:55px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);font-weight:600;">FAST</div>
+          <div style="flex:1;height:32px;display:flex;border-radius:4px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:95%;background:rgba(200,205,216,0.15);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);">
+              bullet: 129,948
+            </div>
+            <div style="width:5%;min-width:36px;background:var(--green);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:#000;">
+              2%
+            </div>
           </div>
+          <div style="width:90px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">132,600</div>
         </div>
-        <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:4px;">
-          gas contributes 2% → 7% of total · <span style="color:var(--blue);">Δ recoil ≈ 5%</span>
+
+        <!-- Slow bar -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:55px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);font-weight:600;">SLOW</div>
+          <div style="flex:1;height:32px;display:flex;border-radius:4px;overflow:hidden;border:1px solid var(--border);">
+            <div style="width:89%;background:rgba(200,205,216,0.15);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);">
+              bullet: 129,948
+            </div>
+            <div style="width:11%;min-width:40px;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;color:#000;">
+              7%
+            </div>
+          </div>
+          <div style="width:90px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);">139,177</div>
+        </div>
+
+        <!-- What it means -->
+        <div style="margin-left:65px;padding:10px 14px;background:rgba(59,130,246,0.06);border-radius:4px;border-left:2px solid var(--blue);">
+          <div style="font-size:13px;color:var(--text);line-height:1.6;">
+            <strong style="color:var(--blue);">What 5% means:</strong>
+            Gas still triples (9,229 vs 2,652) but at this low velocity, gas momentum is the smallest
+            fraction of total recoil. A 5% momentum difference is like the difference between 130 PF
+            and 136 PF — subtle on its own. But 147gr is already subsonic territory: the blast and
+            sound difference between fast and slow powder is <em>huge</em> because slow powder is still
+            burning at the muzzle. The perceptual win matters more than the momentum win here.
+          </div>
         </div>
       </div>
 
-      <!-- Annotation -->
-      <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border);font-size:13px;color:var(--text-dim);line-height:1.6;">
-        <strong style="color:var(--text);">Pattern:</strong> The lighter the bullet, the more velocity is needed for the same PF, and the more
-        the gas term matters. But even at 147gr, the gas momentum still <em>triples</em> between fast and slow powder — 
-        the absolute recoil difference is just smaller because gas is a smaller fraction of the total.
-        The blast, sound, and kick-shape benefits of fast powder apply equally at all weights.
+      <!-- THE PATTERN -->
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);">
+        <div style="display:flex;gap:16px;align-items:stretch;">
+
+          <div style="flex:1;padding:16px;background:var(--bg-card-alt);border-radius:6px;border-top:3px solid var(--accent);">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:var(--accent);margin-bottom:4px;">95gr</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:8px;">BIGGEST GAS EFFECT</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5;">
+              Highest velocity means highest gas speed. Gas is the largest fraction of total recoil.
+              Fast powder saves <strong>~9,300 momentum units</strong> of gas push.
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;font-size:24px;color:var(--text-dim);">→</div>
+
+          <div style="flex:1;padding:16px;background:var(--bg-card-alt);border-radius:6px;border-top:3px solid var(--cyan);">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:var(--cyan);margin-bottom:4px;">124gr</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:8px;">MODERATE GAS EFFECT</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5;">
+              Lower velocity reduces gas speed. Gas saves <strong>~8,600 units</strong>.
+              Momentum benefit shrinks but blast/sound reduction is still large.
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;font-size:24px;color:var(--text-dim);">→</div>
+
+          <div style="flex:1;padding:16px;background:var(--bg-card-alt);border-radius:6px;border-top:3px solid var(--blue);">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:var(--blue);margin-bottom:4px;">147gr</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:8px;">SMALLEST GAS EFFECT</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5;">
+              Lowest velocity = lowest gas speed. Gas saves <strong>~6,600 units</strong>.
+              Momentum delta is modest — but the perceptual win is still dramatic.
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 
@@ -973,7 +1256,7 @@
 
 <!-- SECTION 4: PERCEPTUAL FACTORS -->
 <div class="section">
-  <div class="section-number">04 — The Other 80%: Why It Feels Bigger Than the Math Says</div>
+  <div class="section-number">05 — The Other 80%: Why It Feels Bigger Than the Math Says</div>
   <h2>Muzzle blast, sound, and impulse shape</h2>
   <p>
     The momentum equation says the recoil difference is ~5–10%. But shooters say it feels much bigger than that.
@@ -1038,7 +1321,7 @@
 
 <!-- SECTION 5: SUMMARY -->
 <div class="section">
-  <div class="section-number">05 — Pistol vs PCC: Opposite Strategies</div>
+  <div class="section-number">06 — Pistol vs PCC: Opposite Strategies</div>
   <h2>The best pistol load is the worst PCC load (and vice versa)</h2>
   <p>
     In a pistol with a 4–5″ barrel, there isn't enough barrel length for gas to expand much regardless of powder
@@ -1067,14 +1350,9 @@
         <td>Short barrel = gas can't expand much either way. Heavy bullet produces a slower, gentler push on the slide.</td>
       </tr>
       <tr>
-        <td style="font-weight:600;color:var(--text-bright)">PCC (13–16″)<br><span style="font-size:11px;color:var(--text-dim)">no compensator</span></td>
+        <td style="font-weight:600;color:var(--text-bright)">PCC (13–16″)</td>
         <td style="color:var(--green);font-weight:600;">Light bullet (90–100gr) + fast powder</td>
         <td>Long barrel = gas expansion chamber. Small charge of fast powder = less gas, lower pressure, less blast and noise.</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600;color:var(--text-bright)">PCC compensated</td>
-        <td>Medium bullet (124gr) + medium powder</td>
-        <td>The comp needs hot gas at the muzzle to push the barrel down. Fast powder robs the comp of the gas energy it needs.</td>
       </tr>
     </tbody>
   </table>
