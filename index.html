@@ -32,9 +32,11 @@
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 15px;
     line-height: 1.6;
-    width: 1100px;
+    max-width: 1100px;
+    width: 100%;
     margin: 0 auto;
     padding: 0;
+    overflow-x: hidden;
   }
 
   /* HEADER */
@@ -511,13 +513,89 @@
     margin: 0;
     font-style: italic;
   }
+  /* RESPONSIVE — TABLET */
+  @media (max-width: 900px) {
+    .header h1 { font-size: 28px; }
+    .section h2 { font-size: 20px; }
+    .factors-grid { grid-template-columns: 1fr; }
+    .legend { grid-template-columns: 1fr; }
+    .zones-grid { grid-template-columns: 1fr !important; }
+    .barrel-row { flex-wrap: wrap; }
+    .barrel-desc { width: 100%; margin-left: 0 !important; margin-top: 8px; }
+    .barrel-label { width: 70px; font-size: 10px; }
+    .calc-table { font-size: 12px; }
+    .calc-table th, .calc-table td { padding: 8px 10px; }
+  }
+
+  /* RESPONSIVE — MOBILE */
+  @media (max-width: 600px) {
+    body { font-size: 14px; }
+
+    .header { padding: 32px 20px 28px; }
+    .header h1 { font-size: 22px; }
+    .header-sub { font-size: 14px; }
+
+    .section { padding: 28px 20px; }
+    .section h2 { font-size: 18px; margin-bottom: 14px; }
+
+    .eq-box { padding: 18px 16px; }
+    .eq { font-size: 16px; line-height: 2; }
+    .eq-note { font-size: 11px; }
+
+    .legend { grid-template-columns: 1fr; }
+    .legend-item { padding: 8px 14px; }
+    .legend-var { min-width: 55px; font-size: 14px; }
+    .legend-def { font-size: 12px; }
+
+    .plain-english { padding: 14px 16px; gap: 10px; }
+    .plain-english-icon { font-size: 18px; }
+    .plain-english p { font-size: 13px; }
+
+    .barrel-diagram { padding: 18px 16px; }
+    .barrel-row { flex-wrap: wrap; gap: 8px; }
+    .barrel-label { width: 60px; font-size: 9px; }
+    .barrel-visual { min-height: 40px; }
+    .barrel-desc { width: 100%; margin-left: 0 !important; font-size: 11px; }
+
+    /* Tables: horizontal scroll */
+    .calc-table { font-size: 11px; display: block; overflow-x: auto; white-space: nowrap; }
+    .calc-table th, .calc-table td { padding: 8px; }
+    .calc-table th:first-child, .calc-table td:first-child { white-space: normal; min-width: 120px; }
+
+    .factors-grid { grid-template-columns: 1fr; gap: 12px; }
+    .factor-card { padding: 18px; }
+    .factor-card p { font-size: 12px; }
+
+    .callout { padding: 16px 18px; }
+    .callout p { font-size: 14px; }
+
+    .sources { padding: 24px 20px 32px; }
+    .source-item { font-size: 11px; }
+
+    /* Barrel length zone grid */
+    .zones-grid { grid-template-columns: 1fr !important; }
+
+    /* Stacked bar labels */
+    div[style*="width:55px"] { width: 40px !important; font-size: 10px !important; }
+    div[style*="width:90px"] { width: 60px !important; font-size: 10px !important; }
+    div[style*="margin-left:65px"] { margin-left: 0 !important; }
+    div[style*="margin-left:52px"] { margin-left: 0 !important; }
+
+    /* Pattern cards: stack vertically */
+    .pattern-cards { flex-direction: column !important; }
+    .pattern-arrow { display: none !important; }
+
+    /* Bullet label on barrel diagram */
+    div[style*="right:-30px"] { right: -24px !important; }
+    div[style*="white-space:nowrap"] { font-size: 8px !important; }
+  }
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <div class="header">
-  <div class="header-label">9×19mm Internal Ballistics · Practical Shooting Reference</div>
+  <div class="header-label">9×19mm Internal Ballistics · A Practical Shooting Reference by Anthony Zabonik</div>
   <h1>Why Light Bullets + Fast Powder = Less Felt Recoil <em>in PCCs</em></h1>
   <div class="header-sub">
     The physics of gas momentum, muzzle blast, and impulse shape — and why the optimal PCC competition load
@@ -725,7 +803,7 @@
     </div>
 
     <!-- Zone descriptions -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="zones-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
 
       <div style="padding:16px;background:var(--bg-card-alt);border-radius:6px;border-left:3px solid var(--red);">
         <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--red);margin-bottom:6px;">3–5″ · PISTOL TERRITORY</div>
@@ -1205,7 +1283,7 @@
 
       <!-- THE PATTERN -->
       <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);">
-        <div style="display:flex;gap:16px;align-items:stretch;">
+        <div class="pattern-cards" style="display:flex;gap:16px;align-items:stretch;">
 
           <div style="flex:1;padding:16px;background:var(--bg-card-alt);border-radius:6px;border-top:3px solid var(--accent);">
             <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:var(--accent);margin-bottom:4px;">95gr</div>
@@ -1216,7 +1294,7 @@
             </div>
           </div>
 
-          <div style="display:flex;align-items:center;font-size:24px;color:var(--text-dim);">→</div>
+          <div class="pattern-arrow" style="display:flex;align-items:center;font-size:24px;color:var(--text-dim);">→</div>
 
           <div style="flex:1;padding:16px;background:var(--bg-card-alt);border-radius:6px;border-top:3px solid var(--cyan);">
             <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:var(--cyan);margin-bottom:4px;">124gr</div>
@@ -1227,7 +1305,7 @@
             </div>
           </div>
 
-          <div style="display:flex;align-items:center;font-size:24px;color:var(--text-dim);">→</div>
+          <div class="pattern-arrow" style="display:flex;align-items:center;font-size:24px;color:var(--text-dim);">→</div>
 
           <div style="flex:1;padding:16px;background:var(--bg-card-alt);border-radius:6px;border-top:3px solid var(--blue);">
             <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:var(--blue);margin-bottom:4px;">147gr</div>
