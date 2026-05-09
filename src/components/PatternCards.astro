@@ -1,0 +1,98 @@
+---
+// Closing summary of bullet-weight tradeoffs. Three cards joined by → arrows.
+// Hard-coded because the narrative ordering (most gas → least gas) is article-specific.
+---
+<div class="pattern-wrap">
+  <div class="pattern-cards">
+    <article class="pattern-card amber">
+      <div class="pattern-weight">95gr</div>
+      <div class="pattern-tag">MOST GAS AT EQUAL PF</div>
+      <p>
+        Needs the highest velocity → biggest charge → most gas mass and highest gas speed.
+        Furthest from atmospheric. Benefits most from fast powder, but also <strong>loses
+        most if you use the wrong powder.</strong>
+      </p>
+    </article>
+
+    <div class="pattern-arrow">→</div>
+
+    <article class="pattern-card cyan">
+      <div class="pattern-weight">124gr</div>
+      <div class="pattern-tag">MODERATE GAS</div>
+      <p>
+        Lower velocity → smaller charge → less gas. At equal fast powder,
+        produces <strong>less gas momentum than 95gr</strong> at the same PF.
+        Practical sweet spot — enough velocity for flat trajectories at PCC
+        distances while still keeping gas momentum low.
+      </p>
+    </article>
+
+    <div class="pattern-arrow">→</div>
+
+    <article class="pattern-card blue">
+      <div class="pattern-weight">147gr</div>
+      <div class="pattern-tag">LEAST GAS — BUT TRADEOFFS</div>
+      <p>
+        Lowest velocity → smallest charge → least gas momentum. But 884 fps means
+        <strong>more drop, more lead on movers, and longer time-to-target</strong> at
+        distance — a real penalty in PCC stages with 50+ yard engagements.
+      </p>
+    </article>
+  </div>
+</div>
+
+<style>
+  .pattern-wrap {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .pattern-cards {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+  }
+  .pattern-card {
+    flex: 1;
+    padding: 16px;
+    background: var(--bg-card-alt);
+    border-radius: 6px;
+    border-top: 3px solid var(--border);
+  }
+  .pattern-card.amber { border-top-color: var(--accent); }
+  .pattern-card.cyan { border-top-color: var(--cyan); }
+  .pattern-card.blue { border-top-color: var(--blue); }
+  .pattern-weight {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .pattern-card.amber .pattern-weight { color: var(--accent); }
+  .pattern-card.cyan .pattern-weight { color: var(--cyan); }
+  .pattern-card.blue .pattern-weight { color: var(--blue); }
+  .pattern-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .pattern-card p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+    margin: 0;
+    max-width: none;
+  }
+  .pattern-arrow {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 600px) {
+    .pattern-cards { flex-direction: column; }
+    .pattern-arrow { display: none; }
+  }
+</style>

@@ -1,0 +1,237 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const articles = (await getCollection('articles', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const dateFmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+---
+<BaseLayout
+  title="Anthony Zabonik — zabs.dev"
+  description="Engineering writing by Anthony Zabonik."
+  canonicalPath="/"
+>
+  <header class="landing">
+    <div class="landing-label">zabs.dev</div>
+    <h1>Anthony Zabonik</h1>
+    <p class="landing-bio">Engineering writing.</p>
+    <nav class="landing-links">
+      <a href="https://github.com/azabonik" rel="me noopener" target="_blank">github</a>
+      <span class="dot">·</span>
+      <a href="mailto:laxpulse@gmail.com">email</a>
+    </nav>
+  </header>
+
+  <section class="writing">
+    <div class="writing-label">Writing</div>
+    <ul class="article-list">
+      {articles.map((article) => (
+        <li class="article-card">
+          <a href={`/articles/${article.id}/`} class="article-card-link">
+            <div class="article-card-meta">
+              <time datetime={article.data.pubDate.toISOString()}>
+                {dateFmt.format(article.data.pubDate)}
+              </time>
+              {article.data.tags.length > 0 && (
+                <span class="article-card-tags">
+                  {article.data.tags.map((tag, i) => (
+                    <>
+                      <span class="article-card-tag">{tag}</span>
+                      {i < article.data.tags.length - 1 && <span class="dot">·</span>}
+                    </>
+                  ))}
+                </span>
+              )}
+            </div>
+            <h2 class="article-card-title">
+              {article.data.title}{article.data.headlineSuffix && (
+                <>{': '}<em>{article.data.headlineSuffix}</em></>
+              )}
+            </h2>
+            <p class="article-card-desc">{article.data.description}</p>
+            <span class="article-card-cta">Read →</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <footer class="landing-footer">
+    <span>© {new Date().getFullYear()} Anthony Zabonik</span>
+    <span>·</span>
+    <a href="https://github.com/azabonik/pcc-recoil-physics" rel="noopener" target="_blank">source</a>
+  </footer>
+</BaseLayout>
+
+<style>
+  .landing {
+    padding: 80px 48px 48px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .landing::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 50%, rgba(59,130,246,0.04) 100%);
+    pointer-events: none;
+  }
+  .landing-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .landing h1 {
+    font-family: var(--font-serif);
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--text-bright);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .landing-bio {
+    font-size: 16px;
+    color: var(--text-dim);
+    max-width: 640px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .landing-links {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .landing-links a {
+    color: var(--text);
+    border-bottom: 1px solid transparent;
+  }
+  .landing-links a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .dot { color: var(--text-dim); opacity: 0.5; }
+
+  .writing {
+    padding: 56px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .writing-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    margin-bottom: 24px;
+  }
+
+  .article-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .article-card-link {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px 28px;
+    color: inherit;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 150ms ease, transform 150ms ease;
+  }
+  .article-card-link:hover {
+    border-color: var(--accent-dim);
+    transform: translateY(-1px);
+  }
+
+  .article-card-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .article-card-tags { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .article-card-tag { color: var(--accent); }
+
+  .article-card-title {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-bright);
+    line-height: 1.25;
+    margin: 0 0 10px;
+  }
+  .article-card-title em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .article-card-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    margin: 0 0 14px;
+    max-width: 720px;
+  }
+
+  .article-card-cta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .landing-footer {
+    padding: 28px 48px 48px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+  }
+  .landing-footer a {
+    color: var(--text-dim);
+    border-bottom: none;
+  }
+  .landing-footer a:hover { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .landing { padding: 48px 20px 32px; }
+    .landing h1 { font-size: 32px; }
+    .landing-bio { font-size: 14px; }
+    .writing { padding: 36px 20px; }
+    .article-card-link { padding: 18px 20px; }
+    .article-card-title { font-size: 19px; }
+    .landing-footer { padding: 24px 20px 32px; }
+  }
+</style>

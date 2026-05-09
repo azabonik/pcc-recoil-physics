@@ -1,0 +1,16 @@
+---
+interface Props {
+  /** "01", "02", etc. */
+  number: string;
+  /** Kicker text to the right of the number. */
+  label: string;
+  /** Section heading. */
+  heading: string;
+}
+const { number, label, heading } = Astro.props;
+---
+<section class="section">
+  <div class="section-number">{number} — {label}</div>
+  <h2>{heading}</h2>
+  <slot />
+</section>

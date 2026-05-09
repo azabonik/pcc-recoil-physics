@@ -1,0 +1,10 @@
+---
+interface Props {
+  /** Single ref number, or array of ref numbers (e.g., [1, 2, 3] renders [1][2][3]). */
+  refs: number | number[];
+}
+const { refs } = Astro.props;
+const list = Array.isArray(refs) ? refs : [refs];
+const text = list.map((n) => `[${n}]`).join('');
+---
+<sup class="sup">{text}</sup>

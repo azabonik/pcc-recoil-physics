@@ -1,0 +1,695 @@
+---
+title: "PCC Recoil Physics"
+headlineSuffix: "Get the Gas to Atmospheric"
+headerLabel: "9×19mm Internal Ballistics · A Practical Shooting Reference by Anthony Zabonik"
+headerSubtitle: >-
+  The physics of gas momentum, muzzle blast, and impulse shape — why felt recoil in a PCC
+  is dominated by the gas state at the muzzle, and how powder selection and barrel length
+  determine whether that gas exits hot and fast or cool and quiet.
+description: >-
+  How powder burn rate, barrel length, and bullet weight interact to determine felt recoil
+  in a 9mm PCC. Covers the free recoil equation, gas momentum, muzzle blast physics, and a
+  calculated recoil lookup table from 90gr to 147gr at 130 Power Factor.
+pubDate: 2025-05-08
+tags: ["PCC", "9mm reloading", "internal ballistics", "recoil"]
+about:
+  - "Internal ballistics"
+  - "Pistol caliber carbine"
+  - "9mm Parabellum"
+  - "Recoil"
+  - "Handloading"
+keywords: "PCC recoil, pistol caliber carbine, 9mm reloading, internal ballistics, gas momentum, muzzle blast, powder burn rate, USPSA PCC, practical shooting, free recoil equation, SAAMI, power factor, 9x19mm, handloading, felt recoil, barrel length, muzzle pressure"
+---
+
+import Section from '../../components/Section.astro';
+import PlainEnglish from '../../components/PlainEnglish.astro';
+import EquationBox from '../../components/EquationBox.astro';
+import VariableLegend from '../../components/VariableLegend.astro';
+import BarrelDiagram from '../../components/BarrelDiagram.astro';
+import BarrelLengthZones from '../../components/BarrelLengthZones.astro';
+import Callout from '../../components/Callout.astro';
+import MethodNote from '../../components/MethodNote.astro';
+import FactorGrid from '../../components/FactorGrid.astro';
+import FactorCard from '../../components/FactorCard.astro';
+import RecoilCompositionChart from '../../components/RecoilCompositionChart.astro';
+import PatternCards from '../../components/PatternCards.astro';
+import Tag from '../../components/Tag.astro';
+import Sup from '../../components/Sup.astro';
+import Sources from '../../components/Sources.astro';
+import SourceItem from '../../components/SourceItem.astro';
+
+{/* ============================================================================
+    SECTION 1 — THE EQUATION
+    ============================================================================ */}
+<Section number="01" label="The Recoil Equation" heading="Recoil is more than bullet momentum">
+  <p>
+    When a round fires, two things fly out the front of the barrel: the bullet, and a blast of hot gas
+    from the burned powder. Both push the gun backward. Most shooters only think about the bullet — but
+    the gas matters too, especially in a long-barreled PCC.<Sup refs={[1, 2, 3]} />
+  </p>
+
+  <PlainEnglish>
+    <p>
+      In plain terms: recoil = how hard the bullet pushes backward + how hard the gas pushes backward.
+      You can't change the bullet push (that's your Power Factor). But you CAN change the gas push
+      by choosing a different powder.
+    </p>
+  </PlainEnglish>
+
+  <EquationBox label="Free Recoil Velocity (SAAMI / Hatcher / NRA)">
+    <div class="eq">
+      <span class="var">V</span><sub>gun</sub> &nbsp;=&nbsp;
+      ( <span class="highlight"><span class="var">m</span><sub>bullet</sub> × <span class="var">V</span><sub>muzzle</sub></span>
+      &nbsp;+&nbsp;
+      <span class="blue-hl"><span class="var">m</span><sub>charge</sub> × <span class="var">V</span><sub>gas</sub></span> )
+      &nbsp;÷&nbsp; <span class="var">M</span><sub>gun</sub>
+    </div>
+    <div class="eq-note">
+      Where <span class="accent"><span class="var">V</span><sub>gas</sub></span><span> = </span><span class="var">f</span><span> × </span><span class="var">V</span><sub>muzzle</sub><br />
+      <span>SAAMI gas factor </span><span class="var">f</span><span> ≈ 1.5 for handguns, 1.75 for rifles</span><Sup refs={1} /><br />
+      <span>British Textbook of Small Arms (1929): </span><span class="var">f</span><span> "lies between 1 and 2, with average value 1½"</span><Sup refs={3} />
+    </div>
+  </EquationBox>
+
+  <VariableLegend />
+
+  <p>
+    The <span style="color:var(--accent);font-weight:600">orange term</span> (bullet push) is locked once you pick your bullet weight and PF target.
+    The <span style="color:var(--blue);font-weight:600">blue term</span> (gas push) is the only variable a handloader can manipulate — and
+    the theoretical ideal is to drive it to zero. That happens when gas pressure at the muzzle
+    equals atmospheric pressure: no pressure differential, no gas acceleration, no blast, no kick
+    from gas. In practice you can't reach zero, but every psi above atmospheric is wasted energy
+    that becomes recoil, blast, and noise instead of bullet velocity.
+  </p>
+</Section>
+
+{/* ============================================================================
+    SECTION 2 — THE GOAL
+    ============================================================================ */}
+<Section number="02" label="The Goal: Atmospheric Pressure at the Muzzle" heading="Every psi above atmospheric is wasted as recoil">
+  <p>
+    If gas pressure inside the barrel dropped to 14.7 psi (atmospheric) right as the bullet exits,
+    there would be no pressure differential between bore and open air. Gas wouldn't accelerate out the muzzle.
+    V<sub>gas</sub> would approach zero. No blast. No gas recoil. Total recoil would equal pure bullet momentum —
+    nothing else. That's the theoretical floor.
+  </p>
+  <p>
+    You can't actually reach it — the bullet needs some residual gas pressure to overcome bore friction,
+    and hot gas at atmospheric pressure still pops when it hits cooler ambient air. But the closer you
+    get, the less recoil, blast, and noise you produce. Two things move you toward atmospheric:
+    a powder that finishes burning early (so gas has room to expand) and a barrel long enough to let
+    that expansion happen.<Sup refs={[4, 5]} />
+  </p>
+
+  <PlainEnglish>
+    <p>
+      The barrel after the powder finishes burning is just an expansion chamber. The longer the gas
+      has to expand, the lower its pressure when it finally exits. Fast powder in a long barrel
+      gives the gas the most room to decompress. Slow powder in the same barrel is still generating
+      pressure right up to the muzzle — the gas never gets a chance to settle.
+    </p>
+  </PlainEnglish>
+
+  <BarrelDiagram />
+</Section>
+
+{/* ============================================================================
+    SECTION 3 — DIMINISHING RETURNS
+    ============================================================================ */}
+<Section number="03" label="How Much Barrel Do You Need to Reach Atmospheric?" heading="Diminishing returns: you can approach atmospheric but never reach it">
+  <p>
+    Gas expansion follows roughly P ∝ V<sup style="font-size:10px;">−γ</sup> — each doubling of expansion volume drops
+    pressure by about 55–60%, but you can never reach zero (or atmospheric). The first few inches of
+    expansion after burn-out produce the biggest pressure drop. After that, each additional inch matters less.
+    There's a barrel length where the gas is close enough to atmospheric that more barrel just adds friction.
+  </p>
+
+  <PlainEnglish>
+    <p>
+      Think of it like opening a pressure cooker. Cracking the lid an inch releases a huge blast of steam.
+      Opening it another inch releases less. By the time it's wide open, the pressure inside has equalized
+      with the room — more opening changes nothing. Barrel length works the same way: you're trying to
+      let the gas equalize with the atmosphere before it exits.
+    </p>
+  </PlainEnglish>
+
+  <BarrelLengthZones />
+
+  <Callout title="What this means for short-barrel PCC builds">
+    <p>
+      If you're running a 7–8″ AR-9 or MPX-K, you're in the transition zone. Fast powder still wins
+      over slow powder (less gas mass is always less gas mass), but the expansion benefit is only partial.
+      The blast and sound reduction will be noticeable but not as dramatic as from a 13″+ barrel.
+      You're getting maybe <strong>half the perceptual benefit</strong> compared to a full-length PCC.
+      If minimum recoil is the goal and you're choosing between barrel lengths, the jump from
+      8″ to 10–11″ buys more than the jump from 13″ to 16″.
+    </p>
+  </Callout>
+</Section>
+
+{/* ============================================================================
+    SECTION 4 — RUNNING THE NUMBERS
+    ============================================================================ */}
+<Section number="04" label="Running the Numbers" heading="Quantified: 95gr at 130 PF from a 13″ barrel">
+  <p>
+    Let's compare two loads that both deliver the same Power Factor (130 PF) from the same 13″ PCC —
+    same bullet momentum, same scoring, same steel-knockdown energy. The only difference is the powder.
+  </p>
+
+  <PlainEnglish>
+    <p>
+      The bullet push is identical in both loads — 95 grains at 1,368 fps. What changes is
+      how much gas exits the muzzle and how fast it's moving when it gets there.
+    </p>
+  </PlainEnglish>
+
+  <p>
+    The SAAMI gas factor <em>f</em> is a platform-wide average that doesn't account for burn rate differences.
+    The values below use estimated <em>f</em> values adjusted for muzzle pressure, bounded by the established
+    range of 1.0–2.0.<Sup refs={3} />
+  </p>
+
+  <table class="calc-table">
+    <thead>
+      <tr>
+        <th style="width:180px;">What We're Measuring</th>
+        <th>Fast Powder (~4.0 gr)</th>
+        <th>Slow Powder (~6.0 gr)</th>
+        <th style="width:100px;">Difference</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row-fast">
+        <td>Powder charge<br /><span style="font-size:11px;color:var(--text-dim)">How much powder per round</span></td>
+        <td class="num">4.0 gr</td>
+        <td class="num">6.0 gr</td>
+        <td class="num green">−33%</td>
+      </tr>
+      <tr>
+        <td>Powder finishes burning at<br /><span style="font-size:11px;color:var(--text-dim)">Distance down the barrel</span></td>
+        <td class="num">~3″ <span style="font-size:11px;color:var(--text-dim)">(10″ left to expand)</span></td>
+        <td class="num">~10″ <span style="font-size:11px;color:var(--text-dim)">(only 3″ left)</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Gas velocity factor (<em>f</em>)<br /><span style="font-size:11px;color:var(--text-dim)">How fast gas exits vs bullet</span></td>
+        <td class="num">~1.0 <span style="font-size:11px;color:var(--text-dim)">(fully expanded)</span></td>
+        <td class="num">~1.8 <span style="font-size:11px;color:var(--text-dim)">(still pressurized)</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Estimated gas exit speed<br /><span style="font-size:11px;color:var(--text-dim)">V<sub>gas</sub> = f × 1,368 fps</span></td>
+        <td class="num">~1,368 fps</td>
+        <td class="num">~2,462 fps</td>
+        <td class="num red">+80%</td>
+      </tr>
+      <tr class="row-alt">
+        <td class="bold">Gas push (gas momentum)<br /><span style="font-size:11px;color:var(--text-dim)">charge × gas speed</span></td>
+        <td class="num green bold">5,472</td>
+        <td class="num red bold">14,774</td>
+        <td><Tag color="red">2.7×</Tag></td>
+      </tr>
+      <tr>
+        <td>Bullet push (bullet momentum)<br /><span style="font-size:11px;color:var(--text-dim)">Same in both — that's the point</span></td>
+        <td class="num center" colSpan={2}>129,960 &nbsp;(identical — both 130 PF)</td>
+        <td></td>
+      </tr>
+      <tr class="row-alt">
+        <td class="bold">Gas push as % of total recoil<br /><span style="font-size:11px;color:var(--text-dim)">How much of the kick is from gas</span></td>
+        <td class="num bold">~4.0%</td>
+        <td class="num bold">~10.2%</td>
+        <td></td>
+      </tr>
+      <tr class="row-amber">
+        <td class="bold-bright">Net recoil difference<br /><span style="font-size:11px;color:var(--text-dim);font-weight:400">From momentum alone</span></td>
+        <td class="center" colSpan={2}>
+          <Tag color="amber" large>~7–8% less total momentum with fast powder</Tag>
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <Callout title="Key Insight">
+    <p>
+      The gas momentum term <strong>triples</strong> between fast and slow powder — but since gas is only
+      4–10% of total recoil momentum, the net impulse reduction is <strong>~3–8%</strong> depending on
+      how gas velocity is estimated (see note below). That's real and measurable, but it
+      doesn't fully explain why shooters describe the difference as "dramatic."
+      The rest of the story is perceptual.
+    </p>
+  </Callout>
+
+  <MethodNote>
+    <strong>A note on the f estimates:</strong>
+    SAAMI uses a single f = 1.5 for all handguns regardless of barrel length or burn rate.
+    There is no published SAAMI category for PCCs. The f ≈ 1.0 (fast powder, fully expanded)
+    and f ≈ 1.8 (slow powder, still pressurized) used above are analytical estimates
+    bounded by the British Textbook range of 1–2.<Sup refs={6} />
+    If SAAMI's standard f = 1.5 were applied to both loads, the recoil difference would be
+    ~3% (driven purely by the charge weight difference: 4.0 gr vs 6.0 gr). The true value
+    is likely between 3% and 8%, depending on actual muzzle pressure — which has not been
+    measured for 9mm PCC with variable burn rates in any published study.
+  </MethodNote>
+
+  <h2 class="subhead">Same analysis: 124gr and 147gr at 130 PF</h2>
+  <p>
+    The 95gr example above shows the biggest effect because light bullets need the highest velocity —
+    and higher velocity means more gas speed at the muzzle. Here's how the same fast-vs-slow comparison
+    plays out with heavier bullets. All loads are 130 PF from a 13″ PCC.
+  </p>
+
+  <EquationBox label="124gr at 130 PF — needs 1,049 fps from 13″ PCC" variant="cyan">
+    <table class="calc-table" style="margin:12px 0 0;">
+      <thead>
+        <tr>
+          <th style="width:180px;">What We're Measuring</th>
+          <th>Fast (~3.5 gr)</th>
+          <th>Slow (~6.5 gr)</th>
+          <th style="width:80px;">Diff</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Powder charge</td>
+          <td class="num">3.5 gr</td>
+          <td class="num">6.5 gr</td>
+          <td class="num green">−46%</td>
+        </tr>
+        <tr>
+          <td>Gas velocity factor (<em>f</em>)</td>
+          <td class="num">~1.0</td>
+          <td class="num">~1.8</td>
+          <td></td>
+        </tr>
+        <tr class="row-alt">
+          <td class="bold">Gas push (momentum)</td>
+          <td class="num green bold">3,672</td>
+          <td class="num red bold">12,272</td>
+          <td><Tag color="red">3.3×</Tag></td>
+        </tr>
+        <tr>
+          <td>Bullet push (momentum)</td>
+          <td class="num center" colSpan={2}>130,076 (identical — both 130 PF)</td>
+          <td></td>
+        </tr>
+        <tr class="row-alt">
+          <td>Gas as % of total</td>
+          <td class="num bold">2.7%</td>
+          <td class="num bold">8.6%</td>
+          <td></td>
+        </tr>
+        <tr class="row-cyan">
+          <td class="bold-bright">Net recoil difference</td>
+          <td class="center" colSpan={2}>
+            <Tag color="cyan" large>~6% less total momentum with fast powder</Tag>
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </EquationBox>
+
+  <EquationBox label="147gr at 130 PF — needs 884 fps from 13″ PCC" variant="blue">
+    <table class="calc-table" style="margin:12px 0 0;">
+      <thead>
+        <tr>
+          <th style="width:180px;">What We're Measuring</th>
+          <th>Fast (~3.0 gr)</th>
+          <th>Slow (~5.8 gr)</th>
+          <th style="width:80px;">Diff</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Powder charge</td>
+          <td class="num">3.0 gr</td>
+          <td class="num">5.8 gr</td>
+          <td class="num green">−48%</td>
+        </tr>
+        <tr>
+          <td>Gas velocity factor (<em>f</em>)</td>
+          <td class="num">~1.0</td>
+          <td class="num">~1.8</td>
+          <td></td>
+        </tr>
+        <tr class="row-alt">
+          <td class="bold">Gas push (momentum)</td>
+          <td class="num green bold">2,652</td>
+          <td class="num red bold">9,229</td>
+          <td><Tag color="red">3.5×</Tag></td>
+        </tr>
+        <tr>
+          <td>Bullet push (momentum)</td>
+          <td class="num center" colSpan={2}>129,948 (identical — both 130 PF)</td>
+          <td></td>
+        </tr>
+        <tr class="row-alt">
+          <td>Gas as % of total</td>
+          <td class="num bold">2.0%</td>
+          <td class="num bold">6.6%</td>
+          <td></td>
+        </tr>
+        <tr class="row-blue">
+          <td class="bold-bright">Net recoil difference</td>
+          <td class="center" colSpan={2}>
+            <Tag color="blue" large>~5% less total momentum with fast powder</Tag>
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </EquationBox>
+
+  <h2 class="subhead">The powder is the primary variable, not the bullet weight</h2>
+  <p>
+    Across all three weights, the gas momentum roughly triples between fast and slow powder.
+    But notice the pattern: at equal PF with the same fast powder, heavier bullets produce
+    <em>less</em> gas momentum — because lower muzzle velocity means lower V<sub>gas</sub> and a
+    smaller charge. The bullet weight doesn't drive the recoil difference. The powder does.
+    Light bullets enter the picture because they're the weight class that lets you run
+    ultra-fast powders at charge weights large enough for consistent metering and ignition,
+    while maintaining the velocity needed for flat trajectories at PCC distances.
+  </p>
+
+  <RecoilCompositionChart
+    rows={[
+      {
+        weight: '95gr',
+        velocity: '1,368 fps',
+        delta: '7–8%',
+        color: 'accent',
+        bulletMomentum: '129,960',
+        fast: { bulletWidthPct: 90, gasWidthPct: 10, gasLabel: '4%', total: '135,472' },
+        slow: { bulletWidthPct: 83, gasWidthPct: 17, gasLabel: '10%', total: '144,734' },
+        insight: {
+          label: '7–8%',
+          body: 'The gas push with slow powder is <strong>2.7× larger</strong> than with fast powder (14,774 vs 5,472). That gas difference adds roughly the equivalent of going from a 130 PF load to 140 PF — a full division\'s worth of recoil penalty, purely from powder choice. But note: 95gr requires the <em>largest</em> charge of any weight at this PF, producing the most gas. It benefits most from fast powder, but also has the most gas to begin with.',
+        },
+      },
+      {
+        weight: '124gr',
+        velocity: '1,049 fps',
+        delta: '6%',
+        color: 'cyan',
+        bulletMomentum: '130,076',
+        fast: { bulletWidthPct: 93, gasWidthPct: 7, gasLabel: '3%', total: '133,672' },
+        slow: { bulletWidthPct: 86, gasWidthPct: 14, gasLabel: '9%', total: '142,348' },
+        insight: {
+          label: '6%',
+          body: 'The gas push triples (12,272 vs 3,672) but the bullet is heavier, so gas is a smaller slice of total recoil. With the same fast powder, 124gr actually produces <em>less</em> total gas momentum than 95gr at equal PF — because it needs less velocity and therefore a smaller charge. At 1,049 fps, external ballistics remain practical for typical PCC engagement distances.',
+        },
+      },
+      {
+        weight: '147gr',
+        velocity: '884 fps',
+        delta: '5%',
+        color: 'blue',
+        bulletMomentum: '129,948',
+        fast: { bulletWidthPct: 95, gasWidthPct: 5, gasLabel: '2%', total: '132,652' },
+        slow: { bulletWidthPct: 89, gasWidthPct: 11, gasLabel: '7%', total: '139,177' },
+        insight: {
+          label: '5%',
+          body: 'Gas still triples (9,229 vs 2,652) but at this low velocity, gas momentum is the smallest fraction of total recoil. With the same fast powder, 147gr produces the <em>least</em> total gas momentum of any weight class. The tradeoff is external ballistics: 884 fps means more bullet drop, more lead required on moving targets, and longer flight time to distant steel — a real competitive penalty on stages with longer engagements.',
+        },
+      },
+    ]}
+  >
+    <PatternCards slot="footer" />
+  </RecoilCompositionChart>
+
+  <PlainEnglish>
+    <p>
+      The rule is not "light bullets win." The rule is: <strong>choose the fastest powder
+      that reliably functions in your gun, then choose the bullet weight that balances
+      gas optimization against ballistic performance at your match distances.</strong>
+      Every load is trying to get gas pressure at the muzzle as close to atmospheric
+      as possible. The powder determines how close you get. The bullet weight determines
+      whether you have enough velocity to shoot flat at distance.
+    </p>
+  </PlainEnglish>
+</Section>
+
+{/* ============================================================================
+    SECTION 5 — PERCEPTUAL FACTORS
+    ============================================================================ */}
+<Section number="05" label="The Other 80%: Why It Feels Bigger Than the Math Says" heading="Muzzle blast, sound, and impulse shape">
+  <p>
+    The momentum equation says the recoil difference is ~3–8%. But shooters say it feels much bigger than that.
+    They're not wrong — "felt recoil" isn't just about momentum. Three other factors make a huge difference
+    in how a shot <em>feels</em>, and all three get dramatically worse when hot, high-pressure gas exits the muzzle.
+  </p>
+
+  <FactorGrid>
+    <FactorCard accent="red" title="Muzzle Blast" verdict="Probably the single biggest factor in perceived difference">
+      High-pressure gas hitting open air creates a shockwave — a sharp
+      "punch" you feel on your face, hands, and chest. This isn't recoil
+      in the physics sense, but your body registers it as part of the kick.
+      Fast powder = low gas pressure at the muzzle = almost no blast.
+    </FactorCard>
+    <FactorCard accent="amber" title="Sound Level" verdict="Your brain perceives louder as harder-kicking">
+      Slow powder exiting a PCC barrel is LOUD — 5–10 dB louder than
+      fast powder, which sounds roughly twice as loud to human ears.
+      Our brains don't cleanly separate "loud" from "hard-kicking" —
+      a louder shot feels like it kicks harder, even if the momentum
+      is nearly the same.
+    </FactorCard>
+    <FactorCard accent="blue" title="Kick Shape" verdict="Same total energy, spread over longer time = softer feel">
+      Gas exits after the bullet, delivering a secondary push. With slow powder,
+      that push is sharp and sudden — like a slap. With fast powder, the gas
+      trickles out gently — like a nudge. Same total push, but the peak force
+      is lower, so it feels softer.
+    </FactorCard>
+  </FactorGrid>
+
+  <Callout title="The Complete Picture">
+    <p>
+      Fast powder in a PCC produces <strong>~3–8% less recoil momentum</strong> plus a
+      <strong> major reduction</strong> in muzzle blast, sound pressure, and secondary impulse sharpness.
+      The combination produces a subjective experience that feels like a 20–30% improvement.
+      The momentum reduction is real but modest; the perceptual factors are where most of the
+      "softness" lives.
+    </p>
+  </Callout>
+</Section>
+
+{/* ============================================================================
+    SECTION 6 — THE OPTIMIZATION HIERARCHY
+    ============================================================================ */}
+<Section number="06" label="The Optimization Hierarchy" heading="Minimize muzzle gas pressure. Everything else follows.">
+  <p>
+    The single principle behind PCC recoil optimization: get the gas as close to atmospheric
+    pressure as possible by the time the bullet exits. The three variables that control this
+    are, in order of importance:
+  </p>
+
+  <table class="calc-table" style="margin-top:24px;">
+    <thead>
+      <tr>
+        <th>Priority</th>
+        <th>Variable</th>
+        <th>Why It Matters</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-family:var(--font-mono);font-weight:700;color:var(--accent);font-size:18px;">1</td>
+        <td style="font-weight:600;color:var(--text-bright)">Powder burn rate</td>
+        <td>The faster the powder finishes burning, the more barrel is available for gas expansion toward atmospheric. This is the dominant variable — it determines how far above atmospheric the gas sits when it exits.</td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--font-mono);font-weight:700;color:var(--accent);font-size:18px;">2</td>
+        <td style="font-weight:600;color:var(--text-bright)">Barrel length</td>
+        <td>More barrel after burn completion = more expansion volume = lower muzzle pressure. But diminishing returns: the drop from 8″ to 13″ matters more than 13″ to 18″. There's a barrel length for each powder where you've captured most of the available expansion.</td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--font-mono);font-weight:700;color:var(--accent);font-size:18px;">3</td>
+        <td style="font-weight:600;color:var(--text-bright)">Bullet weight</td>
+        <td>Secondary to powder choice. At equal PF and equal powder, heavier bullets produce <em>less</em> gas momentum (lower velocity = lower V<sub>gas</sub> and smaller charge). But heavier bullets at lower velocity introduce external ballistic penalties — more drop, more lead on movers, longer time-to-target — which matter in PCC stages with 50+ yard engagements. Modern roller-delayed and tunable-gas PCCs (JP5, Mean Arms, etc.) mitigate the mechanical cycling concerns that older blowback designs impose on charge weight. Choose the weight that balances gas optimization against the ballistic demands of your match stages.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:24px;">
+    In a pistol (4–5″ barrel), this hierarchy barely applies. The barrel is too short for meaningful gas
+    expansion regardless of powder choice — muzzle pressure is high with any load. Pistol recoil is
+    dominated by slide dynamics, where heavy bullets produce a softer impulse. PCC recoil is dominated
+    by gas state at the muzzle, where powder selection and barrel length determine how close you get
+    to atmospheric.
+  </p>
+
+  <h2 class="subhead">Reference: Optimized PCC Load vs Pistol Load Through a PCC</h2>
+  <p>
+    Two scenarios from the same 13″ PCC, side by side. The top section shows loads built for
+    the PCC — fastest practical powder, gas fully expanded at the muzzle (f ≈ 1.0), targeted
+    to 130 PF from the carbine. The bottom section shows what happens when you take a standard
+    pistol load (130 PF from a 4–5″ barrel, medium-burn powder) and fire it through the same
+    PCC — the longer barrel adds velocity, pushing PF above target, and the medium powder
+    hasn't fully expanded (f ≈ 1.4), so gas exits hotter and faster.
+  </p>
+  <p>
+    Total recoil momentum = bullet momentum + gas momentum. The relative column compares
+    everything to the lowest-recoil configuration in the table.
+  </p>
+
+  <div style="overflow-x:auto;margin:24px 0;">
+    <table class="calc-table">
+      <thead>
+        <tr>
+          <th>Bullet</th>
+          <th>Velocity<br /><span style="font-weight:400;letter-spacing:0;">from 13″ PCC</span></th>
+          <th>Bullet<br /><span style="font-weight:400;letter-spacing:0;">momentum</span></th>
+          <th>Gas<br /><span style="font-weight:400;letter-spacing:0;">momentum</span></th>
+          <th>Total Recoil<br /><span style="font-weight:400;letter-spacing:0;">momentum</span></th>
+          <th>Relative<br /><span style="font-weight:400;letter-spacing:0;">recoil</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colSpan={6} style="padding:10px 16px;background:rgba(34,197,94,0.06);border-bottom:1px solid var(--border);">
+            <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--green);">
+              Optimized for PCC
+            </span>
+            <span style="font-size:11px;color:var(--text-dim);margin-left:8px;">
+              — fast powder, 130 PF from 13″, gas expanded at muzzle
+            </span>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="font-weight:600;color:var(--text-bright);">90 gr</td>
+          <td class="num">1,444 fps</td>
+          <td class="num">130,000</td>
+          <td class="num red">6,209</td>
+          <td class="num bold-bright">136,209</td>
+          <td><Tag color="red">+2.7%</Tag></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:var(--text-bright);">95 gr</td>
+          <td class="num">1,368 fps</td>
+          <td class="num">130,000</td>
+          <td class="num red">5,472</td>
+          <td class="num bold-bright">135,472</td>
+          <td><Tag color="red">+2.1%</Tag></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:var(--text-bright);">100 gr</td>
+          <td class="num">1,300 fps</td>
+          <td class="num">130,000</td>
+          <td class="num accent">4,940</td>
+          <td class="num bold-bright">134,940</td>
+          <td><Tag color="amber">+1.7%</Tag></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:var(--text-bright);">115 gr</td>
+          <td class="num">1,130 fps</td>
+          <td class="num">130,000</td>
+          <td class="num accent">4,068</td>
+          <td class="num bold-bright">134,068</td>
+          <td><Tag color="amber">+1.1%</Tag></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:var(--text-bright);">124 gr</td>
+          <td class="num">1,049 fps</td>
+          <td class="num">130,000</td>
+          <td class="num green">3,672</td>
+          <td class="num bold-bright">133,672</td>
+          <td><Tag color="green">+0.8%</Tag></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:var(--text-bright);">135 gr</td>
+          <td class="num">963 fps</td>
+          <td class="num">130,000</td>
+          <td class="num green">3,082</td>
+          <td class="num bold-bright">133,082</td>
+          <td><Tag color="green">+0.3%</Tag></td>
+        </tr>
+        <tr style="background:rgba(34,197,94,0.04);">
+          <td style="font-weight:600;color:var(--text-bright);">147 gr</td>
+          <td class="num">884 fps</td>
+          <td class="num">130,000</td>
+          <td class="num green">2,652</td>
+          <td class="num green" style="font-weight:700;">132,652</td>
+          <td><Tag color="green">baseline</Tag></td>
+        </tr>
+
+        <tr>
+          <td colSpan={6} style="padding:10px 16px;background:rgba(239,68,68,0.06);border-top:2px solid var(--border);border-bottom:1px solid var(--border);">
+            <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--red);">
+              Pistol load through PCC
+            </span>
+            <span style="font-size:11px;color:var(--text-dim);margin-left:8px;">
+              — medium powder, 130 PF from pistol, gas still energetic at muzzle
+            </span>
+          </td>
+        </tr>
+
+        <tr style="background:rgba(239,68,68,0.03);">
+          <td style="font-weight:600;color:var(--text-bright);">115 gr</td>
+          <td class="num">1,290 fps<br /><span style="font-size:10px;color:var(--text-dim);">148 PF</span></td>
+          <td class="num">148,350</td>
+          <td class="num red">8,127</td>
+          <td class="num red" style="font-weight:700;">156,477</td>
+          <td><Tag color="red">+18.0%</Tag></td>
+        </tr>
+        <tr style="background:rgba(239,68,68,0.03);">
+          <td style="font-weight:600;color:var(--text-bright);">124 gr</td>
+          <td class="num">1,220 fps<br /><span style="font-size:10px;color:var(--text-dim);">151 PF</span></td>
+          <td class="num">151,280</td>
+          <td class="num red">7,344</td>
+          <td class="num red" style="font-weight:700;">158,624</td>
+          <td><Tag color="red">+19.6%</Tag></td>
+        </tr>
+        <tr style="background:rgba(239,68,68,0.03);">
+          <td style="font-weight:600;color:var(--text-bright);">147 gr</td>
+          <td class="num">1,030 fps<br /><span style="font-size:10px;color:var(--text-dim);">151 PF</span></td>
+          <td class="num">151,410</td>
+          <td class="num red">5,871</td>
+          <td class="num red" style="font-weight:700;">157,281</td>
+          <td><Tag color="red">+18.6%</Tag></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <PlainEnglish>
+    <p>
+      Within the optimized section, the spread across all bullet weights is ~2.7%. Across the
+      two sections, the gap is ~18–20%. Powder selection for the barrel matters roughly
+      7× more than bullet weight. The gas momentum column tells you why: optimized loads keep
+      gas under 6,200; pistol loads let it run up to 8,100 — and that's just the momentum.
+      The blast, sound, and impulse-shape differences between near-atmospheric gas and
+      still-pressurized gas are on top of that.
+    </p>
+  </PlainEnglish>
+
+  <MethodNote>
+    <strong>For other Power Factors:</strong> multiply velocity by (target PF ÷ 130).
+    Example: 125 PF with 95 gr → 1,368 × (125 ÷ 130) = 1,316 fps.
+    Gas momentum scales proportionally — the relative differences between weights remain roughly the same.
+  </MethodNote>
+</Section>
+
+{/* ============================================================================
+    SOURCES
+    ============================================================================ */}
+<Sources>
+  <SourceItem num={1}>
+    SAAMI, "Free Recoil Energy" — <em>saami.org/faqs</em>. Provides the standard free recoil equation and gas velocity estimation method (V<sub>gas</sub> = f × V<sub>muzzle</sub>).
+  </SourceItem>
+  <SourceItem num={2}>
+    Hatcher, Julian S. <em>Hatcher's Notebook</em> (1947). Chapter on recoil — derives the momentum equation from Newton's third law. Primary reference for the gas momentum term in small arms.
+  </SourceItem>
+  <SourceItem num={3}>
+    British Textbook of Small Arms (1929). Proposed the proportional gas velocity factor <em>f</em>, noting it "lies between 1 and 2, with an average value of 1½." First known published treatment of variable gas velocity in recoil calculations.
+  </SourceItem>
+  <SourceItem num={4}>
+    FIRGELLI Engineering Calculators, "Recoil Energy Interactive Calculator" — documents gas velocity ranges of 1.2–1.75× muzzle velocity depending on barrel length, burn rate, and chamber pressure profile. Confirms short barrels exhibit higher gas velocity ratios.
+  </SourceItem>
+  <SourceItem num={5}>
+    NRA Fact Book (1988). Estimates average propellant gas velocity at ~4,000 fps for smokeless powder in small arms. Provides the alternative fixed-velocity method for recoil calculation.
+  </SourceItem>
+  <SourceItem num={6}>
+    The gas velocity factors used in this reference (f ≈ 1.0 for fast powder in a 13″ PCC barrel, f ≈ 1.4 for medium powder, f ≈ 1.8 for slow powder) are analytical estimates, not measurements. They are bounded by the British Textbook range [1, 2] and informed by FIRGELLI's documented range of 1.2–1.75.<Sup refs={[3, 4]} /> The standard SAAMI method uses f = 1.5 for all handguns regardless of burn rate or barrel length; SAAMI does not publish a PCC-specific factor. If f = 1.5 is applied uniformly, the momentum difference between fast and slow powder at equal PF reduces to ~3% (driven by charge weight alone). The variable-f approach is more physically defensible for PCC barrel lengths but has not been validated by controlled measurement. Charge weight estimates throughout are interpolated from published load data and should be treated as approximations. Perceptual factors (blast, sound, impulse shape) are qualitative observations consistent with muzzle pressure physics but not quantified by controlled study for 9mm PCC specifically.
+  </SourceItem>
+</Sources>

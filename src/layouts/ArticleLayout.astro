@@ -1,0 +1,139 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Short label rendered above h1 (kicker). */
+  headerLabel: string;
+  /** Optional italicized accent suffix shown after the title (e.g., "Get the Gas to Atmospheric"). */
+  headlineSuffix?: string;
+  /** Subtitle / dek under the title. */
+  headerSubtitle: string;
+  /** Slug used for canonical URL. */
+  slug: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  author?: string;
+  keywords?: string;
+  /** schema.org section/genre. */
+  section?: string;
+  /** Tags surfaced in metadata. */
+  tags?: string[];
+  /** Optional schema.org "about" entries. */
+  about?: string[];
+}
+
+const {
+  title,
+  description,
+  headerLabel,
+  headlineSuffix,
+  headerSubtitle,
+  slug,
+  pubDate,
+  updatedDate,
+  author = 'Anthony Zabonik',
+  keywords,
+  section = 'Writing',
+  tags = [],
+  about = [],
+} = Astro.props;
+
+const canonicalPath = `/articles/${slug}/`;
+const ogTitle = headlineSuffix ? `${title}: ${headlineSuffix}` : title;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: ogTitle,
+  description,
+  author: { '@type': 'Person', name: author },
+  datePublished: pubDate.toISOString(),
+  ...(updatedDate ? { dateModified: updatedDate.toISOString() } : {}),
+  ...(about.length ? { about: about.map((name) => ({ '@type': 'Thing', name })) } : {}),
+  proficiencyLevel: 'Expert',
+  inLanguage: 'en',
+  genre: section,
+  ...(keywords ? { keywords } : {}),
+};
+---
+<BaseLayout
+  title={ogTitle}
+  description={description}
+  canonicalPath={canonicalPath}
+  ogType="article"
+  author={author}
+  keywords={keywords}
+  structuredDataJson={JSON.stringify(structuredData)}
+>
+  <nav class="site-nav">
+    <a href="/" class="site-nav-home">zabs.dev</a>
+    <span class="site-nav-sep">/</span>
+    <span class="site-nav-section">writing</span>
+  </nav>
+
+  <article itemscope itemtype="https://schema.org/TechArticle">
+    <header class="article-header">
+      <div class="article-header-label">{headerLabel}</div>
+      <h1>
+        {title}{headlineSuffix && <>{': '}<em>{headlineSuffix}</em></>}
+      </h1>
+      <div class="article-header-sub">{headerSubtitle}</div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+  </article>
+
+  <footer class="site-footer">
+    <a href="/">← back to zabs.dev</a>
+    <span class="site-footer-meta">© {pubDate.getFullYear()} {author}</span>
+  </footer>
+</BaseLayout>
+
+<style>
+  .site-nav {
+    padding: 18px 48px 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .site-nav-home {
+    color: var(--text-dim);
+    border-bottom: none;
+  }
+  .site-nav-home:hover { color: var(--accent); border-bottom: none; }
+  .site-nav-sep { margin: 0 8px; opacity: 0.5; }
+  .site-nav-section { color: var(--accent); }
+
+  .site-footer {
+    padding: 28px 48px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+  }
+  .site-footer a {
+    color: var(--text-dim);
+    border-bottom: none;
+  }
+  .site-footer a:hover { color: var(--accent); }
+  .site-footer-meta { font-size: 10px; opacity: 0.6; }
+
+  @media (max-width: 600px) {
+    .site-nav { padding: 14px 20px 0; }
+    .site-footer {
+      padding: 24px 20px 32px;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+</style>

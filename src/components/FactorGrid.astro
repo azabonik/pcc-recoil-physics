@@ -1,0 +1,15 @@
+---
+// Grid container for FactorCard components. 3-up on desktop, stacks on mobile via global CSS.
+---
+<div class="factors-grid">
+  <slot />
+</div>
+
+<style>
+  .factors-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+// Variable legend for the free-recoil equation. Hard-coded structure because
+// the groupings (result / bullet term / gas term / firearm) are specific to this article.
+import Sup from './Sup.astro';
+---
+<div class="legend">
+  <div class="legend-title">Variable Legend</div>
+
+  <div class="legend-group">Result</div>
+  <div class="legend-item span">
+    <div class="legend-var">V<sub>gun</sub></div>
+    <div class="legend-def">
+      <strong>Recoil velocity</strong> — how fast the gun moves backward. Higher = more kick.
+    </div>
+  </div>
+
+  <div class="legend-group">
+    <span class="group-label-accent">Bullet Momentum Term</span>
+    <span class="group-note">— fixed by your Power Factor target</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-var accent">m<sub>bullet</sub></div>
+    <div class="legend-def">
+      <strong>Bullet weight</strong> — mass of the projectile in grains.
+    </div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-var accent">V<sub>muzzle</sub></div>
+    <div class="legend-def">
+      <strong>Muzzle velocity</strong> — speed of the bullet leaving the barrel (fps).
+    </div>
+  </div>
+
+  <div class="legend-group">
+    <span class="group-label-blue">Gas Momentum Term</span>
+    <span class="group-note">— the variable you can control with powder selection</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-var blue">m<sub>charge</sub></div>
+    <div class="legend-def">
+      <strong>Powder charge weight</strong> — mass of the powder burned (grains). Fast powders use less.
+    </div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-var blue">V<sub>gas</sub></div>
+    <div class="legend-def">
+      <strong>Gas exit velocity</strong> — how fast burned gases leave the muzzle (fps). Drops when gas has more barrel length to expand through.
+    </div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-var blue">f</div>
+    <div class="legend-def">
+      <strong>Gas velocity factor</strong> — multiplier estimating gas speed relative to bullet speed. Varies with barrel length and burn rate (range: 1.0–2.0).<Sup refs={3} />
+    </div>
+  </div>
+
+  <div class="legend-group">Firearm</div>
+  <div class="legend-item span">
+    <div class="legend-var">M<sub>gun</sub></div>
+    <div class="legend-def">
+      <strong>Gun weight</strong> — total mass of the firearm. Heavier gun = less felt recoil for the same load.
+    </div>
+  </div>
+</div>

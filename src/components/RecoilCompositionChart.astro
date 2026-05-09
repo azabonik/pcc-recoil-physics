@@ -1,0 +1,268 @@
+---
+interface BarRow {
+  /** Width of bullet-momentum block as a percentage of the bar. */
+  bulletWidthPct: number;
+  /** Width of gas-momentum block (the colored tail) as a percentage. */
+  gasWidthPct: number;
+  /** Label inside the gas tail (e.g., "4%"). */
+  gasLabel: string;
+  /** Right-side total recoil momentum number (formatted string). */
+  total: string;
+}
+
+interface WeightBlock {
+  weight: string;
+  velocity: string;
+  delta: string;
+  color: 'accent' | 'cyan' | 'blue';
+  /** Identical bullet-momentum number (PF) shown inside the dim block. */
+  bulletMomentum: string;
+  fast: BarRow;
+  slow: BarRow;
+  insight: { label: string; body: string };
+}
+
+interface Props {
+  rows: WeightBlock[];
+}
+
+const { rows } = Astro.props;
+
+const colorVar = (c: WeightBlock['color']) =>
+  c === 'accent' ? 'var(--accent)' : c === 'cyan' ? 'var(--cyan)' : 'var(--blue)';
+
+const insightBg = (c: WeightBlock['color']) =>
+  c === 'accent'
+    ? 'rgba(245,158,11,0.06)'
+    : c === 'cyan'
+    ? 'rgba(6,182,212,0.06)'
+    : 'rgba(59,130,246,0.06)';
+---
+<div class="recoil-card">
+  <div class="recoil-title">
+    Total Recoil Composition — Fast vs Slow Powder at 130 PF from 13″ PCC
+  </div>
+  <div class="recoil-sub">
+    Each bar shows total recoil momentum. The dark portion is bullet push (identical in both — that's
+    your Power Factor). The colored tail is gas push — the part that changes with powder selection.
+  </div>
+
+  <div class="recoil-legend">
+    <div class="recoil-legend-item">
+      <div class="recoil-legend-swatch dim"></div>
+      <span>Bullet momentum (fixed by PF)</span>
+    </div>
+    <div class="recoil-legend-item">
+      <div class="recoil-legend-swatch green"></div>
+      <span>Gas momentum — fast powder</span>
+    </div>
+    <div class="recoil-legend-item">
+      <div class="recoil-legend-swatch red"></div>
+      <span>Gas momentum — slow powder</span>
+    </div>
+  </div>
+
+  {rows.map((row, idx) => (
+    <div class:list={['recoil-row', idx === rows.length - 1 && 'last']}>
+      <div class="recoil-row-head">
+        <div class="recoil-row-label" style={`color:${colorVar(row.color)};`}>
+          {row.weight} · {row.velocity}
+        </div>
+        <div class="recoil-row-delta" style={`color:${colorVar(row.color)};`}>
+          Δ {row.delta}
+        </div>
+      </div>
+
+      <div class="recoil-bar">
+        <div class="recoil-bar-label fast">FAST</div>
+        <div class="recoil-bar-track">
+          <div class="recoil-bar-bullet" style={`width:${row.fast.bulletWidthPct}%;`}>
+            bullet: {row.bulletMomentum}
+          </div>
+          <div
+            class="recoil-bar-gas green"
+            style={`width:${row.fast.gasWidthPct}%; min-width:50px;`}
+          >
+            {row.fast.gasLabel}
+          </div>
+        </div>
+        <div class="recoil-bar-total">{row.fast.total}</div>
+      </div>
+
+      <div class="recoil-bar">
+        <div class="recoil-bar-label slow">SLOW</div>
+        <div class="recoil-bar-track">
+          <div class="recoil-bar-bullet" style={`width:${row.slow.bulletWidthPct}%;`}>
+            bullet: {row.bulletMomentum}
+          </div>
+          <div
+            class="recoil-bar-gas red"
+            style={`width:${row.slow.gasWidthPct}%; min-width:50px;`}
+          >
+            {row.slow.gasLabel}
+          </div>
+        </div>
+        <div class="recoil-bar-total">{row.slow.total}</div>
+      </div>
+
+      <div
+        class="recoil-insight"
+        style={`background:${insightBg(row.color)}; border-left-color:${colorVar(row.color)};`}
+      >
+        <strong style={`color:${colorVar(row.color)};`}>
+          What {row.insight.label} means:
+        </strong>
+        <span set:html={row.insight.body} />
+      </div>
+    </div>
+  ))}
+
+  <slot name="footer" />
+</div>
+
+<style>
+  .recoil-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 28px 32px;
+    margin: 28px 0;
+  }
+  .recoil-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .recoil-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .recoil-legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+  .recoil-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-dim);
+  }
+  .recoil-legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+  }
+  .recoil-legend-swatch.dim { background: var(--text-dim); opacity: 0.4; }
+  .recoil-legend-swatch.green { background: var(--green); }
+  .recoil-legend-swatch.red { background: var(--red); }
+
+  .recoil-row {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .recoil-row.last {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .recoil-row-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .recoil-row-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .recoil-row-delta {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .recoil-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .recoil-bar:nth-of-type(2) { margin-bottom: 10px; }
+  .recoil-bar-label {
+    width: 55px;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .recoil-bar-label.fast { color: var(--green); }
+  .recoil-bar-label.slow { color: var(--red); }
+
+  .recoil-bar-track {
+    flex: 1;
+    height: 32px;
+    display: flex;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .recoil-bar-bullet {
+    background: rgba(200, 205, 216, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .recoil-bar-gas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    color: #000;
+  }
+  .recoil-bar-gas.green { background: var(--green); }
+  .recoil-bar-gas.red { background: var(--red); }
+
+  .recoil-bar-total {
+    width: 90px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .recoil-insight {
+    margin-top: 4px;
+    margin-left: 65px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    border-left: 2px solid var(--accent);
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .recoil-insight strong { font-weight: 700; }
+
+  @media (max-width: 600px) {
+    .recoil-card { padding: 18px 16px; }
+    .recoil-bar-label { width: 40px; font-size: 10px; }
+    .recoil-bar-total { width: 60px; font-size: 10px; }
+    .recoil-insight { margin-left: 0; }
+  }
+</style>

@@ -1,0 +1,68 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path that should be the canonical URL relative to the site root, with leading slash. */
+  canonicalPath?: string;
+  /** Optional schema.org / OG type override. Default: "website". */
+  ogType?: 'website' | 'article';
+  /** Author for og/article meta. */
+  author?: string;
+  /** Optional comma-separated keywords. */
+  keywords?: string;
+  /** If provided, rendered inside <head> as raw HTML (use for JSON-LD). */
+  structuredDataJson?: string;
+}
+
+const {
+  title,
+  description,
+  canonicalPath = '/',
+  ogType = 'website',
+  author = 'Anthony Zabonik',
+  keywords,
+  structuredDataJson,
+} = Astro.props;
+
+const canonical = new URL(canonicalPath, Astro.site).href;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content={author} />
+  {keywords && <meta name="keywords" content={keywords} />}
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={canonical} />
+
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:url" content={canonical} />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap"
+    rel="stylesheet"
+  />
+
+  {structuredDataJson && (
+    <script type="application/ld+json" set:html={structuredDataJson} />
+  )}
+</head>
+<body>
+  <slot />
+</body>
+</html>

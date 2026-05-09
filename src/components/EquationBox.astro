@@ -1,0 +1,13 @@
+---
+interface Props {
+  label: string;
+  /** Border color variant. */
+  variant?: 'accent' | 'cyan' | 'blue';
+}
+const { label, variant = 'accent' } = Astro.props;
+const variantClass = variant === 'accent' ? '' : variant;
+---
+<div class:list={['eq-box', variantClass]}>
+  <div class="eq-label">{label}</div>
+  <slot />
+</div>

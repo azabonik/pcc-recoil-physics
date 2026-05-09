@@ -1,0 +1,64 @@
+---
+interface Props {
+  /** Top-edge accent color. */
+  accent: 'red' | 'amber' | 'blue';
+  title: string;
+  /** Short verdict line shown at the bottom, colored to match. */
+  verdict: string;
+}
+const { accent, title, verdict } = Astro.props;
+
+const verdictColor = {
+  red: 'var(--red)',
+  amber: 'var(--accent)',
+  blue: 'var(--blue)',
+}[accent];
+---
+<article class:list={['factor-card', accent]}>
+  <h4>{title}</h4>
+  <p><slot /></p>
+  <div class="factor-verdict" style={`color:${verdictColor};`}>{verdict}</div>
+</article>
+
+<style>
+  .factor-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    position: relative;
+  }
+  .factor-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 6px 6px 0 0;
+  }
+  .factor-card.red::before { background: var(--red); }
+  .factor-card.amber::before { background: var(--accent); }
+  .factor-card.blue::before { background: var(--blue); }
+  .factor-card h4 {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-bright);
+    margin-bottom: 10px;
+  }
+  .factor-card p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    margin: 0;
+    max-width: none;
+  }
+  .factor-verdict {
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+</style>

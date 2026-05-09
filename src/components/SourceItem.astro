@@ -1,0 +1,9 @@
+---
+interface Props {
+  num: number;
+}
+const { num } = Astro.props;
+---
+<div class="source-item">
+  <span class="ref-num">[{num}]</span> <slot />
+</div>

@@ -1,0 +1,11 @@
+---
+interface Props {
+  color?: 'green' | 'red' | 'amber' | 'cyan' | 'blue';
+  /** Slightly larger pill (used inline in tables to draw the eye). */
+  large?: boolean;
+}
+const { color = 'amber', large = false } = Astro.props;
+---
+<span class:list={['tag', `tag-${color}`, large && 'tag-lg']}>
+  <slot />
+</span>

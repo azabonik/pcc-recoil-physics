@@ -1,0 +1,183 @@
+---
+// Barrel-length expansion-curve visual: gradient bar with inch markers,
+// followed by 4 zone descriptions and a closing methodology note.
+// Hand-tuned for fast powder + 95gr at 130 PF.
+---
+<div class="zones-card">
+  <div class="zones-title">Barrel Length Zones — Fast Powder with 95gr Bullet</div>
+
+  <div class="zones-bar">
+    <div class="zones-bar-fill"></div>
+  </div>
+  <div class="zones-marks">
+    <div class="zones-mark zones-mark-3">3″</div>
+    <div class="zones-mark zones-mark-5">5″</div>
+    <div class="zones-mark zones-mark-7">7″</div>
+    <div class="zones-mark zones-mark-10">10″</div>
+    <div class="zones-mark zones-mark-13">13″</div>
+    <div class="zones-mark zones-mark-16">16″+</div>
+  </div>
+
+  <div class="zones-grid">
+    <div class="zone red">
+      <div class="zone-label">3–5″ · PISTOL TERRITORY</div>
+      <div class="zone-body">
+        Fast powder finishes burning right at the muzzle — there's <strong>no expansion length at all</strong>.
+        Gas exits at high pressure regardless of powder choice. The fast-vs-slow gas difference is minimal.
+        Recoil is dominated by bullet momentum and slide timing. This is where 147gr + fast powder wins
+        (the pistol strategy).
+      </div>
+    </div>
+
+    <div class="zone amber">
+      <div class="zone-label">5–10″ · TRANSITION ZONE</div>
+      <div class="zone-body">
+        Fast powder is done burning and gas is <strong>starting to expand</strong> — but there's only
+        2–5″ of expansion volume. You're getting some benefit: lower muzzle pressure, less blast.
+        Slow powder is likely still burning. The advantage is real but <strong>partial</strong> —
+        you're capturing maybe 40–60% of the full expansion effect. Common barrel lengths:
+        SBR AR-9 (7.5″), Sig MPX-K (8″).
+      </div>
+    </div>
+
+    <div class="zone green">
+      <div class="zone-label">10–16″ · THE SWEET SPOT</div>
+      <div class="zone-body">
+        Fast powder has 6–12″ of expansion length — gas pressure at the muzzle is <strong>near its minimum</strong>.
+        This is where the full blast/sound/recoil benefit kicks in. Going from 10″ to 13″ is a meaningful
+        improvement. Going from 13″ to 16″ helps, but less — you're on the flat part of the curve.
+        Most of the gas expansion has already happened by 12–13″. Common barrel lengths:
+        CMMG Banshee (10.5″), standard PCC (16″), your barrel (13″).
+      </div>
+    </div>
+
+    <div class="zone dim">
+      <div class="zone-label">16″+ · DIMINISHING RETURNS</div>
+      <div class="zone-body">
+        Gas is already at near-ambient pressure by 13–14″ with fast powder. Extra barrel length
+        adds <strong>almost no additional expansion benefit</strong>. Worse: with light bullets (95gr),
+        bore friction may actually start <strong>slowing the bullet down</strong> past ~14–16″ because
+        friction exceeds the tiny residual gas pressure still pushing it forward. You can lose
+        velocity — and therefore PF — with a barrel that's too long for the load.
+      </div>
+    </div>
+  </div>
+
+  <div class="zones-curve-note">
+    <div class="zones-curve-title">Why the curve flattens</div>
+    <div class="zones-curve-body">
+      Gas expansion follows roughly <strong>P ∝ V<sup>−γ</sup></strong> (adiabatic expansion, where
+      γ ≈ 1.2–1.25 for combustion gases). In plain terms: doubling the volume doesn't halve the
+      pressure — it drops it by about 55–60%. The first doubling (4″ → 8″) matters a lot. The
+      second (8″ → 16″) helps but less. The curve flattens because you're approaching an asymptote:
+      atmospheric pressure. You can get close, but every inch of barrel produces a smaller absolute
+      pressure drop than the one before it.
+    </div>
+  </div>
+</div>
+
+<style>
+  .zones-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 28px 32px;
+    margin: 28px 0;
+  }
+  .zones-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  .zones-bar {
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .zones-bar-fill {
+    height: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background:
+      linear-gradient(90deg,
+        var(--red) 0%,
+        var(--red) 15%,
+        var(--accent) 23%,
+        var(--accent) 38%,
+        var(--green) 62%,
+        var(--green) 77%,
+        var(--text-dim) 100%
+      );
+  }
+  .zones-marks {
+    display: flex;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  .zones-mark { text-align: center; }
+  .zones-mark-3  { width: 0%;   text-align: left; }
+  .zones-mark-5  { width: 15%; }
+  .zones-mark-7  { width: 23%; }
+  .zones-mark-10 { width: 24%; }
+  .zones-mark-13 { width: 15%; }
+  .zones-mark-16 { flex: 1; text-align: right; }
+
+  .zones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .zone {
+    padding: 16px;
+    background: var(--bg-card-alt);
+    border-radius: 6px;
+    border-left: 3px solid var(--border);
+  }
+  .zone.red { border-left-color: var(--red); }
+  .zone.amber { border-left-color: var(--accent); }
+  .zone.green { border-left-color: var(--green); }
+  .zone.dim { border-left-color: var(--text-dim); }
+  .zone-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .zone.red .zone-label { color: var(--red); }
+  .zone.amber .zone-label { color: var(--accent); }
+  .zone.green .zone-label { color: var(--green); }
+  .zone.dim .zone-label { color: var(--text-dim); }
+  .zone-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .zone-body strong { color: var(--text); }
+
+  .zones-curve-note {
+    margin-top: 20px;
+    padding: 16px 20px;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+  }
+  .zones-curve-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .zones-curve-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  .zones-curve-body strong { color: var(--text); }
+</style>
