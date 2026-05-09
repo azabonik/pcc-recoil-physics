@@ -301,8 +301,7 @@
   .factor-card.sound::before { background: var(--accent); }
   .factor-card.impulse::before { background: var(--blue); }
   .factor-icon {
-    font-size: 28px;
-    margin-bottom: 12px;
+    display: none;
   }
   .factor-card h4 {
     font-family: 'IBM Plex Mono', monospace;
@@ -493,17 +492,13 @@
   .plain-english {
     background: var(--bg-card-alt);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 20px 24px;
+    border-left: 3px solid var(--text-dim);
+    border-radius: 0 6px 6px 0;
+    padding: 18px 22px;
     margin: 20px 0;
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
   }
   .plain-english-icon {
-    font-size: 22px;
-    flex-shrink: 0;
-    margin-top: 2px;
+    display: none;
   }
   .plain-english p {
     font-family: 'IBM Plex Serif', serif;
@@ -614,7 +609,7 @@
   </p>
 
   <div class="plain-english">
-    <div class="plain-english-icon">💡</div>
+    
     <p>
       In plain terms: recoil = how hard the bullet pushes backward + how hard the gas pushes backward.
       You can't change the bullet push (that's your Power Factor). But you CAN change the gas push
@@ -767,7 +762,7 @@
   </p>
 
   <div class="plain-english">
-    <div class="plain-english-icon">📐</div>
+    
     <p>
       Think of it like opening a pressure cooker. Cracking the lid an inch releases a huge blast of steam.
       Opening it another inch releases less. By the time it's fully open, more opening doesn't matter —
@@ -874,15 +869,6 @@
       8″ to 10–11″ buys more than the jump from 13″ to 16″.
     </p>
   </div>
-
-  <div class="plain-english">
-    <div class="plain-english-icon">🎯</div>
-    <p>
-      Your 13″ barrel is right in the sweet spot — long enough for fast powder to fully expand,
-      short enough that you're not losing velocity to friction. If anything, it's close to the
-      ideal length for this application.
-    </p>
-  </div>
 </div>
 
 <!-- SECTION 4: THE MATH -->
@@ -895,7 +881,7 @@
   </p>
 
   <div class="plain-english">
-    <div class="plain-english-icon">🔑</div>
+    
     <p>
       The bullet push is identical in both loads — 95 grains at 1,368 fps. What changes is
       how much gas exits the muzzle and how fast it's moving when it gets there.
@@ -1322,7 +1308,7 @@
   </div>
 
   <div class="plain-english">
-    <div class="plain-english-icon">⚖️</div>
+    
     <p>
       Bottom line: if you're shooting PCC, fast powder helps at every bullet weight. But the advantage
       is most pronounced with light bullets (95gr) where gas momentum is the largest fraction of total
@@ -1344,7 +1330,7 @@
 
   <div class="factors-grid">
     <div class="factor-card blast">
-      <div class="factor-icon">💥</div>
+      
       <h4>Muzzle Blast</h4>
       <p>
         High-pressure gas hitting open air creates a shockwave — a sharp
@@ -1357,7 +1343,7 @@
       </div>
     </div>
     <div class="factor-card sound">
-      <div class="factor-icon">🔊</div>
+      
       <h4>Sound Level</h4>
       <p>
         Slow powder exiting a PCC barrel is LOUD — 5–10 dB louder than
@@ -1371,7 +1357,7 @@
       </div>
     </div>
     <div class="factor-card impulse">
-      <div class="factor-icon">📈</div>
+      
       <h4>Kick Shape</h4>
       <p>
         Gas exits after the bullet, delivering a secondary push. With slow powder,
