@@ -24,6 +24,7 @@ keywords: "PCC recoil, pistol caliber carbine, 9mm reloading, internal ballistic
 import Section from '../../components/Section.astro';
 import PlainEnglish from '../../components/PlainEnglish.astro';
 import EquationBox from '../../components/EquationBox.astro';
+import Derivation from '../../components/Derivation.astro';
 import VariableLegend from '../../components/VariableLegend.astro';
 import BarrelDiagram from '../../components/BarrelDiagram.astro';
 import BarrelLengthZones from '../../components/BarrelLengthZones.astro';
@@ -70,6 +71,100 @@ import SourceItem from '../../components/SourceItem.astro';
       <span>British Textbook of Small Arms (1929): </span><span class="var">f</span><span> "lies between 1 and 2, with average value 1½"</span><Sup refs={3} />
     </div>
   </EquationBox>
+
+  <Derivation title="How this equation falls out of Newton's 3rd law">
+    <p>
+      The equation isn't conjured from authority — it falls out of conservation of
+      momentum in three short steps.<Sup refs={2} />
+    </p>
+
+    <p>
+      <span class="deriv-step-num">1.</span>
+      <strong>Set up the closed system.</strong> Before the trigger break, the gun,
+      bullet, and powder charge are all at rest relative to the shooter. Total
+      system momentum = 0.
+    </p>
+
+    <p>
+      <span class="deriv-step-num">2.</span>
+      <strong>Apply Newton's 3rd law.</strong> After firing, the bullet leaves the
+      muzzle moving forward (mass <em>m</em><sub>bullet</sub> × velocity
+      <em>V</em><sub>muzzle</sub>). The combusted powder gas also leaves moving
+      forward, with some average velocity <em>V</em><sub>gas</sub>. To keep total
+      system momentum at zero, the gun must move backward at <em>V</em><sub>gun</sub>:
+    </p>
+
+    <div class="deriv-eq">
+      <span class="var">M</span><sub>gun</sub> × <span class="var">V</span><sub>gun</sub>
+      &nbsp;=&nbsp;
+      <span class="var">m</span><sub>bullet</sub> × <span class="var">V</span><sub>muzzle</sub>
+      &nbsp;+&nbsp;
+      <span class="var">m</span><sub>charge</sub> × <span class="var">V</span><sub>gas</sub>
+    </div>
+
+    <p>
+      <span class="deriv-step-num">3.</span>
+      <strong>Solve for V<sub>gun</sub>.</strong> Divide both sides by gun mass:
+    </p>
+
+    <div class="deriv-eq">
+      <span class="var">V</span><sub>gun</sub>
+      &nbsp;=&nbsp;
+      ( <span class="var">m</span><sub>bullet</sub> × <span class="var">V</span><sub>muzzle</sub>
+      &nbsp;+&nbsp;
+      <span class="var">m</span><sub>charge</sub> × <span class="var">V</span><sub>gas</sub> )
+      &nbsp;÷&nbsp;
+      <span class="var">M</span><sub>gun</sub>
+    </div>
+
+    <p>
+      That's the canonical SAAMI / Hatcher / NRA form.<Sup refs={[1, 2, 5]} /> The
+      derivation makes no assumption about the shape of the pressure curve, the burn
+      profile, or the powder type — it's pure conservation of momentum, valid for any
+      cartridge, any propellant, any barrel.
+    </p>
+
+    <p>
+      <strong>The V<sub>gas</sub> problem.</strong> The catch is that
+      <em>V</em><sub>gas</sub> isn't directly measurable. Gas velocity varies across
+      the muzzle column and depends on residual chamber pressure, barrel length, and
+      burn rate. The standard workaround is to express it as a multiple of bullet
+      velocity:
+    </p>
+
+    <div class="deriv-eq">
+      <span class="var">V</span><sub>gas</sub>
+      &nbsp;=&nbsp;
+      <span class="var">f</span> × <span class="var">V</span><sub>muzzle</sub>
+    </div>
+
+    <p>
+      where <em>f</em> is the gas factor. SAAMI uses <em>f</em> ≈ 1.5 for handguns,
+      1.75 for rifles.<Sup refs={1} /> The British Textbook of Small Arms (1929)
+      bracketed <em>f</em> between 1 and 2 with an average of 1.5.<Sup refs={3} />
+      Substituting back gives the practical form:
+    </p>
+
+    <div class="deriv-eq">
+      <span class="var">V</span><sub>gun</sub>
+      &nbsp;=&nbsp;
+      <span class="var">V</span><sub>muzzle</sub>
+      × ( <span class="var">m</span><sub>bullet</sub>
+      &nbsp;+&nbsp;
+      <span class="var">f</span> × <span class="var">m</span><sub>charge</sub> )
+      &nbsp;÷&nbsp;
+      <span class="var">M</span><sub>gun</sub>
+    </div>
+
+    <p>
+      This article uses variable <em>f</em> estimates (≈ 1.0 for fast powder fully
+      expanded in a 13″+ barrel, ≈ 1.8 for slow powder still pressurized at the
+      muzzle) bounded by the British Textbook range. The variable-<em>f</em> approach
+      isn't a different equation — just a more honest accounting of what physically
+      changes when you change powders. See section 4 and source [6] for the
+      methodology details.
+    </p>
+  </Derivation>
 
   <VariableLegend />
 

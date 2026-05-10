@@ -1,0 +1,108 @@
+---
+interface Props {
+  /** Disclosure title shown in the summary. */
+  title: string;
+}
+const { title } = Astro.props;
+---
+<details class="derivation">
+  <summary>{title}</summary>
+  <div class="derivation-body">
+    <slot />
+  </div>
+</details>
+
+<style>
+  .derivation {
+    margin: 24px 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-card-alt);
+    overflow: hidden;
+  }
+  .derivation summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 14px 20px 14px 38px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text);
+    position: relative;
+    transition: color 120ms ease;
+  }
+  .derivation summary:hover { color: var(--accent); }
+  .derivation summary::-webkit-details-marker { display: none; }
+  .derivation summary::before {
+    content: '+';
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-55%);
+    font-size: 16px;
+    color: var(--text-dim);
+    width: 12px;
+    text-align: center;
+    transition: color 120ms ease;
+  }
+  .derivation[open] > summary::before {
+    content: '−';
+    color: var(--accent);
+  }
+
+  .derivation-body {
+    padding: 4px 24px 20px 38px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+  }
+  .derivation-body :global(p) {
+    margin: 14px 0;
+    max-width: 720px;
+  }
+  .derivation-body :global(p:first-child) { margin-top: 12px; }
+  .derivation-body :global(p:last-child) { margin-bottom: 0; }
+  .derivation-body :global(strong) { color: var(--text-bright); font-weight: 600; }
+  .derivation-body :global(em) {
+    color: var(--accent);
+    font-style: italic;
+    font-family: var(--font-serif);
+  }
+
+  /* Step numbers (e.g., "1.", "2.", "3.") used inline at start of step text. */
+  .derivation-body :global(.deriv-step-num) {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-right: 8px;
+  }
+
+  /* Equation block within a derivation step — centered serif on its own line. */
+  .derivation-body :global(.deriv-eq) {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--text-bright);
+    line-height: 1.6;
+    padding: 14px 20px;
+    background: var(--bg);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    margin: 14px 0;
+    text-align: center;
+    overflow-x: auto;
+  }
+  .derivation-body :global(.deriv-eq .var) { font-style: italic; }
+
+  @media (max-width: 600px) {
+    .derivation summary { padding: 12px 16px 12px 32px; font-size: 10px; }
+    .derivation summary::before { left: 14px; }
+    .derivation-body { padding: 4px 18px 18px 18px; font-size: 13px; }
+    .derivation-body :global(.deriv-eq) { font-size: 14px; padding: 12px 14px; }
+  }
+</style>
