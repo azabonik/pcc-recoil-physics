@@ -481,32 +481,48 @@ import SourceItem from '../../components/SourceItem.astro';
     are, in order of importance:
   </p>
 
-  <table class="calc-table" style="margin-top:24px;">
-    <thead>
-      <tr>
-        <th>Priority</th>
-        <th>Variable</th>
-        <th>Why It Matters</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td style="font-family:var(--font-mono);font-weight:700;color:var(--accent);font-size:18px;">1</td>
-        <td style="font-weight:600;color:var(--text-bright)">Powder burn rate</td>
-        <td>The faster the powder finishes burning, the more barrel is available for gas expansion toward atmospheric. This is the dominant variable — it determines how far above atmospheric the gas sits when it exits.</td>
-      </tr>
-      <tr>
-        <td style="font-family:var(--font-mono);font-weight:700;color:var(--accent);font-size:18px;">2</td>
-        <td style="font-weight:600;color:var(--text-bright)">Barrel length</td>
-        <td>More barrel after burn completion = more expansion volume = lower muzzle pressure. But diminishing returns: the drop from 8″ to 13″ matters more than 13″ to 18″. There's a barrel length for each powder where you've captured most of the available expansion.</td>
-      </tr>
-      <tr>
-        <td style="font-family:var(--font-mono);font-weight:700;color:var(--accent);font-size:18px;">3</td>
-        <td style="font-weight:600;color:var(--text-bright)">Bullet weight</td>
-        <td>Secondary to powder choice. At equal PF and equal powder, heavier bullets produce <em>less</em> gas momentum (lower velocity = lower V<sub>gas</sub> and smaller charge). But heavier bullets at lower velocity introduce external ballistic penalties — more drop, more lead on movers, longer time-to-target — which matter in PCC stages with 50+ yard engagements. Modern roller-delayed and tunable-gas PCCs (JP5, Mean Arms, etc.) mitigate the mechanical cycling concerns that older blowback designs impose on charge weight. Choose the weight that balances gas optimization against the ballistic demands of your match stages.</td>
-      </tr>
-    </tbody>
-  </table>
+  <ol class="priority-list">
+    <li class="priority-item">
+      <div class="priority-num">1</div>
+      <div class="priority-body">
+        <div class="priority-name">Powder burn rate</div>
+        <p>
+          The faster the powder finishes burning, the more barrel is available for gas
+          expansion toward atmospheric. This is the dominant variable — it determines
+          how far above atmospheric the gas sits when it exits.
+        </p>
+      </div>
+    </li>
+    <li class="priority-item">
+      <div class="priority-num">2</div>
+      <div class="priority-body">
+        <div class="priority-name">Barrel length</div>
+        <p>
+          More barrel after burn completion = more expansion volume = lower muzzle
+          pressure. But diminishing returns: the drop from 8″ to 13″ matters more than
+          13″ to 18″. There's a barrel length for each powder where you've captured
+          most of the available expansion.
+        </p>
+      </div>
+    </li>
+    <li class="priority-item">
+      <div class="priority-num">3</div>
+      <div class="priority-body">
+        <div class="priority-name">Bullet weight</div>
+        <p>
+          Secondary to powder choice. At equal PF and equal powder, heavier bullets
+          produce <em>less</em> gas momentum (lower velocity = lower V<sub>gas</sub>
+          and smaller charge). But heavier bullets at lower velocity introduce external
+          ballistic penalties — more drop, more lead on movers, longer time-to-target —
+          which matter in PCC stages with 50+ yard engagements. Modern roller-delayed
+          and tunable-gas PCCs (JP5, Mean Arms, etc.) mitigate the mechanical cycling
+          concerns that older blowback designs impose on charge weight. Choose the
+          weight that balances gas optimization against the ballistic demands of your
+          match stages.
+        </p>
+      </div>
+    </li>
+  </ol>
 
   <p style="margin-top:24px;">
     In a pistol (4–5″ barrel), this hierarchy barely applies. The barrel is too short for meaningful gas

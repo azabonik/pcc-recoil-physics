@@ -339,6 +339,73 @@ a:hover { border-bottom-color: var(--accent); }
 .calc-table td.bold { font-weight: 600; }
 .calc-table td.bold-bright { font-weight: 700; color: var(--text-bright); }
 
+/* ============================================================================
+   Priority list — ranked items with prose descriptions.
+   Used for the "optimization hierarchy" in the PCC recoil article. Replaces
+   what used to be a calc-table; tables are wrong for prose-heavy content
+   because the global mobile rule (display:block + nowrap) made the prose
+   columns scroll for hundreds of px.
+   ========================================================================== */
+.priority-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.priority-item {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 24px;
+  align-items: start;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+.priority-num {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.priority-body { min-width: 0; }
+.priority-name {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-bright);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.priority-item p {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.65;
+  margin: 0;
+  max-width: none;
+}
+.priority-item p em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .priority-item {
+    grid-template-columns: 44px 1fr;
+    gap: 16px;
+    padding: 16px 18px;
+  }
+  .priority-num { font-size: 28px; }
+  .priority-name { font-size: 18px; }
+  .priority-item p { font-size: 13px; }
+}
+
 /* tags / pills */
 .tag {
   display: inline-block;
