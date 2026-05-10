@@ -7,9 +7,8 @@ headerSubtitle: >-
   is dominated by the gas state at the muzzle, and how powder selection and barrel length
   determine whether that gas exits hot and fast or cool and quiet.
 description: >-
-  How powder burn rate, barrel length, and bullet weight interact to determine felt recoil
-  in a 9mm PCC. Covers the free recoil equation, gas momentum, muzzle blast physics, and a
-  calculated recoil lookup table from 90gr to 147gr at 130 Power Factor.
+  Why felt recoil in a 9mm PCC is dominated by gas state at the muzzle. Powder, barrel
+  length, and bullet weight tradeoffs at 130 PF, with a 90–147gr table.
 pubDate: 2025-05-08
 tags: ["PCC", "9mm reloading", "internal ballistics", "recoil"]
 about:
@@ -223,7 +222,7 @@ import SourceItem from '../../components/SourceItem.astro';
       <tr class="row-amber">
         <td class="bold-bright">Net recoil difference<br /><span style="font-size:11px;color:var(--text-dim);font-weight:400">From momentum alone</span></td>
         <td class="center" colSpan={2}>
-          <Tag color="amber" large>~7–8% less total momentum with fast powder</Tag>
+          <Tag color="amber" large>~6% less total momentum with fast powder</Tag>
         </td>
         <td></td>
       </tr>
@@ -377,13 +376,13 @@ import SourceItem from '../../components/SourceItem.astro';
       {
         weight: '95gr',
         velocity: '1,368 fps',
-        delta: '7–8%',
+        delta: '6%',
         color: 'accent',
         bulletMomentum: '129,960',
         fast: { bulletWidthPct: 90, gasWidthPct: 10, gasLabel: '4%', total: '135,472' },
         slow: { bulletWidthPct: 83, gasWidthPct: 17, gasLabel: '10%', total: '144,734' },
         insight: {
-          label: '7–8%',
+          label: '6%',
           body: 'The gas push with slow powder is <strong>2.7× larger</strong> than with fast powder (14,774 vs 5,472). That gas difference adds roughly the equivalent of going from a 130 PF load to 140 PF — a full division\'s worth of recoil penalty, purely from powder choice. But note: 95gr requires the <em>largest</em> charge of any weight at this PF, producing the most gas. It benefits most from fast powder, but also has the most gas to begin with.',
         },
       },
