@@ -73,6 +73,16 @@ import SourceItem from '../../components/SourceItem.astro';
 
   <VariableLegend />
 
+  <Callout title="Try it yourself">
+    <p>
+      Want to see what these variables produce for your own load? The
+      <a href="/articles/recoil-calculator/">free recoil calculator</a> takes
+      bullet weight, target Power Factor, charge, gas factor, and gun weight,
+      and returns the bullet/gas momentum split, V<sub>gun</sub>, and free-recoil
+      energy in real time.
+    </p>
+  </Callout>
+
   <p>
     The <span style="color:var(--accent);font-weight:600">orange term</span> (bullet push) is locked once you pick your bullet weight and PF target.
     The <span style="color:var(--blue);font-weight:600">blue term</span> (gas push) is the only variable a handloader can manipulate — and
@@ -416,15 +426,6 @@ import SourceItem from '../../components/SourceItem.astro';
       whether you have enough velocity to shoot flat at distance.
     </p>
   </PlainEnglish>
-
-  <Callout title="Try it yourself">
-    <p>
-      Curious how your own load looks under the same equation? The
-      <a href="/articles/recoil-calculator/">free recoil calculator</a> takes
-      bullet, PF, charge, gas factor, and gun weight, and returns the bullet/gas
-      momentum split, recoil velocity, and free-recoil energy.
-    </p>
-  </Callout>
 </Section>
 
 {/* ============================================================================
