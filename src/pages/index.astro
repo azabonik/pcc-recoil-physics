@@ -2,240 +2,351 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const articles = (await getCollection('articles', ({ data }) => !data.draft))
+const all = (await getCollection('articles', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
 const dateFmt = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
-  month: 'long',
+  month: 'short',
   day: 'numeric',
   timeZone: 'UTC',
 });
+
+// Editorial split: long-form articles drive the hero + Previously list.
+// Tools (calculators, references) are surfaced as bonus content, never the
+// hero — even if a tool was published more recently than the latest article.
+const longForm = all.filter((a) => a.data.kind === 'article');
+const tools = all.filter((a) => a.data.kind === 'tool');
+const [hero, ...rest] = longForm;
+
+const TYPE_LABELS = { article: 'LONG FORM', tool: 'INTERACTIVE TOOL' } as const;
+const typeLabel = (kind: 'article' | 'tool') => TYPE_LABELS[kind];
 ---
 <BaseLayout
-  title="Anthony Zabonik — zabs.dev"
+  title="zabs.dev"
   description="Engineering writing by Anthony Zabonik."
   canonicalPath="/"
 >
-  <header class="landing">
-    <div class="landing-label">zabs.dev</div>
-    <h1>Anthony Zabonik</h1>
-    <p class="landing-bio">Engineering writing.</p>
-    <nav class="landing-links">
-      <a href="https://github.com/azabonik" rel="me noopener" target="_blank">github</a>
-      <span class="dot">·</span>
-      <a href="mailto:laxpulse@gmail.com">email</a>
-    </nav>
+  <header class="brand-row">
+    <span class="brand">zabs.dev</span>
   </header>
 
-  <section class="writing">
-    <div class="writing-label">Writing</div>
-    <ul class="article-list">
-      {articles.map((article) => (
-        <li class="article-card">
-          <a href={`/articles/${article.id}/`} class="article-card-link">
-            <div class="article-card-meta">
-              <time datetime={article.data.pubDate.toISOString()}>
-                {dateFmt.format(article.data.pubDate)}
-              </time>
-              {article.data.updatedDate && article.data.updatedDate.getTime() !== article.data.pubDate.getTime() && (
-                <span class="article-card-updated">
-                  · updated {dateFmt.format(article.data.updatedDate)}
-                </span>
-              )}
-              {article.data.tags.length > 0 && (
-                <span class="article-card-tags">
-                  {article.data.tags.map((tag, i) => (
-                    <>
-                      <span class="article-card-tag">{tag}</span>
-                      {i < article.data.tags.length - 1 && <span class="dot">·</span>}
-                    </>
-                  ))}
-                </span>
-              )}
-            </div>
-            <h2 class="article-card-title">
-              {article.data.title}{article.data.headlineSuffix && (
-                <>{': '}<em>{article.data.headlineSuffix}</em></>
-              )}
-            </h2>
-            <p class="article-card-desc">{article.data.description}</p>
-            <span class="article-card-cta">Read →</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </section>
+  {hero && (
+    <main class="hero-wrap">
+      <a href={`/articles/${hero.id}/`} class="hero-link">
+        <div class="hero-kicker">
+          <time datetime={hero.data.pubDate.toISOString()}>{dateFmt.format(hero.data.pubDate)}</time>
+          <span class="kicker-sep">·</span>
+          <span class="kicker-type">{typeLabel(hero.data.kind)}</span>
+        </div>
 
-  <footer class="landing-footer">
-    <span>© {new Date().getFullYear()} Anthony Zabonik</span>
+        <h1 class="hero-title">{hero.data.title}</h1>
+        {hero.data.headlineSuffix && (
+          <div class="hero-suffix">{hero.data.headlineSuffix}</div>
+        )}
+
+        <p class="hero-desc">{hero.data.description}</p>
+
+        <div class="hero-cta">
+          <span class="cta-label">read</span>
+          <span class="cta-arrow">→</span>
+        </div>
+      </a>
+    </main>
+  )}
+
+  {rest.length > 0 && (
+    <section class="prev-section">
+      <div class="prev-heading">Previously</div>
+      <ul class="prev-list">
+        {rest.map((article) => (
+          <li class="prev-item">
+            <a href={`/articles/${article.id}/`} class="prev-link">
+              <div class="prev-meta">
+                <time datetime={article.data.pubDate.toISOString()}>
+                  {dateFmt.format(article.data.pubDate)}
+                </time>
+                <span class="prev-sep">·</span>
+                <span class="prev-type">{typeLabel(article.data.kind)}</span>
+              </div>
+              <div class="prev-title">
+                {article.data.title}
+                {article.data.headlineSuffix && (
+                  <span class="prev-suffix"> · {article.data.headlineSuffix}</span>
+                )}
+              </div>
+              <span class="prev-arrow">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {tools.length > 0 && (
+    <section class="prev-section bonus">
+      <div class="prev-heading bonus-heading">Bonus · Tools</div>
+      <ul class="prev-list">
+        {tools.map((tool) => (
+          <li class="prev-item">
+            <a href={`/articles/${tool.id}/`} class="prev-link">
+              <div class="prev-meta">
+                <time datetime={tool.data.pubDate.toISOString()}>
+                  {dateFmt.format(tool.data.pubDate)}
+                </time>
+                <span class="prev-sep">·</span>
+                <span class="prev-type">{typeLabel(tool.data.kind)}</span>
+              </div>
+              <div class="prev-title">
+                {tool.data.title}
+                {tool.data.headlineSuffix && (
+                  <span class="prev-suffix"> · {tool.data.headlineSuffix}</span>
+                )}
+              </div>
+              <span class="prev-arrow">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <footer class="brand-foot">
+    <a href="https://github.com/azabonik" rel="me noopener" target="_blank">github</a>
+    <span class="dot">·</span>
+    <a href="mailto:laxpulse@gmail.com">email</a>
+    <span class="dot">·</span>
+    <span class="dim">© {new Date().getFullYear()} Anthony Zabonik</span>
   </footer>
 </BaseLayout>
 
 <style>
-  .landing {
-    padding: 80px 48px 48px;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
+  /* ─── Brand chrome ──────────────────────────────────────────────────── */
+  .brand-row {
+    padding: 28px 48px 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
   }
-  .landing::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 50%, rgba(59,130,246,0.04) 100%);
-    pointer-events: none;
-  }
-  .landing-label {
+  .brand { color: var(--accent); font-weight: 600; }
+
+  .brand-foot {
+    padding: 28px 48px 36px;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
     font-family: var(--font-mono);
     font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .brand-foot a {
+    color: var(--text);
+    border-bottom: none;
+  }
+  .brand-foot a:hover { color: var(--accent); }
+  .brand-foot .dot { opacity: 0.4; }
+  .brand-foot .dim { color: var(--text-dim); margin-left: auto; }
+
+  /* ─── Hero ──────────────────────────────────────────────────────────── */
+  .hero-wrap {
+    padding: 80px 48px 120px;
+    /* push content toward bottom-left so the title has breathing room above */
+    min-height: calc(100vh - 240px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .hero-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    border-bottom: none;
+    max-width: 1100px;
+  }
+  .hero-link:hover .hero-title { color: var(--accent); }
+  .hero-link:hover .cta-arrow { transform: translateX(4px); }
+
+  .hero-kicker {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .hero-kicker time { color: var(--text); }
+  .hero-kicker .kicker-type { color: var(--accent); }
+  .hero-kicker .kicker-sep { opacity: 0.4; }
+
+  .hero-title {
+    font-family: var(--font-serif);
+    font-size: clamp(56px, 13vw, 168px);
+    font-weight: 600;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--text-bright);
+    margin: 0;
+    transition: color 200ms ease;
+  }
+
+  .hero-suffix {
+    margin-top: 18px;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(22px, 3.6vw, 44px);
+    color: var(--accent);
+    line-height: 1.1;
+    max-width: 80%;
+  }
+
+  .hero-desc {
+    margin-top: 36px;
+    font-size: 16px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    max-width: 640px;
+  }
+
+  .hero-cta {
+    margin-top: 32px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 13px;
     font-weight: 600;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--accent);
-    margin-bottom: 16px;
   }
-  .landing h1 {
-    font-family: var(--font-serif);
-    font-size: 48px;
-    font-weight: 600;
-    color: var(--text-bright);
-    line-height: 1.1;
-    margin-bottom: 16px;
+  .cta-arrow {
+    font-size: 18px;
+    transition: transform 180ms ease;
   }
-  .landing-bio {
-    font-size: 16px;
-    color: var(--text-dim);
-    max-width: 640px;
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
-  .landing-links {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    display: flex;
-    gap: 12px;
-    align-items: center;
-  }
-  .landing-links a {
-    color: var(--text);
-    border-bottom: 1px solid transparent;
-  }
-  .landing-links a:hover {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-  .dot { color: var(--text-dim); opacity: 0.5; }
 
-  .writing {
-    padding: 56px 48px;
-    border-bottom: 1px solid var(--border);
+  /* ─── Previously / Bonus section ────────────────────────────────────── */
+  .prev-section {
+    padding: 0 48px;
+    border-top: 1px solid var(--border);
+    padding-top: 36px;
+    margin-bottom: 0;
   }
-  .writing-label {
+  .prev-section + .prev-section { margin-top: 24px; padding-top: 0; border-top: none; }
+  .prev-section.bonus { padding-top: 24px; }
+  .bonus-heading { color: var(--blue) !important; }
+  .prev-heading {
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--accent-dim);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
-
-  .article-list {
+  .prev-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
   }
-
-  .article-card-link {
-    display: block;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 24px 28px;
+  .prev-item { border-top: 1px solid var(--border); }
+  .prev-item:last-child { border-bottom: 1px solid var(--border); }
+  .prev-link {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'meta arrow'
+      'title arrow';
+    column-gap: 24px;
+    row-gap: 8px;
+    align-items: center;
+    padding: 22px 0;
     color: inherit;
-    border-bottom: 1px solid var(--border);
-    transition: border-color 150ms ease, transform 150ms ease;
+    text-decoration: none;
+    border-bottom: none;
+    transition: padding-left 180ms ease;
   }
-  .article-card-link:hover {
-    border-color: var(--accent-dim);
-    transform: translateY(-1px);
-  }
+  .prev-link:hover { padding-left: 12px; }
+  .prev-link:hover .prev-title { color: var(--accent); }
+  .prev-link:hover .prev-arrow { color: var(--accent); transform: translateX(4px); }
 
-  .article-card-meta {
+  .prev-meta {
+    grid-area: meta;
     font-family: var(--font-mono);
     font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
     color: var(--text-dim);
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
     display: flex;
-    align-items: center;
     gap: 12px;
+    align-items: baseline;
     flex-wrap: wrap;
   }
-  .article-card-tags { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .article-card-tag { color: var(--accent); }
-  .article-card-updated { color: var(--text-dim); opacity: 0.85; }
+  .prev-meta time { color: var(--text); }
+  .prev-meta .prev-type { color: var(--accent); }
+  .prev-meta .prev-sep { opacity: 0.4; }
 
-  .article-card-title {
+  .prev-title {
+    grid-area: title;
     font-family: var(--font-serif);
-    font-size: 24px;
+    font-size: clamp(24px, 3vw, 36px);
     font-weight: 600;
     color: var(--text-bright);
-    line-height: 1.25;
-    margin: 0 0 10px;
+    line-height: 1.2;
+    transition: color 180ms ease;
   }
-  .article-card-title em {
+  .prev-suffix {
     color: var(--accent);
     font-style: italic;
+    font-weight: 400;
   }
-
-  .article-card-desc {
-    font-size: 14px;
-    color: var(--text-dim);
-    line-height: 1.55;
-    margin: 0 0 14px;
-    max-width: 720px;
-  }
-
-  .article-card-cta {
+  .prev-arrow {
+    grid-area: arrow;
     font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--accent);
+    font-size: 22px;
+    color: var(--text-dim);
+    transition: color 180ms ease, transform 180ms ease;
   }
 
-  .landing-footer {
-    padding: 28px 48px 48px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-  }
-  .landing-footer a {
-    color: var(--text-dim);
-    border-bottom: none;
-  }
-  .landing-footer a:hover { color: var(--accent); }
-
-  @media (max-width: 600px) {
-    .landing { padding: 48px 20px 32px; }
-    .landing h1 { font-size: 32px; }
-    .landing-bio { font-size: 14px; }
-    .writing { padding: 36px 20px; }
-    .article-card-link { padding: 18px 20px; }
-    .article-card-title { font-size: 19px; }
-    .landing-footer { padding: 24px 20px 32px; }
+  /* ─── Mobile ────────────────────────────────────────────────────────── */
+  @media (max-width: 700px) {
+    .brand-row { padding: 22px 20px 0; letter-spacing: 2px; }
+    .hero-wrap {
+      padding: 56px 20px 64px;
+      min-height: calc(100vh - 200px);
+    }
+    .hero-kicker { font-size: 11px; letter-spacing: 2px; gap: 10px; }
+    .hero-suffix { max-width: 100%; }
+    .hero-desc { font-size: 14px; }
+    .prev-section { padding: 36px 20px 0; }
+    .prev-section.bonus { padding-top: 24px; }
+    .prev-link {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        'meta'
+        'title'
+        'arrow';
+      row-gap: 6px;
+      padding: 18px 0;
+    }
+    .prev-link:hover { padding-left: 0; }
+    .prev-arrow { justify-self: end; margin-top: -4px; }
+    .brand-foot {
+      padding: 24px 20px 32px;
+      gap: 8px;
+    }
+    .brand-foot .dim { margin-left: 0; width: 100%; }
   }
 </style>

@@ -23,6 +23,13 @@ const articles = defineCollection({
     keywords: z.string().optional(),
     /** Hide from the homepage list (drafts). */
     draft: z.boolean().default(false),
+    /**
+     * Editorial classification.
+     * - "article" (default): long-form writing. Eligible for the homepage hero.
+     * - "tool": interactive tool / calculator / reference. Lives in the
+     *   homepage's "Bonus" section, never the hero, regardless of pubDate.
+     */
+    kind: z.enum(['article', 'tool']).default('article'),
   }),
 });
 
