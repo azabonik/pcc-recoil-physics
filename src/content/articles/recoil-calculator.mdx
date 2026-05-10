@@ -1,0 +1,32 @@
+---
+title: "Free Recoil Calculator"
+headerLabel: "9×19mm Internal Ballistics · Interactive Tool"
+headerSubtitle: >-
+  V_gun, free-recoil energy, and the bullet-vs-gas momentum split for any 9mm
+  load. Implements the standard SAAMI / Hatcher / NRA momentum equation.
+description: >-
+  Interactive 9mm free-recoil calculator. Inputs: bullet, PF, charge, gas factor, gun weight. Computes V_gun, free-recoil energy, and momentum split.
+pubDate: 2026-05-09
+tags: ["calculator", "9mm reloading", "internal ballistics", "PCC"]
+about:
+  - "Internal ballistics"
+  - "Free recoil"
+  - "Power factor"
+  - "9mm Parabellum"
+keywords: "9mm recoil calculator, free recoil calculator, V_gun, free recoil energy, USPSA power factor calculator, PCC recoil"
+---
+
+import Section from '../../components/Section.astro';
+import RecoilCalculator from '../../components/RecoilCalculator.astro';
+
+<Section>
+  <RecoilCalculator />
+
+  <p>
+    For the physics behind the equation — what the gas factor really represents,
+    why fast powder in a long barrel produces less felt recoil at the same Power
+    Factor, and the perceptual factors (blast, sound, impulse shape) that the
+    momentum math doesn't capture — see
+    <a href="/articles/pcc-recoil-physics/">PCC Recoil Physics: Get the Gas to Atmospheric</a>.
+  </p>
+</Section>

@@ -184,10 +184,13 @@
   @media (max-width: 600px) {
     .barrel-diagram { padding: 18px 16px; }
     .barrel-row { flex-wrap: wrap; gap: 8px; }
-    .barrel-label { width: 60px; font-size: 9px; }
+    .barrel-label { width: 56px; font-size: 9px; }
     .barrel-visual { min-height: 40px; }
     .barrel-desc { width: 100%; margin-left: 0; font-size: 11px; }
-    .barrel-bullet { right: -24px; }
-    .barrel-bullet-label { font-size: 8px; }
+    /* Decorative bullet pip + "EXPANDING TOWARD ATMOSPHERIC →" overflow at
+       narrow widths. Hide them on mobile — the burn/expand color zones still
+       carry the visual story. */
+    .barrel-bullet { display: none; }
+    .barrel-expansion span { display: none; }
   }
 </style>

@@ -1,0 +1,464 @@
+---
+// Interactive free-recoil calculator. Vanilla JS, no framework.
+// Astro hoists the <script> into a small bundle scoped to pages that import this.
+---
+<section class="recoil-calc" data-recoil-calc>
+  <div class="recoil-calc-head">
+    <div class="recoil-calc-kicker">Try your own load</div>
+    <h3>Free recoil calculator</h3>
+    <p>
+      Plug in your bullet weight, target Power Factor, charge, gas factor, and gun
+      weight. Computes muzzle velocity from PF, the bullet/gas momentum split, free-recoil
+      velocity (V<sub>gun</sub>), and free-recoil energy. Math runs in your browser; no
+      data leaves the page.
+    </p>
+  </div>
+
+  <div class="recoil-calc-body">
+    <div class="recoil-calc-inputs">
+      <label class="rc-row">
+        <span class="rc-lbl">Bullet weight</span>
+        <input type="number" data-input="bullet" value="95" min="60" max="200" step="1" inputmode="decimal" />
+        <span class="rc-unit">gr</span>
+      </label>
+      <label class="rc-row">
+        <span class="rc-lbl">Target Power Factor</span>
+        <input type="number" data-input="pf" value="130" min="100" max="180" step="1" inputmode="decimal" />
+        <span class="rc-unit">PF</span>
+      </label>
+      <label class="rc-row">
+        <span class="rc-lbl">Powder charge</span>
+        <input type="number" data-input="charge" value="4.0" min="1" max="10" step="0.1" inputmode="decimal" />
+        <span class="rc-unit">gr</span>
+      </label>
+      <label class="rc-row">
+        <span class="rc-lbl">Gas factor (<em>f</em>)</span>
+        <input type="number" data-input="f" value="1.0" min="1.0" max="2.0" step="0.05" inputmode="decimal" />
+        <span class="rc-unit">×</span>
+      </label>
+      <label class="rc-row">
+        <span class="rc-lbl">Gun weight</span>
+        <input type="number" data-input="gun" value="7.5" min="1.5" max="15" step="0.1" inputmode="decimal" />
+        <span class="rc-unit">lb</span>
+      </label>
+    </div>
+
+    <div class="recoil-calc-out">
+      <div class="rc-out-row">
+        <span class="rc-out-lbl">Muzzle velocity</span>
+        <span class="rc-out-val" data-output="velocity">—</span>
+        <span class="rc-out-unit">fps</span>
+      </div>
+      <div class="rc-out-row">
+        <span class="rc-out-lbl">Bullet momentum</span>
+        <span class="rc-out-val" data-output="bullet-momentum">—</span>
+        <span class="rc-out-unit">gr·fps</span>
+      </div>
+      <div class="rc-out-row">
+        <span class="rc-out-lbl">Gas exit speed (V<sub>gas</sub>)</span>
+        <span class="rc-out-val" data-output="gas-velocity">—</span>
+        <span class="rc-out-unit">fps</span>
+      </div>
+      <div class="rc-out-row">
+        <span class="rc-out-lbl">Gas momentum</span>
+        <span class="rc-out-val" data-output="gas-momentum">—</span>
+        <span class="rc-out-unit">gr·fps</span>
+      </div>
+      <div class="rc-out-row total">
+        <span class="rc-out-lbl">Total recoil momentum</span>
+        <span class="rc-out-val" data-output="total-momentum">—</span>
+        <span class="rc-out-unit">gr·fps</span>
+      </div>
+      <div class="rc-out-row primary">
+        <span class="rc-out-lbl">Recoil velocity (V<sub>gun</sub>)</span>
+        <span class="rc-out-val" data-output="v-gun">—</span>
+        <span class="rc-out-unit">fps</span>
+      </div>
+      <div class="rc-out-row primary">
+        <span class="rc-out-lbl">Free recoil energy</span>
+        <span class="rc-out-val" data-output="energy">—</span>
+        <span class="rc-out-unit">ft·lb</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="recoil-calc-bar">
+    <div class="rc-bar-label">
+      <span class="bar-legend-bullet">
+        Bullet <span data-output="bullet-pct">—</span>
+      </span>
+      <span class="bar-legend-gas" data-gas-band="green">
+        Gas <span data-output="gas-pct">—</span>
+      </span>
+    </div>
+    <div class="rc-bar-track">
+      <div class="rc-bar-bullet" data-bar="bullet"></div>
+      <div class="rc-bar-gas" data-bar="gas" data-gas-band="green"></div>
+    </div>
+  </div>
+
+  <div class="recoil-calc-notes">
+    <details open>
+      <summary>About the gas factor</summary>
+      <p>
+        The gas factor <em>f</em> multiplies muzzle velocity to estimate how fast the gas
+        column itself exits. Rough anchors: <strong>≈ 1.0</strong> for fast powder fully
+        expanded in a 13″+ barrel · <strong>≈ 1.5</strong> SAAMI handgun default ·
+        <strong>≈ 1.8</strong> for slow powder still pressurized at the muzzle. The gas
+        bar shifts green → amber → red as the factor rises — it visualizes how much of
+        your recoil is gas push, not bullet push.
+      </p>
+    </details>
+
+    <details>
+      <summary>Where's "burn rate"?</summary>
+      <p>
+        It's already in the calculator — just split across two inputs, because burn rate
+        affects recoil through two independent quantities the equation cares about:
+        <strong>charge weight</strong> (mass of powder burned) and the
+        <strong>gas factor</strong> (how fast that mass exits the muzzle). Fast powders
+        need less charge AND finish burning early enough that gas has room to expand,
+        lowering the gas factor. Slow powders need more charge AND are still pressurized
+        at the muzzle, raising it. Reaching for AutoComp vs. Longshot at the same PF
+        means dialing both inputs in the same direction. There's no single "burn rate"
+        knob because the equation doesn't have one — the PCC Recoil Physics article walks
+        through the same load with three different (charge, gas factor) pairs to make
+        this concrete.
+      </p>
+    </details>
+
+    <details>
+      <summary>What about OAL, position sensitivity, and case volume?</summary>
+      <p>
+        These don't appear because free recoil is purely a momentum calculation —
+        mass × velocity, summed for bullet and gas, divided by gun mass. Seating
+        depth, case capacity (Federal vs. Starline vs. Win), powder column orientation,
+        primer choice — these change <strong>peak pressure, ignition consistency,
+        and standard deviation</strong>, not the first-order recoil momentum coming out
+        the back. A 4.0 gr charge produces 4.0 × V<sub>gas</sub> of gas momentum
+        regardless of which end of the case it ignited from. They matter enormously for
+        load development (9mm is uniquely sensitive — ~8–15% pressure rise per 0.010″
+        deeper at near-max charges, per the SAAMI-acknowledged small case volume) but
+        they're a different question from "how hard does the gun kick." Use a reloading
+        manual and a chronograph for those; use this calculator for the recoil math once
+        you've validated the load.
+      </p>
+    </details>
+  </div>
+</section>
+
+<script>
+  type Bands = 'green' | 'amber' | 'red';
+
+  function setup(root: HTMLElement) {
+    const $ = <T extends Element = HTMLElement>(sel: string) =>
+      root.querySelector(sel) as T | null;
+    const $$ = (sel: string) => Array.from(root.querySelectorAll(sel)) as HTMLElement[];
+
+    const inputs = {
+      bullet: $<HTMLInputElement>('[data-input="bullet"]')!,
+      pf:     $<HTMLInputElement>('[data-input="pf"]')!,
+      charge: $<HTMLInputElement>('[data-input="charge"]')!,
+      f:      $<HTMLInputElement>('[data-input="f"]')!,
+      gun:    $<HTMLInputElement>('[data-input="gun"]')!,
+    };
+
+    const out = (name: string) => $<HTMLElement>(`[data-output="${name}"]`)!;
+    const outputs = {
+      velocity:        out('velocity'),
+      bulletMomentum:  out('bullet-momentum'),
+      gasVelocity:     out('gas-velocity'),
+      gasMomentum:     out('gas-momentum'),
+      totalMomentum:   out('total-momentum'),
+      vGun:            out('v-gun'),
+      energy:          out('energy'),
+      bulletPct:       out('bullet-pct'),
+      gasPct:          out('gas-pct'),
+    };
+
+    const bars = {
+      bullet: $<HTMLElement>('[data-bar="bullet"]')!,
+      gas:    $<HTMLElement>('[data-bar="gas"]')!,
+    };
+    const gasBandTargets = $$('[data-gas-band]');
+
+    const fmt = (n: number, d = 0) =>
+      Number.isFinite(n)
+        ? new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n)
+        : '—';
+
+    function band(f: number): Bands {
+      if (f <= 1.2) return 'green';
+      if (f <= 1.6) return 'amber';
+      return 'red';
+    }
+
+    function clear() {
+      for (const k of Object.keys(outputs) as (keyof typeof outputs)[]) {
+        outputs[k].textContent = '—';
+      }
+      bars.bullet.style.flex = '0 0 50%';
+      bars.gas.style.flex = '0 0 50%';
+    }
+
+    function compute() {
+      const bullet = parseFloat(inputs.bullet.value);
+      const pf = parseFloat(inputs.pf.value);
+      const charge = parseFloat(inputs.charge.value);
+      const f = parseFloat(inputs.f.value);
+      const gunLbs = parseFloat(inputs.gun.value);
+
+      if (![bullet, pf, charge, f, gunLbs].every(Number.isFinite) || bullet <= 0 || gunLbs <= 0) {
+        clear();
+        return;
+      }
+
+      const velocity = (pf * 1000) / bullet;          // fps
+      const bulletMomentum = bullet * velocity;       // gr·fps
+      const vGas = f * velocity;                      // fps
+      const gasMomentum = charge * vGas;              // gr·fps
+      const totalMomentum = bulletMomentum + gasMomentum;
+      const gunGrains = gunLbs * 7000;                // 1 lb = 7000 gr
+      const vGun = totalMomentum / gunGrains;         // fps
+      const energy = (gunLbs * vGun * vGun) / 64.348; // ft·lb (g = 32.174 fps²)
+
+      const bulletPct = (bulletMomentum / totalMomentum) * 100;
+      const gasPct = 100 - bulletPct;
+
+      outputs.velocity.textContent       = fmt(velocity);
+      outputs.bulletMomentum.textContent = fmt(bulletMomentum);
+      outputs.gasVelocity.textContent    = fmt(vGas);
+      outputs.gasMomentum.textContent    = fmt(gasMomentum);
+      outputs.totalMomentum.textContent  = fmt(totalMomentum);
+      outputs.vGun.textContent           = fmt(vGun, 2);
+      outputs.energy.textContent         = fmt(energy, 2);
+      outputs.bulletPct.textContent      = fmt(bulletPct, 1) + '%';
+      outputs.gasPct.textContent         = fmt(gasPct, 1) + '%';
+
+      bars.bullet.style.flex = `0 0 ${bulletPct}%`;
+      bars.gas.style.flex    = `0 0 ${gasPct}%`;
+
+      const b = band(f);
+      gasBandTargets.forEach((el) => el.dataset.gasBand = b);
+    }
+
+    Object.values(inputs).forEach((el) => el.addEventListener('input', compute));
+    compute();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-recoil-calc]').forEach(setup);
+</script>
+
+<style>
+  .recoil-calc {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 28px 32px;
+    margin: 32px 0;
+  }
+  .recoil-calc-head { margin-bottom: 22px; }
+  .recoil-calc-kicker {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .recoil-calc h3 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 0 0 8px;
+    line-height: 1.25;
+  }
+  .recoil-calc p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .recoil-calc-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+
+  /* INPUTS */
+  .recoil-calc-inputs { display: flex; flex-direction: column; gap: 10px; }
+  .rc-row {
+    display: grid;
+    grid-template-columns: 1fr 110px 28px;
+    gap: 10px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .rc-lbl { color: var(--text); }
+  .rc-lbl em { font-style: italic; color: var(--accent); font-family: var(--font-serif); }
+  .rc-row input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-bright);
+    padding: 7px 10px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    text-align: right;
+    width: 100%;
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+  .rc-row input::-webkit-outer-spin-button,
+  .rc-row input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .rc-row input:focus {
+    outline: 1px solid var(--accent);
+    outline-offset: -1px;
+    border-color: var(--accent);
+  }
+  .rc-unit {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  /* OUTPUTS */
+  .recoil-calc-out {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-card-alt);
+    padding: 12px 16px;
+  }
+  .rc-out-row {
+    display: grid;
+    grid-template-columns: 1fr auto 56px;
+    gap: 10px;
+    padding: 5px 0;
+    font-size: 13px;
+    align-items: baseline;
+  }
+  .rc-out-lbl { color: var(--text-dim); }
+  .rc-out-val {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    color: var(--text-bright);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .rc-out-unit {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: left;
+  }
+  .rc-out-row.total {
+    border-top: 1px solid var(--border);
+    margin-top: 6px;
+    padding-top: 9px;
+  }
+  .rc-out-row.primary .rc-out-val { color: var(--accent); font-weight: 600; }
+
+  /* BAR */
+  .recoil-calc-bar { margin: 6px 0 18px; }
+  .rc-bar-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .bar-legend-bullet { color: var(--text); }
+  .bar-legend-gas[data-gas-band="green"] { color: var(--green); }
+  .bar-legend-gas[data-gas-band="amber"] { color: var(--accent); }
+  .bar-legend-gas[data-gas-band="red"]   { color: var(--red); }
+
+  .rc-bar-track {
+    height: 32px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    background: var(--bg);
+  }
+  .rc-bar-bullet {
+    background: rgba(200, 205, 216, 0.18);
+    transition: flex 180ms ease;
+  }
+  .rc-bar-gas {
+    transition: flex 180ms ease, background-color 180ms ease;
+  }
+  .rc-bar-gas[data-gas-band="green"] { background: var(--green); }
+  .rc-bar-gas[data-gas-band="amber"] { background: var(--accent); }
+  .rc-bar-gas[data-gas-band="red"]   { background: var(--red); }
+
+  .recoil-calc-notes {
+    border-top: 1px dashed var(--border);
+    padding-top: 6px;
+  }
+  .recoil-calc-notes details {
+    border-bottom: 1px solid var(--border);
+  }
+  .recoil-calc-notes details:last-child { border-bottom: none; }
+  .recoil-calc-notes summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 12px 0 12px 22px;
+    position: relative;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text);
+    transition: color 120ms ease;
+  }
+  .recoil-calc-notes summary:hover { color: var(--accent); }
+  .recoil-calc-notes summary::-webkit-details-marker { display: none; }
+  .recoil-calc-notes summary::before {
+    content: '+';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-dim);
+    width: 12px;
+    text-align: center;
+    transition: transform 150ms ease;
+  }
+  .recoil-calc-notes details[open] > summary::before {
+    content: '−';
+    color: var(--accent);
+  }
+  .recoil-calc-notes summary em {
+    color: var(--accent); font-style: italic; font-family: var(--font-serif);
+    text-transform: none; letter-spacing: 0; font-weight: 400; font-size: 13px;
+  }
+  .recoil-calc-notes p {
+    margin: 0;
+    padding: 0 4px 16px 22px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.65;
+    max-width: 760px;
+  }
+  .recoil-calc-notes p em { color: var(--accent); font-style: italic; font-family: var(--font-serif); }
+  .recoil-calc-notes p strong { color: var(--text); font-weight: 600; }
+
+  @media (max-width: 760px) {
+    .recoil-calc { padding: 22px 18px; }
+    .recoil-calc-body { grid-template-columns: 1fr; gap: 18px; }
+    .rc-row { grid-template-columns: 1fr 92px 24px; }
+    .rc-out-row { grid-template-columns: 1fr auto 50px; gap: 8px; font-size: 12px; }
+  }
+</style>

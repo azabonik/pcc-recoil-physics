@@ -1,16 +1,17 @@
 ---
 interface Props {
-  /** "01", "02", etc. */
-  number: string;
+  /** "01", "02", etc. Pair with `label` to render the kicker line. */
+  number?: string;
   /** Kicker text to the right of the number. */
-  label: string;
-  /** Section heading. */
-  heading: string;
+  label?: string;
+  /** Section heading (h2). */
+  heading?: string;
 }
 const { number, label, heading } = Astro.props;
+const showKicker = number && label;
 ---
 <section class="section">
-  <div class="section-number">{number} — {label}</div>
-  <h2>{heading}</h2>
+  {showKicker && <div class="section-number">{number} — {label}</div>}
+  {heading && <h2>{heading}</h2>}
   <slot />
 </section>

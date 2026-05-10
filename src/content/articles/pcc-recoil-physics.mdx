@@ -10,6 +10,7 @@ description: >-
   Why felt recoil in a 9mm PCC is dominated by gas state at the muzzle. Powder, barrel
   length, and bullet weight tradeoffs at 130 PF, with a 90–147gr table.
 pubDate: 2025-05-08
+updatedDate: 2026-05-09
 tags: ["PCC", "9mm reloading", "internal ballistics", "recoil"]
 about:
   - "Internal ballistics"
@@ -64,7 +65,7 @@ import SourceItem from '../../components/SourceItem.astro';
       &nbsp;÷&nbsp; <span class="var">M</span><sub>gun</sub>
     </div>
     <div class="eq-note">
-      Where <span class="accent"><span class="var">V</span><sub>gas</sub></span><span> = </span><span class="var">f</span><span> × </span><span class="var">V</span><sub>muzzle</sub><br />
+      Where <span class="blue"><span class="var">V</span><sub>gas</sub></span><span> = </span><span class="blue"><span class="var">f</span></span><span> × </span><span class="var">V</span><sub>muzzle</sub><br />
       <span>SAAMI gas factor </span><span class="var">f</span><span> ≈ 1.5 for handguns, 1.75 for rifles</span><Sup refs={1} /><br />
       <span>British Textbook of Small Arms (1929): </span><span class="var">f</span><span> "lies between 1 and 2, with average value 1½"</span><Sup refs={3} />
     </div>
@@ -164,7 +165,7 @@ import SourceItem from '../../components/SourceItem.astro';
 
   <p>
     The SAAMI gas factor <em>f</em> is a platform-wide average that doesn't account for burn rate differences.
-    The values below use estimated <em>f</em> values adjusted for muzzle pressure, bounded by the established
+    The values below are estimated for a 13″ PCC at the two burn-rate extremes, bounded by the established
     range of 1.0–2.0.<Sup refs={3} />
   </p>
 
@@ -376,41 +377,29 @@ import SourceItem from '../../components/SourceItem.astro';
       {
         weight: '95gr',
         velocity: '1,368 fps',
-        delta: '6%',
+        recoilDelta: '~6%',
         color: 'accent',
-        bulletMomentum: '129,960',
-        fast: { bulletWidthPct: 90, gasWidthPct: 10, gasLabel: '4%', total: '135,472' },
-        slow: { bulletWidthPct: 83, gasWidthPct: 17, gasLabel: '10%', total: '144,734' },
-        insight: {
-          label: '6%',
-          body: 'The gas push with slow powder is <strong>2.7× larger</strong> than with fast powder (14,774 vs 5,472). That gas difference adds roughly the equivalent of going from a 130 PF load to 140 PF — a full division\'s worth of recoil penalty, purely from powder choice. But note: 95gr requires the <em>largest</em> charge of any weight at this PF, producing the most gas. It benefits most from fast powder, but also has the most gas to begin with.',
-        },
+        fastGas: 5472,
+        slowGas: 14774,
+        multiplier: '2.7×',
       },
       {
         weight: '124gr',
         velocity: '1,049 fps',
-        delta: '6%',
+        recoilDelta: '~6%',
         color: 'cyan',
-        bulletMomentum: '130,076',
-        fast: { bulletWidthPct: 93, gasWidthPct: 7, gasLabel: '3%', total: '133,672' },
-        slow: { bulletWidthPct: 86, gasWidthPct: 14, gasLabel: '9%', total: '142,348' },
-        insight: {
-          label: '6%',
-          body: 'The gas push triples (12,272 vs 3,672) but the bullet is heavier, so gas is a smaller slice of total recoil. With the same fast powder, 124gr actually produces <em>less</em> total gas momentum than 95gr at equal PF — because it needs less velocity and therefore a smaller charge. At 1,049 fps, external ballistics remain practical for typical PCC engagement distances.',
-        },
+        fastGas: 3672,
+        slowGas: 12272,
+        multiplier: '3.3×',
       },
       {
         weight: '147gr',
         velocity: '884 fps',
-        delta: '5%',
+        recoilDelta: '~5%',
         color: 'blue',
-        bulletMomentum: '129,948',
-        fast: { bulletWidthPct: 95, gasWidthPct: 5, gasLabel: '2%', total: '132,652' },
-        slow: { bulletWidthPct: 89, gasWidthPct: 11, gasLabel: '7%', total: '139,177' },
-        insight: {
-          label: '5%',
-          body: 'Gas still triples (9,229 vs 2,652) but at this low velocity, gas momentum is the smallest fraction of total recoil. With the same fast powder, 147gr produces the <em>least</em> total gas momentum of any weight class. The tradeoff is external ballistics: 884 fps means more bullet drop, more lead required on moving targets, and longer flight time to distant steel — a real competitive penalty on stages with longer engagements.',
-        },
+        fastGas: 2652,
+        slowGas: 9229,
+        multiplier: '3.5×',
       },
     ]}
   >
@@ -427,6 +416,15 @@ import SourceItem from '../../components/SourceItem.astro';
       whether you have enough velocity to shoot flat at distance.
     </p>
   </PlainEnglish>
+
+  <Callout title="Try it yourself">
+    <p>
+      Curious how your own load looks under the same equation? The
+      <a href="/articles/recoil-calculator/">free recoil calculator</a> takes
+      bullet, PF, charge, gas factor, and gun weight, and returns the bullet/gas
+      momentum split, recoil velocity, and free-recoil energy.
+    </p>
+  </Callout>
 </Section>
 
 {/* ============================================================================

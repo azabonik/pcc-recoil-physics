@@ -38,6 +38,11 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
               <time datetime={article.data.pubDate.toISOString()}>
                 {dateFmt.format(article.data.pubDate)}
               </time>
+              {article.data.updatedDate && article.data.updatedDate.getTime() !== article.data.pubDate.getTime() && (
+                <span class="article-card-updated">
+                  · updated {dateFmt.format(article.data.updatedDate)}
+                </span>
+              )}
               {article.data.tags.length > 0 && (
                 <span class="article-card-tags">
                   {article.data.tags.map((tag, i) => (
@@ -178,6 +183,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
   }
   .article-card-tags { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .article-card-tag { color: var(--accent); }
+  .article-card-updated { color: var(--text-dim); opacity: 0.85; }
 
   .article-card-title {
     font-family: var(--font-serif);

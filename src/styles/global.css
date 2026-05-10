@@ -172,6 +172,7 @@ a:hover { border-bottom-color: var(--accent); }
 }
 .eq-note span { color: var(--text); }
 .eq-note .accent { color: var(--accent); }
+.eq-note .blue { color: var(--blue); }
 
 /* ============================================================================
    Variable legend (formula key)
@@ -453,7 +454,23 @@ a:hover { border-bottom-color: var(--accent); }
   .barrel-bullet-label { font-size: 8px !important; }
   .barrel-bullet { right: -24px !important; }
 
-  .calc-table { font-size: 11px; display: block; overflow-x: auto; white-space: nowrap; }
+  /* Wide tables horizontally scroll on mobile. Force a thin always-visible
+     scrollbar so readers know they can pan — otherwise the rightmost columns
+     (often the answer columns) feel cut off. */
+  .calc-table {
+    font-size: 11px;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-dim) var(--bg-card);
+  }
+  .calc-table::-webkit-scrollbar { height: 6px; }
+  .calc-table::-webkit-scrollbar-thumb {
+    background: var(--accent-dim);
+    border-radius: 3px;
+  }
+  .calc-table::-webkit-scrollbar-track { background: var(--bg-card); }
   .calc-table th, .calc-table td { padding: 8px; }
   .calc-table th:first-child, .calc-table td:first-child { white-space: normal; min-width: 120px; }
 

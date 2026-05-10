@@ -43,6 +43,13 @@ const {
 const canonicalPath = `/articles/${slug}/`;
 const ogTitle = headlineSuffix ? `${title}: ${headlineSuffix}` : title;
 
+const dateFmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
@@ -80,6 +87,19 @@ const structuredData = {
         {title}{headlineSuffix && <>{': '}<em>{headlineSuffix}</em></>}
       </h1>
       <div class="article-header-sub">{headerSubtitle}</div>
+      <div class="article-header-dates">
+        <time datetime={pubDate.toISOString()} itemprop="datePublished">
+          Published {dateFmt.format(pubDate)}
+        </time>
+        {updatedDate && updatedDate.getTime() !== pubDate.getTime() && (
+          <>
+            <span class="dot">·</span>
+            <time datetime={updatedDate.toISOString()} itemprop="dateModified">
+              Updated {dateFmt.format(updatedDate)}
+            </time>
+          </>
+        )}
+      </div>
     </header>
 
     <main>
@@ -109,6 +129,20 @@ const structuredData = {
   .site-nav-home:hover { color: var(--accent); border-bottom: none; }
   .site-nav-sep { margin: 0 8px; opacity: 0.5; }
   .site-nav-section { color: var(--accent); }
+
+  .article-header-dates {
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .article-header-dates time { font-variant-numeric: tabular-nums; }
+  .article-header-dates .dot { opacity: 0.5; }
 
   .site-footer {
     padding: 28px 48px 48px;
