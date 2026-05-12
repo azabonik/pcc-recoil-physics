@@ -16,6 +16,12 @@
 
   <ol class="recoil-calc-loads" data-loads aria-label="Cartridge loads"></ol>
 
+  <div class="recoil-calc-actions">
+    <button type="button" class="recoil-calc-add" data-add aria-label="Add a load (currently 1 of 4)">
+      + Add load
+    </button>
+  </div>
+
   <div class="recoil-calc-notes">
     <details open>
       <summary>About the gas factor</summary>
@@ -69,6 +75,7 @@
   <li class="recoil-calc-card" data-load>
     <div class="recoil-calc-card-head">
       <h4 class="recoil-calc-card-label" data-load-label>Load A</h4>
+      <button type="button" class="recoil-calc-remove" data-remove hidden aria-label="Remove load">×</button>
     </div>
     <div class="recoil-calc-body">
       <div class="recoil-calc-inputs">
@@ -185,6 +192,8 @@
   const DEFAULT_LOAD: LoadInputs = {
     bullet: 124, velocity: 1050, charge: 4.0, f: 1.5, gun: 7.5,
   };
+
+  const MAX_LOADS = 4;
 
   function bandFor(f: number): Bands {
     if (f <= 1.2) return 'green';
@@ -315,9 +324,54 @@
         const el = card.querySelector<HTMLInputElement>(`[data-field="${field}"]`)!;
         el.value = String(initial[field]);
       });
+      const removeBtn = card.querySelector<HTMLButtonElement>('[data-remove]')!;
+      removeBtn.addEventListener('click', () => {
+        const i = cards.indexOf(card);
+        if (i >= 0) removeLoad(i);
+      });
       attachInputListeners(card);
       return card;
     }
+
+    function syncControls() {
+      const n = loads.length;
+      addBtn.disabled = n >= MAX_LOADS;
+      addBtn.setAttribute(
+        'aria-label',
+        n >= MAX_LOADS
+          ? `Add a load (maximum ${MAX_LOADS} reached)`
+          : `Add a load (currently ${n} of ${MAX_LOADS})`,
+      );
+      cards.forEach((card, i) => {
+        const r = card.querySelector<HTMLButtonElement>('[data-remove]')!;
+        r.hidden = n < 2;
+        r.setAttribute('aria-label', `Remove Load ${letterFor(i)}`);
+      });
+    }
+
+    function addLoad() {
+      if (loads.length >= MAX_LOADS) return;
+      const copy: LoadInputs = { ...loads[loads.length - 1] };
+      loads.push(copy);
+      const card = createCard(copy);
+      cards.push(card);
+      list.appendChild(card);
+      relabel();
+      recomputeAt(cards.length - 1);
+      syncControls();
+    }
+
+    function removeLoad(i: number) {
+      if (loads.length <= 1) return;
+      loads.splice(i, 1);
+      const [card] = cards.splice(i, 1);
+      card.remove();
+      relabel();
+      syncControls();
+    }
+
+    const addBtn = root.querySelector<HTMLButtonElement>('[data-add]')!;
+    addBtn.addEventListener('click', addLoad);
 
     function init() {
       loads.forEach((load) => {
@@ -326,6 +380,7 @@
         list.appendChild(card);
       });
       relabel();
+      syncControls();
       cards.forEach((_, i) => recomputeAt(i));
     }
 
@@ -397,6 +452,58 @@
     text-transform: uppercase;
     color: var(--accent);
     margin: 0;
+  }
+
+  .recoil-calc-remove {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+  .recoil-calc-remove:hover {
+    color: var(--text-bright);
+    border-color: var(--accent);
+  }
+  .recoil-calc-remove:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .recoil-calc-actions {
+    margin: 0 0 22px;
+  }
+  .recoil-calc-add {
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text);
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+  .recoil-calc-add:hover:not(:disabled) {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .recoil-calc-add:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .recoil-calc-add:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 
   .recoil-calc-body {
