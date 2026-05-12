@@ -1,0 +1,1236 @@
+---
+title: "Pistol Recoil Physics"
+headlineSuffix: "Why the Short Barrel Changes Everything"
+headerLabel: "9×19mm Internal Ballistics · A Practical Shooting Reference by Anthony Zabonik"
+headerSubtitle: >-
+  The physics of bullet momentum, gas momentum, and impulse shape in a pistol. Why felt recoil
+  in a 9mm handgun is dominated by the pressure-time curve, not by powder selection or gas
+  state at the muzzle, and why heavier bullets at equal Power Factor feel softer regardless of
+  platform.
+description: >-
+  Why felt recoil in a 9mm pistol is dominated by the pressure-time curve, not powder selection.
+  Bullet weight, barrel length, and gun weight tradeoffs at 130 PF across eight reference platforms.
+pubDate: 2026-05-11
+draft: true
+tags: ["pistol", "9mm reloading", "internal ballistics", "recoil"]
+about:
+  - "Internal ballistics"
+  - "Pistol"
+  - "9mm Parabellum"
+  - "Recoil"
+  - "Power Factor"
+  - "Handloading"
+keywords: "pistol recoil, 9mm handgun, internal ballistics, pressure-time curve, felt recoil, bullet weight, power factor, USPSA, practical shooting, free recoil equation, SAAMI, polymer striker, steel-frame 2011, DA/SA, sight block, free recoil energy"
+---
+
+import DataTable from '../../components/DataTable.astro';
+import Section from '../../components/Section.astro';
+import PlainEnglish from '../../components/PlainEnglish.astro';
+import EquationBox from '../../components/EquationBox.astro';
+import VariableLegend from '../../components/VariableLegend.astro';
+import PistolBarrelDiagram from '../../components/PistolBarrelDiagram.astro';
+import PistolBarrelLengthZones from '../../components/PistolBarrelLengthZones.astro';
+import PressureCurves from '../../components/PressureCurves.astro';
+import Callout from '../../components/Callout.astro';
+import MethodNote from '../../components/MethodNote.astro';
+import FactorGrid from '../../components/FactorGrid.astro';
+import FactorCard from '../../components/FactorCard.astro';
+import Tag from '../../components/Tag.astro';
+import Sup from '../../components/Sup.astro';
+import Sources from '../../components/Sources.astro';
+import SourceItem from '../../components/SourceItem.astro';
+
+{/* ============================================================================
+    PROLOGUE: Scope note + reference platforms
+    ============================================================================ */}
+<Section>
+  <MethodNote>
+    <strong>Scope note:</strong> This article covers internal ballistics only: everything
+    from primer ignition through the gas jet leaving the muzzle. The deliverable is the
+    <em> recoil impulse profile</em>: how much momentum, delivered over what duration, with
+    what peak force shape. How a specific action type (blowback, locked-breech, roller-delayed)
+    modifies that impulse afterward is platform-dependent and outside the scope of this article.
+  </MethodNote>
+
+  <h2 class="subhead" style="margin-top:32px;">Reference Platforms</h2>
+  <p>
+    This article uses eight pistols as reference points for the recoil equation. To keep the
+    discussion focused on physics rather than brand-loyalty, each is referred to throughout by
+    a short code (<strong>P1–P3</strong> for polymer-frame strikers, <strong>S1–S5</strong>
+    for steel-frame pistols) defined by its physically relevant attributes (action type,
+    barrel length, frame material, unloaded weight). The lineup spans the practical range of
+    9mm competition and duty pistols, from a 21 oz polymer-frame compact (P1) to a 51 oz
+    steel-frame 2011 (S4), with two lighter steel-frame guns (S1, S5) bridging the gap.
+  </p>
+
+  <DataTable label="Six 9mm pistol reference platforms compared: barrel length and unloaded weight for each.">
+    <table class="calc-table">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Barrel</th>
+          <th>Unloaded weight</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600;color:var(--text-bright);">P1: Polymer striker (compact)</td>
+          <td class="num">4.02″</td>
+          <td class="num">21.34 oz <span style="color:var(--text-dim);font-size:11px;">(1.33 lb)</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:var(--text-bright);">P2: Polymer striker (full-size)</td>
+          <td class="num">4.49″</td>
+          <td class="num">22.05 oz <span style="color:var(--text-dim);font-size:11px;">(1.38 lb)</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:var(--text-bright);">P3: Polymer striker (long-slide)</td>
+          <td class="num">5.31″</td>
+          <td class="num">23.46 oz <span style="color:var(--text-dim);font-size:11px;">(1.47 lb)</span></td>
+        </tr>
+        <tr class="row-alt">
+          <td style="font-weight:600;color:var(--text-bright);">S1: Steel-frame striker</td>
+          <td class="num">4.5″</td>
+          <td class="num">40 oz <span style="color:var(--text-dim);font-size:11px;">(2.50 lb)</span></td>
+        </tr>
+        <tr class="row-alt">
+          <td style="font-weight:600;color:var(--text-bright);">S5: Steel-frame 2011 lightweight (SAO, short slide + sight block)</td>
+          <td class="num">4.6″</td>
+          <td class="num">43 oz <span style="color:var(--text-dim);font-size:11px;">(2.68 lb)</span></td>
+        </tr>
+        <tr class="row-alt">
+          <td style="font-weight:600;color:var(--text-bright);">S2: Steel-frame hammer-fired (DA/SA)</td>
+          <td class="num">4.89″</td>
+          <td class="num">46.5 oz <span style="color:var(--text-dim);font-size:11px;">(2.91 lb)</span></td>
+        </tr>
+        <tr class="row-alt">
+          <td style="font-weight:600;color:var(--text-bright);">S3: Steel-frame 2011 (SAO, full slide)</td>
+          <td class="num">5.0″</td>
+          <td class="num">48 oz <span style="color:var(--text-dim);font-size:11px;">(3.0 lb)</span></td>
+        </tr>
+        <tr class="row-alt">
+          <td style="font-weight:600;color:var(--text-bright);">S4: Steel-frame 2011 (SAO, short slide + sight block)</td>
+          <td class="num">4.6″</td>
+          <td class="num">50.88 oz <span style="color:var(--text-dim);font-size:11px;">(3.18 lb)</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </DataTable>
+
+  <MethodNote>
+    <strong>Weights are manufacturer-published unloaded figures for factory-stock
+    configurations.</strong> P1–P3 weights are the manufacturer's "without magazine"
+    figure.<Sup refs={[5, 6, 15]} /> S2's figure is the standard published weight for the
+    optics-ready SKU; the manufacturer does not specify with or without magazine.<Sup refs={16} />
+    S3, S4, and S5 weights are from the Specifications tab on the manufacturer's
+    site.<Sup refs={[17, 18, 20]} /> S1's figure is from the manufacturer's Specifications
+    section.<Sup refs={21} /> Loaded weight will vary based on magazine capacity, cartridge
+    weight, and magazine weight; a loaded 17-round double-stack 9mm magazine adds ~10–11 oz,
+    while a loaded 23-round 141mm 2011 magazine adds ~14–15 oz. Any individual pistol, even
+    of the same model, may differ due to manufacturing tolerances, generation differences, or
+    aftermarket modifications.
+  </MethodNote>
+</Section>
+
+{/* ============================================================================
+    SECTION 1: THE EQUATION
+    ============================================================================ */}
+<Section number="01" label="The Recoil Equation" heading="Recoil is more than bullet momentum">
+  <p>
+    When a round fires, two things fly out the front of the barrel: the bullet, and a blast of
+    hot gas from the burned powder. Both push the gun backward. The free-recoil equation
+    accounts for both, and the relative size of each term tells you which variables are worth
+    optimizing.<Sup refs={[1, 2, 3]} />
+  </p>
+
+  <PlainEnglish>
+    <p>
+      In plain terms: recoil = bullet push + gas push. In a 4–5″ pistol barrel, the gas
+      never gets room to expand no matter what powder you pick, so the gas push is
+      effectively locked at ~3–5% of total momentum, and there's no useful lever there.
+      What you <em>can</em> change is the shape of the push: heavier bullet = wider,
+      gentler shove; lighter bullet at higher velocity = shorter, sharper spike.
+    </p>
+  </PlainEnglish>
+
+  <EquationBox label="Free Recoil Velocity (SAAMI / Hatcher / NRA)">
+    <div class="eq">
+      <span class="var">V</span><sub>gun</sub> &nbsp;=&nbsp;
+      ( <span class="highlight"><span class="var">m</span><sub>bullet</sub> × <span class="var">V</span><sub>muzzle</sub></span>
+      &nbsp;+&nbsp;
+      <span class="blue-hl"><span class="var">m</span><sub>charge</sub> × <span class="var">V</span><sub>gas</sub></span> )
+      &nbsp;÷&nbsp; <span class="var">M</span><sub>gun</sub>
+    </div>
+    <div class="eq-note">
+      Where <span class="blue"><span class="var">V</span><sub>gas</sub></span><span> = </span><span class="blue"><span class="var">f</span></span><span> × </span><span class="var">V</span><sub>muzzle</sub><br />
+      <span>SAAMI gas factor </span><span class="var">f</span><span> ≈ 1.5 for handguns, 1.75 for rifles</span><Sup refs={1} /><br />
+      <span>British Textbook of Small Arms (1929): </span><span class="var">f</span><span> "lies between 1 and 2, with average value 1½"</span><Sup refs={3} />
+    </div>
+  </EquationBox>
+
+  <VariableLegend />
+
+  <Callout title="Try it yourself">
+    <p>
+      Want to see what these variables produce for your own load? The
+      <a href="/articles/recoil-calculator/">free recoil calculator</a> takes bullet weight,
+      target Power Factor, charge, gas factor, and gun weight, and returns the bullet/gas
+      momentum split, V<sub>gun</sub>, and free-recoil energy in real time.
+    </p>
+  </Callout>
+
+  <p>
+    The <span style="color:var(--accent);font-weight:600">orange term</span> (bullet push) is
+    locked once you pick your bullet weight and PF target. The
+    <span style="color:var(--blue);font-weight:600">blue term</span> (gas push) is small in a
+    pistol (typically 3–5% of total recoil momentum) and effectively not tunable. The
+    barrel is too short for meaningful gas expansion regardless of powder choice. What
+    <em> is</em> different between loads is the <strong>shape</strong> of the impulse: how
+    the same total momentum is distributed over time. That's where bullet weight enters the
+    picture.
+  </p>
+</Section>
+
+{/* ============================================================================
+    SECTION 2: WHY ATMOSPHERIC IS UNREACHABLE
+    ============================================================================ */}
+<Section number="02" label="Why Atmospheric Is Unreachable in a Pistol" heading="Every pistol barrel is too short for the gas to settle">
+  <p>
+    The free-recoil equation's gas term shrinks when gas pressure at the muzzle drops toward
+    atmospheric (14.7 psi). At atmospheric, there's no pressure differential, gas doesn't
+    accelerate out the muzzle, V<sub>gas</sub> approaches zero, and the gas term goes to
+    zero. That's the theoretical floor of free recoil: pure bullet momentum, nothing else.
+  </p>
+  <p>
+    In a 4–5″ pistol barrel, you're never close. <strong>Muzzle pressure is always high
+    regardless of powder choice.</strong> QuickLOAD-type estimates put 9mm muzzle (uncorking)
+    pressure at roughly 4,000–8,000 psi across the entire pistol barrel-length range:
+    4,000–5,000 psi for a 147gr / fast-powder subsonic load in a 4″ barrel, and 6,000–8,000+
+    psi with hotter +P loads. Even at the low end, that's hundreds of times atmospheric
+    pressure. There is no "quiet, fully-expanded, near-atmospheric gas" regime available in
+    any pistol barrel length.
+  </p>
+
+  <PistolBarrelDiagram />
+
+  <h2 class="subhead">Why the gas factor f doesn't vary in a pistol</h2>
+  <p>
+    The SAAMI gas factor f = 1.5 for handguns is a single value across the entire class, and
+    there's a good physical reason: muzzle pressure stays in the same order of magnitude
+    across the whole 3.5–5.5″ barrel range. The gas always exits well faster than the bullet,
+    which is exactly the regime f = 1.5 describes.<Sup refs={1} />
+  </p>
+  <p>
+    Even "slow" pistol powders like Power Pistol and Longshot are 95%+ consumed by the time
+    the bullet exits a 4″ barrel, and the remaining gas is always under enough residual
+    pressure to accelerate past the bullet upon uncorking. The effective f difference between
+    Titegroup and Power Pistol in P1 is small enough to fall inside the noise of SAAMI's
+    empirical 1.5 figure.
+  </p>
+
+  <MethodNote>
+    <strong>For all pistol calculations in this article, f = 1.5.</strong>
+  </MethodNote>
+</Section>
+
+{/* ============================================================================
+    SECTION 3: RUNNING THE NUMBERS
+    ============================================================================ */}
+<Section number="03" label="Running the Numbers" heading="130 PF across bullet weights">
+  <p>
+    130 Power Factor requires:
+  </p>
+
+  <DataTable label="Required muzzle velocity for 130 power factor by bullet weight: 95, 115, 124, 135, and 147 grain.">
+    <table class="calc-table" style="max-width:520px;">
+      <thead>
+        <tr>
+          <th>Bullet Weight</th>
+          <th>Velocity for 130 PF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>115 gr</td><td class="num">1,130 fps</td></tr>
+        <tr><td>124 gr</td><td class="num">1,048 fps</td></tr>
+        <tr><td>147 gr</td><td class="num">884 fps</td></tr>
+      </tbody>
+    </table>
+  </DataTable>
+
+  <p>
+    The bullet push is identical in all three loads: 130,000 grain·fps of bullet momentum.
+    That's what holding PF constant means. What changes is the gas term (charge weight × gas
+    velocity) and the <strong>shape</strong> of the pressure-time curve.
+  </p>
+
+  <h2 class="subhead">Gas momentum at 130 PF (P2, 4.49″ barrel)</h2>
+  <p>
+    Using SAAMI f = 1.5 for all loads. Computed for P2 (22.05 oz / 1.38 lb
+    unloaded).<Sup refs={5} /> Momentum values are in lb·ft/s.
+  </p>
+
+  <DataTable label="Per-load momentum breakdown at 130 power factor across five bullet weights: Titegroup and Power Pistol charges, bullet momentum, gas momentum, and total ejecta momentum.">
+    <table class="calc-table">
+      <thead>
+        <tr>
+          <th>Load (130 PF)</th>
+          <th>Charge (TG)</th>
+          <th>Charge (PP)</th>
+          <th>Bullet mom.</th>
+          <th>Gas mom. (TG)</th>
+          <th>Gas mom. (PP)</th>
+          <th>Total (TG)</th>
+          <th>Total (PP)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>115 gr @ 1,130 fps</td>
+          <td class="num">~4.4 gr</td>
+          <td class="num">~5.5 gr</td>
+          <td class="num">18.6</td>
+          <td class="num">1.07</td>
+          <td class="num">1.33</td>
+          <td class="num bold">19.6</td>
+          <td class="num bold">19.9</td>
+        </tr>
+        <tr class="row-alt">
+          <td>124 gr @ 1,048 fps</td>
+          <td class="num">~4.0 gr</td>
+          <td class="num">~5.0 gr</td>
+          <td class="num">18.6</td>
+          <td class="num">0.90</td>
+          <td class="num">1.12</td>
+          <td class="num bold">19.5</td>
+          <td class="num bold">19.7</td>
+        </tr>
+        <tr>
+          <td>147 gr @ 884 fps</td>
+          <td class="num">~3.3 gr</td>
+          <td class="num">~4.2 gr</td>
+          <td class="num">18.6</td>
+          <td class="num green">0.63</td>
+          <td class="num green">0.80</td>
+          <td class="num bold green">19.2</td>
+          <td class="num bold green">19.4</td>
+        </tr>
+      </tbody>
+    </table>
+  </DataTable>
+
+  <Callout title="Key Insight">
+    <p>
+      Total ejecta momentum varies by only <strong>~2% across the three bullet weights</strong>
+      at equal PF with the same powder. Switching from Titegroup to Power Pistol at the same
+      bullet weight adds only <strong>~0.2–0.3 lb·ft/s</strong> (~1% of total momentum). Yet
+      shooters universally report that 147gr feels softer than 115gr, and barely notice the
+      powder swap.
+    </p>
+    <p>
+      <strong>The gas term is not the lever.</strong> At 130 PF with Titegroup, gas momentum
+      drops from 1.07 lb·ft/s (115gr) to 0.63 lb·ft/s (147gr), a difference of 0.44 lb·ft/s
+      on a base of ~19.5 lb·ft/s, or about <strong>2.3%</strong> of total recoil momentum.
+      Across powders at the same bullet weight, the variation is even smaller (~1%). Bullet
+      weight and especially gun weight are doing all the work.
+    </p>
+  </Callout>
+
+  <h2 class="subhead">Free recoil across all reference platforms at 130 PF</h2>
+  <p>
+    All loads use Titegroup. The recoil equation uses gun weight (M<sub>gun</sub>), the mass
+    the impulse acts against. All values below use the manufacturer-published
+    <strong> unloaded weight</strong>. In practice, a loaded magazine adds 10–15 oz depending
+    on capacity and cartridge, which would reduce V<sub>gun</sub> and FRE proportionally. The
+    relative ranking between platforms stays the same regardless of whether you use loaded or
+    unloaded weight.
+  </p>
+
+  <EquationBox label="147 gr @ 884 fps (130 PF, ~3.3 gr Titegroup): lowest-gas configuration" variant="blue">
+    <DataTable label="147 grain at 884 fps across all six reference platforms: barrel, unloaded weight, V_gun, and free-recoil energy.">
+      <table class="calc-table">
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th>Barrel</th>
+            <th>Unloaded weight</th>
+            <th>V<sub>gun</sub></th>
+            <th>Free-recoil energy</th>
+            <th>Relative</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colSpan={6} style="padding:10px 16px;background:rgba(245,158,11,0.06);border-bottom:1px solid var(--border);">
+              <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);">
+                Polymer-frame strikers
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--text-bright);">P1: Polymer striker (compact)</td>
+            <td class="num">4.02″</td>
+            <td class="num">1.33 lb (21.34 oz)</td>
+            <td class="num">14.39 fps</td>
+            <td class="num">4.29 ft-lb</td>
+            <td><Tag color="red">+138%</Tag></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--text-bright);">P2: Polymer striker (full-size)</td>
+            <td class="num">4.49″</td>
+            <td class="num">1.38 lb (22.05 oz)</td>
+            <td class="num">13.92 fps</td>
+            <td class="num">4.15 ft-lb</td>
+            <td><Tag color="red">+131%</Tag></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--text-bright);">P3: Polymer striker (long-slide)</td>
+            <td class="num">5.31″</td>
+            <td class="num">1.47 lb (23.46 oz)</td>
+            <td class="num">13.09 fps</td>
+            <td class="num">3.90 ft-lb</td>
+            <td><Tag color="red">+117%</Tag></td>
+          </tr>
+          <tr>
+            <td colSpan={6} style="padding:10px 16px;background:rgba(59,130,246,0.06);border-top:2px solid var(--border);border-bottom:1px solid var(--border);">
+              <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--blue);">
+                Steel-frame competition pistols
+              </span>
+            </td>
+          </tr>
+          <tr style="background:rgba(59,130,246,0.03);">
+            <td style="font-weight:600;color:var(--text-bright);">S1: Steel-frame striker</td>
+            <td class="num">4.5″</td>
+            <td class="num">2.50 lb (40 oz)</td>
+            <td class="num">7.68 fps</td>
+            <td class="num">2.29 ft-lb</td>
+            <td><Tag color="amber">+27%</Tag></td>
+          </tr>
+          <tr style="background:rgba(59,130,246,0.03);">
+            <td style="font-weight:600;color:var(--text-bright);">S2: Steel-frame hammer-fired (DA/SA)</td>
+            <td class="num">4.89″</td>
+            <td class="num">2.91 lb (46.5 oz)</td>
+            <td class="num">6.60 fps</td>
+            <td class="num green">1.97 ft-lb</td>
+            <td><Tag color="amber">+9%</Tag></td>
+          </tr>
+          <tr style="background:rgba(59,130,246,0.03);">
+            <td style="font-weight:600;color:var(--text-bright);">S3: Steel-frame 2011 (SAO, full slide)</td>
+            <td class="num">5.0″</td>
+            <td class="num">3.0 lb (48 oz)</td>
+            <td class="num">6.40 fps</td>
+            <td class="num green">1.91 ft-lb</td>
+            <td><Tag color="amber">+6%</Tag></td>
+          </tr>
+          <tr style="background:rgba(34,197,94,0.05);">
+            <td style="font-weight:600;color:var(--text-bright);">S4: Steel-frame 2011 (SAO, short slide + sight block)</td>
+            <td class="num">4.6″</td>
+            <td class="num">3.18 lb (50.88 oz)</td>
+            <td class="num green" style="font-weight:700;">6.03 fps</td>
+            <td class="num green" style="font-weight:700;">1.80 ft-lb</td>
+            <td><Tag color="green">baseline</Tag></td>
+          </tr>
+          <tr style="background:rgba(59,130,246,0.03);">
+            <td style="font-weight:600;color:var(--text-bright);">S5: Steel-frame 2011 lightweight (SAO, short slide + sight block)</td>
+            <td class="num">4.6″</td>
+            <td class="num">2.68 lb (43 oz)</td>
+            <td class="num">7.14 fps</td>
+            <td class="num">2.13 ft-lb</td>
+            <td><Tag color="amber">+18%</Tag></td>
+          </tr>
+        </tbody>
+      </table>
+    </DataTable>
+  </EquationBox>
+
+  <p>
+    <strong>S2</strong> at 2.91 lb produces roughly <strong>half the free-recoil
+    energy</strong> of <strong>P2</strong> with the same cartridge. <strong>S3</strong> and
+    <strong>S4</strong> push further, but they are only ~6% apart in free recoil; their
+    similar total weight (3.0 vs 3.18 lb) means the free-recoil equation treats them almost
+    the same. S4's real advantage, its shortened 4.25″ slide and integrated sight block
+    reducing reciprocating mass, is an action-dynamics story, not an internal-ballistics
+    one, and falls outside this article's scope. From a pure free-recoil standpoint,
+    <strong> gun weight is the M<sub>gun</sub> variable in the equation</strong>, and the
+    biggest jump is from polymer-frame strikers (~1.3–1.5 lb) to steel-frame competition guns
+    (~2.5–3.2 lb).
+  </p>
+
+  <p>
+    <strong>S1</strong> at 40 oz sits at the lightweight end of that steel-frame
+    range,<Sup refs={21} /> roughly 6.5 oz lighter than S2. The free-recoil equation reflects
+    that directly: V<sub>gun</sub> is ~16% higher than S2's, and free-recoil energy comes in
+    at 2.29 ft-lb (+27% vs the S4 baseline). It still beats every polymer-frame striker in
+    the table by a wide margin (about half the free-recoil energy of P2), but among the steel
+    guns it is the closest to "polymer feel" while keeping a steel frame's other advantages
+    (rigidity, less flex under recoil, the grip mass that helps with controllability metrics
+    not captured in this equation). S1 and S5 bracket the sub-3-lb segment of the steel-frame
+    market.
+  </p>
+
+  <p>
+    <strong>S5</strong> is a useful sanity check on the equation. Same barrel length, same
+    slide length, same sight-block architecture as S4, but ~8 oz lighter at 43 oz
+    unloaded.<Sup refs={20} /> Drop ~15.5% of M<sub>gun</sub> and free-recoil energy rises by
+    the inverse ratio: <strong>+18% over the S4 baseline</strong> (2.13 vs 1.80 ft-lb),
+    placing it between S2 and S3. The action-dynamics advantage of the short slide and sight
+    block is preserved; only the static free-recoil term gets worse. Whether the lighter gun
+    feels better in your hands depends on whether you're optimizing for transitions (where
+    less mass to drag around helps) or for pure dot return (where more mass is the friend of
+    free recoil). The free-recoil equation only scores the second of those.
+  </p>
+
+  <h2 class="subhead">Within a single platform: bullet weight matters less than gun weight</h2>
+  <p>
+    Holding the platform fixed (P2, 1.38 lb unloaded), the spread across bullet weights
+    is small:
+  </p>
+
+  <DataTable label="Effect of gun mass on V_gun and free-recoil energy across the same load and the six reference platforms.">
+    <table class="calc-table">
+      <thead>
+        <tr>
+          <th>Load</th>
+          <th>Total ejecta momentum (gr·fps)</th>
+          <th>V<sub>gun</sub> (fps)</th>
+          <th>Free-recoil energy (ft-lb)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>115 gr @ 1,130 fps (TG ~4.4 gr)</td>
+          <td class="num">137,408</td>
+          <td class="num">14.24</td>
+          <td class="num">4.35</td>
+        </tr>
+        <tr class="row-alt">
+          <td>124 gr @ 1,048 fps (TG ~4.0 gr)</td>
+          <td class="num">136,240</td>
+          <td class="num">14.12</td>
+          <td class="num">4.27</td>
+        </tr>
+        <tr>
+          <td>147 gr @ 884 fps (TG ~3.3 gr)</td>
+          <td class="num green">134,324</td>
+          <td class="num green">13.92</td>
+          <td class="num green">4.15</td>
+        </tr>
+      </tbody>
+    </table>
+  </DataTable>
+
+  <p>
+    Free-recoil energy varies by <strong>~5% across bullet weights</strong> but by
+    <strong> ~138% across platforms</strong> (P1 vs S4). The math says bullet weight barely
+    matters and gun weight dominates. The hand says bullet weight matters more than the 5%
+    suggests. The hand is right, and Section 05 explains why.
+  </p>
+
+  <h2 class="subhead">Powder choice: the non-lever</h2>
+  <p>
+    Swapping a 4.0 gr Titegroup load for a 5.0 gr Power Pistol load at the same
+    124 gr / 130 PF:
+  </p>
+  <ul style="margin: 0 0 16px 24px; color: var(--text); line-height: 1.7;">
+    <li>Adds 1.0 gr of charge weight.</li>
+    <li>Adds 1.0 × 1,048 × 1.5 / 7,000 = <strong>0.22 lb·ft/s</strong> of gas momentum.</li>
+    <li>On a total ejecta momentum of ~19.5 lb·ft/s, that's a <strong>~1.1% increase</strong>.</li>
+  </ul>
+  <p>
+    This is well below the threshold of human perception for impulse magnitude. Powder
+    selection moves the gas term, but the gas term is too small for the move to matter.
+  </p>
+
+  <MethodNote>
+    <strong>Powder selection still matters for reliability, accuracy, flash, and cleanliness.</strong>
+    The point is narrowly that powder selection is not a meaningful lever for recoil
+    <em> momentum</em> in a pistol.
+  </MethodNote>
+</Section>
+
+{/* ============================================================================
+    SECTION 4: BARREL LENGTH EFFECTS
+    ============================================================================ */}
+<Section number="04" label="Barrel Length Effects" heading="3.5″ to 5.5″: how much does it matter?">
+  <p>
+    Barrel length affects two things in a pistol: muzzle velocity (and therefore the charge
+    weight required to make PF) and the duration of the pressure impulse acting on the gun.
+    Both effects are modest compared to bullet weight, but the difference between the
+    shortest practical pistol barrels and the longest is large enough to be felt.
+  </p>
+  <p>
+    9mm velocity scales at roughly <strong>25–35 fps per inch</strong> in the 3.5–5.5″ range,
+    with heavier bullets showing less sensitivity to barrel length than light bullets. This
+    slope is derived from independent chronograph testing of production pistols and
+    interpolation from BBTI whole-inch data points.<Sup refs={[4, 7, 10]} />
+  </p>
+
+  <MethodNote>
+    <strong>A note on BBTI data:</strong> Ballistics by the Inch (BBTI) is a widely-cited
+    reference for barrel-length-vs-velocity relationships, but their 9mm data was collected
+    using a T/C Encore test platform at <strong>whole-inch increments</strong> (2″, 3″, 4″,
+    5″, etc.). BBTI did not test at 4.02″, 4.49″, 4.89″, or 5.31″, the exact barrel lengths
+    of the reference platforms in this article. Any velocity figure tied to a specific
+    barrel length here is interpolated from BBTI's whole-inch data or sourced from independent
+    chronograph testing. BBTI's "Real World Guns" section notes that production pistols
+    diverge from their Encore data by 20–50 fps.<Sup refs={4} />
+  </MethodNote>
+
+  <h2 class="subhead">Velocity at constant charge weight across barrel lengths</h2>
+  <p>
+    These are <strong>estimated</strong> velocities from a constant charge tuned to produce
+    130 PF from a 4.49″ barrel (P2). The charge does not change; only the barrel length
+    does. Estimates are interpolated from BBTI's 4″/5″ data points and cross-referenced
+    against published production-pistol chronograph data.<Sup refs={[4, 7, 8, 9]} />
+  </p>
+
+  <DataTable label="Estimated muzzle velocity by barrel length (3.5, 4, 4.5, 5 inches) and bullet weight, with Titegroup charge held constant.">
+    <table class="calc-table">
+      <thead>
+        <tr>
+          <th>Bullet</th>
+          <th>Charge (TG)</th>
+          <th>3.5″</th>
+          <th>4.02″ (P1)</th>
+          <th>4.49″ (P2)</th>
+          <th>4.89″ (S2)</th>
+          <th>5.31″ (P3)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>115 gr</td>
+          <td class="num">~4.5 gr</td>
+          <td class="num">~1,075 fps</td>
+          <td class="num">~1,115 fps</td>
+          <td class="num">~1,135 fps</td>
+          <td class="num">~1,150 fps</td>
+          <td class="num">~1,170 fps</td>
+        </tr>
+        <tr class="row-alt">
+          <td>124 gr</td>
+          <td class="num">~4.0 gr</td>
+          <td class="num">~1,000 fps</td>
+          <td class="num">~1,035 fps</td>
+          <td class="num">~1,055 fps</td>
+          <td class="num">~1,070 fps</td>
+          <td class="num">~1,085 fps</td>
+        </tr>
+        <tr>
+          <td>147 gr</td>
+          <td class="num">~3.3 gr</td>
+          <td class="num">~850 fps</td>
+          <td class="num">~880 fps</td>
+          <td class="num">~895 fps</td>
+          <td class="num">~905 fps</td>
+          <td class="num">~920 fps</td>
+        </tr>
+      </tbody>
+    </table>
+  </DataTable>
+
+  <MethodNote>
+    Velocity estimates are approximate and interpolated. Your specific pistol, ammunition lot,
+    and atmospheric conditions will produce different numbers. Chronograph your loads.
+  </MethodNote>
+
+  <h2 class="subhead">The 3.5″ barrel doesn't make Power Factor</h2>
+  <p>
+    At constant charge weight, every load in the 3.5″ column falls below 130 PF:
+  </p>
+
+  <DataTable label="Resulting power factor at a 3.5-inch barrel if charge is held constant: most loads fall below 130 PF.">
+    <table class="calc-table" style="max-width:560px;">
+      <thead>
+        <tr>
+          <th>Bullet</th>
+          <th>Velocity at 3.5″</th>
+          <th>Resulting PF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>115 gr @ 1,075 fps</td>
+          <td class="num">1,075 fps</td>
+          <td class="num red bold">123.6 PF, below Minor</td>
+        </tr>
+        <tr class="row-alt">
+          <td>124 gr @ 1,000 fps</td>
+          <td class="num">1,000 fps</td>
+          <td class="num red bold">124.0 PF, below Minor</td>
+        </tr>
+        <tr>
+          <td>147 gr @ 850 fps</td>
+          <td class="num">850 fps</td>
+          <td class="num red bold">124.9 PF, below Minor</td>
+        </tr>
+      </tbody>
+    </table>
+  </DataTable>
+
+  <p>
+    If you're running a subcompact pistol (G43-class, ~3.4″ barrel), you need a hotter charge
+    to make 130 PF, which means more powder, more muzzle pressure, more blast, and a sharper
+    impulse. The short barrel costs you twice: less velocity <em>and</em> a harsher recoil
+    character. This is why many USPSA Production shooters prefer the longest-barreled pistol
+    their division allows.
+  </p>
+
+  <h2 class="subhead">P1 vs P2 (internal ballistics only)</h2>
+  <p>
+    With the same cartridge (e.g., Federal HST 124gr +P), P2 (4.49″) produces ~20–35 fps more
+    muzzle velocity than P1 (4.02″) due to the extra 0.47″ of barrel. Wideners' paired 10-shot
+    chronograph test found the two within ~2 fps for Speer Gold Dot 124gr +P (1,179 avg from
+    P2, 1,181 avg from P1, within statistical noise for that load).<Sup refs={[11, 14]} />
+    Other independent tests with Federal HST 124gr +P show a more typical ~20–35 fps
+    spread.<Sup refs={8} />
+  </p>
+  <p>
+    From an internal ballistics perspective, the extra barrel length allows slightly more gas
+    expansion before the bullet exits, modestly reducing uncorking pressure. This contributes
+    to the common observation that P2 "shoots flatter" than P1, though the gun weight
+    difference (22.05 vs 21.34 oz unloaded) and longer sight radius also play roles.
+  </p>
+
+  <MethodNote>
+    The <strong>~25–35 fps/inch slope</strong> is consistent with the Office of Justice
+    Programs' finding that 9mm velocity from a 4″ pistol to a 16.5″ carbine increased by only
+    ~6% on average, confirming that most of the velocity is developed in the first few
+    inches, and gains per additional inch diminish rapidly.<Sup refs={10} />
+  </MethodNote>
+</Section>
+
+{/* ============================================================================
+    SECTION 5: PRESSURE-TIME CURVE
+    ============================================================================ */}
+<Section number="05" label="The Pressure-Time Curve" heading="Why heavier bullets feel softer">
+  <p>
+    This is the central physics finding of the article, and it's purely internal ballistics.
+  </p>
+  <p>
+    When a cartridge fires, the primer ignites the powder, pressure builds, and the bullet
+    accelerates down the barrel. The pressure acting on the breech face pushes the gun
+    rearward (Newton's 3rd law). The <strong>pressure-time curve</strong> (the plot of
+    chamber pressure vs. time from ignition to bullet exit) is the fundamental description
+    of the recoil impulse at its source.
+  </p>
+  <p>
+    At equal Power Factor, the area under the force-time curve (which equals impulse =
+    momentum) is the same for all bullet weights. But the <strong>shape</strong> of the curve
+    is different:
+  </p>
+
+  <PressureCurves />
+
+  <h2 class="subhead">Quantifying the shape difference</h2>
+  <p>
+    The ratio of barrel transit times (how long the bullet is in the barrel, and therefore
+    how long the pressure is actively pushing the gun) depends on the bullet's velocity
+    profile through the bore. A simple constant-acceleration model gives:
+  </p>
+
+  <EquationBox label="Barrel transit time scaling">
+    <div class="eq" style="font-size:18px;">
+      <span class="var">t</span><sub>barrel</sub>
+      &nbsp;∝&nbsp;
+      √( <span class="var">m</span><sub>bullet</sub> &nbsp;/&nbsp; <span class="var">F</span><sub>avg</sub> )
+    </div>
+    <div class="eq-note" style="margin-top:10px;">
+      <span>For equal average chamber pressure, the ratio of barrel transit times is:</span><br />
+      <span>t<sub>147</sub> / t<sub>115</sub> = √(147 / 115) = </span><span class="accent">1.13</span>
+    </div>
+  </EquationBox>
+
+  <p>
+    In practice, the 115gr load requires higher peak chamber pressure to achieve its higher
+    muzzle velocity (1,130 vs 884 fps from the same barrel), which means the average force is
+    also higher, compressing the 115gr curve further. The actual barrel transit time ratio,
+    accounting for different pressure profiles, is estimated at <strong>1.15–1.30×</strong>
+    (the 147gr bullet spends 15–30% longer in the barrel).
+  </p>
+  <p>
+    But the perceived difference in impulse character is larger than the time ratio alone
+    suggests, because it's the <strong>peak force</strong> that drives perception, not the
+    total impulse. If the same impulse is delivered in 85% of the time, the peak force must
+    be proportionally higher to maintain the same area under the curve. A 15–30% shorter
+    impulse with the same total momentum means a <strong>15–30% higher peak force</strong>,
+    and the human hand is highly sensitive to peak force.
+  </p>
+  <p>
+    This is the "push vs snap" mechanism, and it's a property of the internal ballistics
+    (the shape of the pressure-time curve), not of any specific action type. Any platform
+    receiving this impulse (blowback, locked-breech, roller-delayed) gets a wider, flatter
+    force curve from the 147gr and a narrower, spikier one from the 115gr. The action type
+    modifies the impulse downstream (through bolt mass, spring rate, buffer systems), but
+    the impulse at the source is set by the cartridge and the barrel.
+  </p>
+
+  <h2 class="subhead">The muzzle blast component</h2>
+  <p>
+    On top of the pressure-time curve shape, heavier bullets at equal PF produce
+    <strong> less muzzle blast</strong>:
+  </p>
+  <ul style="margin: 0 0 16px 24px; color: var(--text); line-height: 1.7;">
+    <li>Lower muzzle velocity → lower gas exit velocity (V<sub>gas</sub> = f × V<sub>muzzle</sub>)</li>
+    <li>Smaller charge weight → less total gas mass</li>
+    <li>Both → less gas momentum, less acoustic energy, less shockwave</li>
+  </ul>
+  <p>
+    At 130 PF with Titegroup, the gas momentum with 115gr is 1.07 lb·ft/s vs 0.63 lb·ft/s
+    with 147gr, a <strong>41% reduction</strong> in the gas jet. While this is only ~2% of
+    total recoil momentum, your face, ears, and hands register blast pressure independently
+    from the recoil push. A quieter, gentler muzzle blast makes the shot <em>feel</em> softer
+    even when the recoil momentum is nearly identical.
+  </p>
+  <p>
+    In a pistol, you can't drive gas momentum to near-zero; every load produces a hot,
+    energetic muzzle jet. But you can reduce it modestly by choosing heavier bullets with
+    smaller charges.
+  </p>
+</Section>
+
+{/* ============================================================================
+    SECTION 6: BARREL LENGTH ZONES
+    ============================================================================ */}
+<Section number="06" label="Barrel Length Zones" heading="Diminishing returns happen fast in a pistol">
+  <p>
+    Gas expansion in a pistol always sits on the steep part of the pressure-vs-volume curve.
+    Each additional inch of barrel produces a meaningful pressure drop, but no pistol-length
+    barrel is long enough for the gas to reach anywhere near atmospheric. The four zones
+    below cover the practical range from subcompact carry guns to long-slide competition
+    pistols.
+  </p>
+
+  <PistolBarrelLengthZones />
+
+  <MethodNote>
+    <strong>The jump from 3.5″ to 4.5″ buys more than the jump from 4.5″ to 5.5″</strong>,
+    both in velocity and in impulse character. The pressure-vs-volume curve flattens as
+    expansion volume grows, so the relative gain per inch shrinks as the barrel gets longer.
+  </MethodNote>
+</Section>
+
+{/* ============================================================================
+    SECTION 7: FACTORY AMMO PF
+    ============================================================================ */}
+<Section number="07" label="Factory Ammunition Power Factors" heading="Where common factory 9mm actually lands">
+  <p>
+    Almost all factory-loaded 9mm sits comfortably above the 125 PF USPSA Minor floor. Most
+    standard-pressure loads land at 130–145 PF; +P loads reach 143–155 PF. The table below
+    uses chronograph data from published reviews and independent testing through the P1 (4.02″)
+    and P2 (4.49″) polymer-striker reference platforms. Wideners' paired 10-shot chronograph
+    strings are the most methodologically clean published head-to-head source and are cited
+    where available.<Sup refs={[8, 9, 11, 12, 13, 14, 19]} />
+  </p>
+
+  <DataTable label="Advertised vs chronographed velocity for each factory load: 4-inch test-barrel published velocity, P1 and P2 chronograph data, and calculated power factor.">
+    <table class="calc-table">
+      <thead>
+        <tr>
+          <th>Load</th>
+          <th>Advertised (4″ test barrel)</th>
+          <th>Chronographed (P1 / P2)</th>
+          <th>Calculated PF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colSpan={4} style="padding:10px 16px;background:rgba(245,158,11,0.06);border-bottom:1px solid var(--border);">
+            <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);">
+              Standard pressure FMJ
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td>Federal American Eagle 115 gr FMJ</td>
+          <td class="num">1,180 fps</td>
+          <td class="num">~1,080–1,160 (P1) / ~1,100–1,180 (P2)</td>
+          <td class="num">124–136</td>
+        </tr>
+        <tr>
+          <td>Winchester White Box 115 gr FMJ</td>
+          <td class="num">1,190 fps</td>
+          <td class="num">~1,150–1,193 fps (P1)</td>
+          <td class="num">132–137</td>
+        </tr>
+        <tr>
+          <td>Blazer Brass 115 gr FMJ</td>
+          <td class="num">1,145 fps</td>
+          <td class="num">~1,125–1,150 fps (P1)</td>
+          <td class="num">129–132</td>
+        </tr>
+
+        <tr>
+          <td colSpan={4} style="padding:10px 16px;background:rgba(6,182,212,0.06);border-top:2px solid var(--border);border-bottom:1px solid var(--border);">
+            <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);">
+              Standard pressure JHP
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td>Federal HST 124 gr</td>
+          <td class="num">1,150 fps</td>
+          <td class="num">~1,090–1,150 (P1)</td>
+          <td class="num">135–143</td>
+        </tr>
+        <tr>
+          <td>Speer Gold Dot 124 gr</td>
+          <td class="num">1,150 fps</td>
+          <td class="num">~1,100–1,151 fps (P1)</td>
+          <td class="num">136–143</td>
+        </tr>
+        <tr>
+          <td>Hornady XTP 124 gr Custom</td>
+          <td class="num">1,110 fps</td>
+          <td class="num">~1,134 fps (P1)</td>
+          <td class="num">141</td>
+        </tr>
+        <tr>
+          <td>Federal HST 147 gr</td>
+          <td class="num">1,000 fps</td>
+          <td class="num">964 (P1) / 967 (P2), Wideners 10-shot</td>
+          <td class="num">142</td>
+        </tr>
+
+        <tr>
+          <td colSpan={4} style="padding:10px 16px;background:rgba(239,68,68,0.06);border-top:2px solid var(--border);border-bottom:1px solid var(--border);">
+            <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--red);">
+              +P loads
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td>Federal HST 124 gr +P</td>
+          <td class="num">1,200 fps</td>
+          <td class="num">~1,150–1,230 (P1) / ~1,200–1,225 (P2)</td>
+          <td class="num">143–152</td>
+        </tr>
+        <tr>
+          <td>Speer Gold Dot 124 gr +P</td>
+          <td class="num">1,220 fps</td>
+          <td class="num">1,181 (P1) / 1,179 (P2), Wideners 10-shot</td>
+          <td class="num">146</td>
+        </tr>
+        <tr>
+          <td>Hornady American Gunner 124 gr +P</td>
+          <td class="num">1,175 fps</td>
+          <td class="num">~1,150 fps (P1)</td>
+          <td class="num">143</td>
+        </tr>
+
+        <tr>
+          <td colSpan={4} style="padding:10px 16px;background:rgba(239,68,68,0.10);border-top:2px solid var(--border);border-bottom:1px solid var(--border);">
+            <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--red);">
+              +P+ loads
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td>Federal 9BPLE 115 gr +P+</td>
+          <td class="num">1,300 fps</td>
+          <td class="num">~1,195–1,320 (P1) / ~1,245 (P2)</td>
+          <td class="num">137–152</td>
+        </tr>
+      </tbody>
+    </table>
+  </DataTable>
+
+  <p>
+    Every common factory 9mm load is <strong>Minor</strong> power factor by USPSA
+    classification: even +P+ loads top out around 145–150 PF, well below the 165 Major
+    threshold. So "competition Minor" loads at 130 PF and "factory carry/duty ammo" at
+    140–150 PF are not dramatically different in total momentum terms.
+  </p>
+  <p>
+    The carry-ammo recoil that shooters describe as "snappy" comes from two factors:
+    <strong> (1)</strong> most defensive loads use 115–124gr bullets, which produce sharper
+    pressure-time profiles than 147gr at any PF, and <strong>(2)</strong> the +P pressure
+    spike produces a taller, narrower force curve: more peak force for the same total
+    impulse. A Federal HST 147gr at ~967 fps from P2 (142 PF per Wideners' 10-shot chrono)
+    has more total momentum than a 115gr FMJ at ~1,140 fps (131 PF) but
+    <em> feels softer</em> because the pressure-time curve is wider and flatter.
+  </p>
+
+  <MethodNote>
+    <strong>Factory velocity caveats:</strong> Manufacturer "spec" velocities are from SAAMI
+    4″ test barrels, not from production pistols. Real production-pistol velocities typically
+    run 20–80 fps under the box spec, with significant lot-to-lot variation (the Federal 9BPLE
+    range of ~1,195–1,320 fps from P1 illustrates this). Chronograph numbers vary
+    ±50 fps from gun to gun and ±25 fps across atmospheric conditions. The Wideners head-to-head
+    10-shot strings (HST 147gr, Gold Dot 124gr +P) are the most reliable published figures;
+    other values are compiled from multiple independent sources.
+  </MethodNote>
+</Section>
+
+{/* ============================================================================
+    SECTION 8: OPTIMIZATION HIERARCHY
+    ============================================================================ */}
+<Section number="08" label="The Optimization Hierarchy" heading="Minimize peak force. Everything else follows.">
+  <p>
+    The single principle behind pistol recoil optimization: produce the <strong>widest,
+    flattest pressure-time curve</strong> that still makes Power Factor. The three variables
+    that control this, in order of importance:
+  </p>
+
+  <ol class="priority-list">
+    <li class="priority-item">
+      <div class="priority-num">1</div>
+      <div class="priority-body">
+        <div class="priority-name">Bullet weight</div>
+        <p>
+          At equal PF, heavier bullets require less muzzle velocity, which means lower peak
+          chamber pressure and a longer-duration impulse. A 147gr bullet at 884 fps produces
+          a gentler force curve than a 115gr at 1,130 fps: same total momentum, less peak
+          force, wider time spread. <strong>This is the dominant variable a handloader can
+          manipulate in a pistol.</strong>
+        </p>
+        <p>
+          The external ballistic penalty of heavier bullets (more drop, more lead on movers)
+          matters less in pistol than in long-range disciplines, where most USPSA/PCSL
+          engagements are at 7–25 yards and the velocity difference between 884 fps and
+          1,130 fps produces negligible trajectory differences at those distances.
+        </p>
+      </div>
+    </li>
+    <li class="priority-item">
+      <div class="priority-num">2</div>
+      <div class="priority-body">
+        <div class="priority-name">Barrel length (and therefore gun selection)</div>
+        <p>
+          More barrel = slightly more barrel time = slightly wider impulse. Also more gun
+          weight = less recoil velocity for the same momentum. P2's 4.49″ barrel gives ~20–40
+          fps more than P1 at 4.02″ and delivers a slightly more favorable pressure-time
+          profile. P3's 5.31″ barrel extends this further. S2 and the 2011-style steel-frame
+          platforms (S3, S4, S5) show the extreme case: the internal ballistics are similar
+          to a polymer striker at the same barrel length, but the steel frame's additional
+          mass absorbs the impulse with dramatically less V<sub>gun</sub> (see Section 03
+          table).
+        </p>
+      </div>
+    </li>
+    <li class="priority-item">
+      <div class="priority-num">3</div>
+      <div class="priority-body">
+        <div class="priority-name">Powder selection (distant third)</div>
+        <p>
+          Powder choice in a pistol changes gas momentum by ~1% of total recoil momentum,
+          below the threshold of human perception for impulse magnitude. Choose a clean-burning,
+          fast-to-medium powder that meters consistently and makes PF reliably. Titegroup,
+          N320, Sport Pistol, Clays, and similar powders are all functionally equivalent from
+          a recoil-momentum standpoint. The reason competition shooters converge on these
+          isn't recoil; it's metering, cleanliness, and temperature stability.
+        </p>
+      </div>
+    </li>
+  </ol>
+
+  <Callout title="Why this is the order">
+    <p>
+      When the gas term is small and locked (as it is in any pistol-length barrel), the only
+      remaining lever on the impulse <em>shape</em> is bullet weight. Barrel length is
+      second-order: it modestly extends the pressure-time curve and gives you more gun mass
+      to absorb it. Powder selection is third-order: it affects gas momentum at the ~1%
+      level, well below human perception.
+    </p>
+    <p>
+      Gun weight isn't on this list because it doesn't shape the impulse; it just sits in
+      front of it. But the Section 03 free-recoil table shows that gun weight dwarfs every
+      other variable by a wide margin. If "less felt recoil" is the goal and bullet weight is
+      already optimized, the next move is a heavier gun, not a different powder.
+    </p>
+  </Callout>
+</Section>
+
+{/* ============================================================================
+    SECTION 9: THE PERCEPTUAL GAP
+    ============================================================================ */}
+<Section number="09" label="The Perceptual Gap" heading="~5% in the equation, ~20% in the hand">
+  <p>
+    The momentum equation says the recoil difference between 115gr and 147gr at 130 PF is
+    ~2–5% (depending on whether you're measuring momentum or free-recoil energy). But
+    shooters describe the difference as substantial. They're not wrong, and the explanation
+    doesn't require action-type mechanics. Three internal-ballistics factors make the
+    difference feel larger than the math suggests:
+  </p>
+
+  <FactorGrid>
+    <FactorCard accent="red" title="Peak Force" verdict="The hand reads peaks, not averages">
+      The hand integrates force over time, but is most sensitive to <strong>peak force</strong>.
+      If the same total impulse is delivered in 15–30% less time (the 115gr's shorter barrel
+      transit and sharper pressure curve), the peak force must be 15–30% higher. The brain
+      perceives higher peak force as "harder kick" even when the total impulse is nearly
+      identical.
+    </FactorCard>
+    <FactorCard accent="amber" title="Muzzle Blast" verdict="41% less gas jet with 147gr">
+      Gas momentum at 130 PF is 1.07 lb·ft/s with 115gr vs 0.63 lb·ft/s with 147gr (Titegroup),
+      a 41% reduction in the gas jet. Less concussive blast, less sound pressure, less flash.
+      Your face and ears register blast independently from the recoil push. A quieter, less
+      violent muzzle event makes the shot feel softer, even when the momentum math says it
+      shouldn't.
+    </FactorCard>
+    <FactorCard accent="blue" title="Sound-Recoil Coupling" verdict="Louder feels harder">
+      The 115gr load is louder than the 147gr at equal PF: higher gas velocity at the muzzle
+      produces more acoustic energy. Research on human perception of impacts shows that our
+      brains don't cleanly separate "loud" from "hard." A louder shot <em>feels</em> like it
+      kicks harder, even when the momentum is identical.
+    </FactorCard>
+  </FactorGrid>
+
+  <Callout title="The complete picture">
+    <p>
+      Heavier bullets at equal PF in a pistol produce <strong>~2–5% less recoil
+      momentum/energy</strong> plus a <strong>wider, flatter pressure-time curve</strong>
+      (lower peak force) plus <strong>reduced muzzle blast and sound</strong>. The combination
+      produces a subjective experience that feels like a 15–25% improvement. The momentum
+      reduction is modest; the impulse shape and perceptual factors are where most of the
+      "softness" lives.
+    </p>
+  </Callout>
+</Section>
+
+{/* ============================================================================
+    SOURCES
+    ============================================================================ */}
+<Sources>
+  <SourceItem num={1}>
+    SAAMI, "Gun Recoil Formulae" (Rev. 7/9/2018). Provides the standard free recoil equation
+    and gas velocity estimation method (V<sub>gas</sub> = f × V<sub>muzzle</sub>). Specifies
+    f = 1.75 for rifles, f = 1.50 for handguns and shotguns.
+  </SourceItem>
+  <SourceItem num={2}>
+    Hatcher, Julian S. <em>Hatcher's Notebook</em> (1947). Chapter on recoil; derives the
+    momentum equation from Newton's third law. Primary reference for the gas momentum term
+    in small arms.
+  </SourceItem>
+  <SourceItem num={3}>
+    British Textbook of Small Arms (1929). Proposed the proportional gas velocity factor
+    <em> f</em>, noting it "lies between 1 and 2, with an average value of 1½." First known
+    published treatment of variable gas velocity in recoil calculations.
+  </SourceItem>
+  <SourceItem num={4}>
+    BBTI (Ballistics by the Inch). Systematic barrel-length vs. velocity testing for 9mm
+    Luger using a T/C Encore platform with barrels cut from 18″ down to 2″ in 1″ increments.
+    Primary reference for the ~25–35 fps/inch velocity slope in the pistol barrel-length range.
+  </SourceItem>
+  <SourceItem num={5}>
+    Glock G17 Gen5 MOS specifications (us.glock.com). Weight without magazine: 22.05 oz
+    (625 g). With empty magazine: 24.87 oz (705 g). Loaded with 17-round magazine: 33.33 oz
+    (945 g / 2.08 lb). Barrel length: 4.49″ (114 mm). Slide length: 7.32″ (186 mm).
+  </SourceItem>
+  <SourceItem num={6}>
+    Glock G19 Gen5 MOS specifications (us.glock.com). Weight without magazine: 21.34 oz
+    (605 g). With empty magazine: 23.81 oz (675 g). Loaded with 15-round magazine: 29.98 oz
+    (850 g / 1.87 lb). Barrel length: 4.02″ (102 mm).
+  </SourceItem>
+  <SourceItem num={7}>
+    Firearm Wiki, "9mm Velocity by Barrel Length." Compilation of BBTI data showing velocity
+    gains across barrel lengths. Confirms most 9mm loads reach maximum velocity by 10–12″.
+  </SourceItem>
+  <SourceItem num={8}>
+    Federal HST 124gr +P chronograph data: various independent testers report ~1,150–1,230
+    fps from Glock 19 Gen5 MOS and ~1,200–1,225 fps from Glock 17 Gen5 MOS, with significant
+    lot-to-lot variation. DefensiveCarry.com range report (Oehler 35P, 10-shot string) and
+    GlockTalk forum testing.
+  </SourceItem>
+  <SourceItem num={9}>
+    Federal American Eagle 115gr FMJ: independent chronograph data clusters ~1,080–1,160 fps
+    from Glock 19 Gen5 MOS barrels. Winchester WB 115gr: ~1,150–1,193 fps from G19, per
+    GlockTalk chronograph thread.
+  </SourceItem>
+  <SourceItem num={10}>
+    Office of Justice Programs, "Nine Millimeter Carbine Ballistics." Found only a 6% average
+    velocity increase from a 4″ pistol to a 16.5″ carbine with common 9mm hollowpoints,
+    confirming that 9mm develops most of its velocity early and gains diminish with barrel
+    length.
+  </SourceItem>
+  <SourceItem num={11}>
+    Speer Gold Dot 124gr +P: Wideners 10-shot chronograph, 1,181 fps avg from Glock 19 Gen5,
+    1,179 fps avg from Glock 17 Gen5.
+  </SourceItem>
+  <SourceItem num={12}>
+    Hornady XTP 124gr Custom: manufacturer-advertised 1,110 fps, chronographed ~1,134 fps
+    from Glock 19, per GlockTalk testing.
+  </SourceItem>
+  <SourceItem num={13}>
+    Federal 9BPLE 115gr +P+: manufacturer-advertised 1,300 fps (4″ test barrel). Chronograph
+    data shows wide lot variation (~1,195–1,320 fps from Glock 19, ~1,245 fps from Glock 17),
+    per GlockTalk cross-Glock comparison and Pistol Smith forum testing. Recent production
+    may run lighter than 1990s-era lots.
+  </SourceItem>
+  <SourceItem num={14}>
+    Wideners, "Glock 17 vs 19" paired comparison. Reports Glock 17 Gen5 loaded at 33.33 oz
+    (2.01 lb) and Glock 19 Gen5 loaded at 31.04 oz (1.94 lb). Includes 10-shot chronograph
+    strings for multiple ammunition types.
+  </SourceItem>
+  <SourceItem num={15}>
+    Glock G34 Gen5 MOS specifications (us.glock.com). Weight without magazine: 23.46 oz
+    (665 g). With empty magazine: 26.21 oz (743 g). Loaded: 34.57 oz (980 g / 2.16 lb).
+    Barrel length: 5.31″ (135 mm). Trigger pull: 24 N (~5.4 lb, lighter than G17/G19 factory
+    pull).
+  </SourceItem>
+  <SourceItem num={16}>
+    CZ Shadow 2 Optics-Ready (SKU 91251, cz-usa.com). Steel frame, SA/DA. Barrel: 4.89″, cold
+    hammer forged. Weight: 46.5 oz (~2.91 lb). Capacity: 19+1 (with extended floor plate
+    magazines as shipped by most U.S. distributors; CZ rates the base magazine at 17 rounds).
+    CZ does not publish separate with/without magazine weights.
+  </SourceItem>
+  <SourceItem num={17}>
+    MPA DS9 LOC v1 (masterpiecearms.com, Specifications tab). Wide-body 2011, steel frame.
+    Barrel: 5.0″ bull barrel, 416R stainless. Frame: Steel 5″ with full-length light rail.
+    Weight: 3.0 lb (48 oz). Overall length: 8.9″. MPA does not publish slide-only or loaded
+    weight.
+  </SourceItem>
+  <SourceItem num={18}>
+    MPA DS9 LOC v2 (masterpiecearms.com, Specifications tab). Slide: Steel 4.25″. Barrel:
+    4.6″ 416R stainless with integrated stainless sight block. Frame: Steel 5″ with
+    full-length dust cover (no light rail). Weight: 3.18 lb (51 oz). Overall length: 8.9″.
+    The v2 is 3 oz heavier than the v1; the design redistributes mass from the shortened
+    slide into the barrel block and frame. MPA does not publish slide-only or loaded weight.
+  </SourceItem>
+  <SourceItem num={19}>
+    Federal HST 147gr: Wideners 10-shot chronograph, 964 fps avg from Glock 19 Gen5, 967 fps
+    avg from Glock 17 Gen5.
+  </SourceItem>
+  <SourceItem num={20}>
+    MPA DS9 LOC v2 Lightweight (masterpiecearms.com, Specifications tab). Slide: Steel 4.25″.
+    Barrel: 4.6″ threaded 416R stainless. Frame: Steel 5″ with full-length dust cover. Weight:
+    2.68 lb (43 oz). Overall length: 8.9″. Same external dimensions and sight-block architecture
+    as the standard LOC v2; the ~8 oz reduction is attributed by MPA to the shortened slide and
+    revised frame profile. MPA does not publish slide-only or loaded weight.
+  </SourceItem>
+  <SourceItem num={21}>
+    Walther PDP Steel Frame Pro Full Size 4.5″ (waltherarms.com Specifications section, item
+    no. 2897008). Steel frame, steel slide. Barrel: 4.5″, polygonal rifling. Weight: 40 oz
+    unloaded. Overall length: 8.0″. Height: 5.7″. Capacity: 20+1 with included 20-round
+    magazines (10-round option available). Walther does not specify whether the 40 oz figure
+    includes a magazine.
+  </SourceItem>
+</Sources>
+
+{/* ============================================================================
+    APPENDIX
+    ============================================================================ */}
+<Section heading="Appendix · Notes and related reading">
+  <p>
+    How the action type (blowback, locked-breech, roller-delayed) modifies the impulse after
+    it leaves the chamber is platform-dependent and outside the scope of this article; see
+    the scope note at the top.
+  </p>
+  <p>
+    If you also shoot pistol-caliber carbines: the same free-recoil equation applies, but the
+    13″ barrel makes the gas term a meaningful (and tunable) variable rather than a fixed
+    minor one, which inverts the optimization hierarchy. See the
+    <a href="/articles/pcc-recoil-physics/"> PCC recoil article</a> for that analysis.
+  </p>
+
+  <MethodNote>
+    <strong>Charge weight estimates</strong> throughout are interpolated from published
+    Hodgdon, Vihtavuori, and Alliant load data and should be treated as approximations.
+    <strong> Do not use these figures as load data.</strong> Work up from published starting
+    loads in current manuals with your specific components and chronograph.
+    <br /><br />
+    <strong>Perceptual factors</strong> (impulse shape, blast, sound-recoil coupling) are
+    qualitative observations consistent with pressure-time curve physics but not quantified
+    by controlled study for 9mm pistol specifically. The "push vs snap" characterization is
+    a widely reported subjective experience among competitive pistol shooters.
+  </MethodNote>
+</Section>
