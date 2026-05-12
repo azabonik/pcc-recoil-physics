@@ -434,6 +434,11 @@
         const el = card.querySelector<HTMLInputElement>(`[data-field="${field}"]`)!;
         el.value = String(initial[field]);
       });
+      const labelEl = card.querySelector<HTMLElement>('[data-load-label]')!;
+      const labelId = `rc-load-${Math.random().toString(36).slice(2, 8)}`;
+      labelEl.id = labelId;
+      card.setAttribute('role', 'group');
+      card.setAttribute('aria-labelledby', labelId);
       const removeBtn = card.querySelector<HTMLButtonElement>('[data-remove]')!;
       removeBtn.addEventListener('click', () => {
         const i = cards.indexOf(card);
