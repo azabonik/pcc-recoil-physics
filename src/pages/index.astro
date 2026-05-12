@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const all = (await getCollection('articles', ({ data }) => !data.draft))
+const all = (await getCollection('articles', ({ data }) => !data.draft || import.meta.env.DEV))
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
 const dateFmt = new Intl.DateTimeFormat('en-US', {
@@ -14,7 +14,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
 
 // Editorial split: long-form articles drive the hero + Previously list.
 // Tools (calculators, references) are surfaced as bonus content, never the
-// hero — even if a tool was published more recently than the latest article.
+// hero, even if a tool was published more recently than the latest article.
 const longForm = all.filter((a) => a.data.kind === 'article');
 const tools = all.filter((a) => a.data.kind === 'tool');
 const [hero, ...rest] = longForm;
@@ -31,8 +31,9 @@ const typeLabel = (kind: 'article' | 'tool') => TYPE_LABELS[kind];
     <span class="brand">zabs.dev</span>
   </header>
 
+  <main id="main-content">
   {hero && (
-    <main class="hero-wrap">
+    <div class="hero-wrap">
       <a href={`/articles/${hero.id}/`} class="hero-link">
         <div class="hero-kicker">
           <time datetime={hero.data.pubDate.toISOString()}>{dateFmt.format(hero.data.pubDate)}</time>
@@ -52,7 +53,7 @@ const typeLabel = (kind: 'article' | 'tool') => TYPE_LABELS[kind];
           <span class="cta-arrow">→</span>
         </div>
       </a>
-    </main>
+    </div>
   )}
 
   {rest.length > 0 && (
@@ -110,9 +111,10 @@ const typeLabel = (kind: 'article' | 'tool') => TYPE_LABELS[kind];
       </ul>
     </section>
   )}
+  </main>
 
   <footer class="brand-foot">
-    <a href="https://github.com/azabonik" rel="me noopener" target="_blank">github</a>
+    <a href="https://github.com/azabonik" rel="me noopener" target="_blank" aria-label="GitHub profile (opens in new tab)">github</a>
     <span class="dot">·</span>
     <a href="mailto:laxpulse@gmail.com">email</a>
     <span class="dot">·</span>

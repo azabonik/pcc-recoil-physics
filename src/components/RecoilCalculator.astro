@@ -1,6 +1,6 @@
 ---
 // Interactive free-recoil calculator. Vanilla JS, no framework.
-// Astro hoists the <script> into a small bundle scoped to pages that import this.
+// Astro hoists the script block into a small bundle scoped to pages that import this.
 ---
 <section class="recoil-calc" data-recoil-calc>
   <div class="recoil-calc-head">
@@ -43,40 +43,40 @@
       </label>
     </div>
 
-    <div class="recoil-calc-out">
+    <div class="recoil-calc-out" aria-live="polite" aria-atomic="false" aria-label="Calculator results">
       <div class="rc-out-row">
         <span class="rc-out-lbl">Power Factor</span>
-        <span class="rc-out-val" data-output="pf">—</span>
+        <span class="rc-out-val" data-output="pf">…</span>
         <span class="rc-out-unit">PF</span>
       </div>
       <div class="rc-out-row">
         <span class="rc-out-lbl">Bullet momentum</span>
-        <span class="rc-out-val" data-output="bullet-momentum">—</span>
+        <span class="rc-out-val" data-output="bullet-momentum">…</span>
         <span class="rc-out-unit">gr·fps</span>
       </div>
       <div class="rc-out-row">
         <span class="rc-out-lbl">Gas exit speed (V<sub>gas</sub>)</span>
-        <span class="rc-out-val" data-output="gas-velocity">—</span>
+        <span class="rc-out-val" data-output="gas-velocity">…</span>
         <span class="rc-out-unit">fps</span>
       </div>
       <div class="rc-out-row">
         <span class="rc-out-lbl">Gas momentum</span>
-        <span class="rc-out-val" data-output="gas-momentum">—</span>
+        <span class="rc-out-val" data-output="gas-momentum">…</span>
         <span class="rc-out-unit">gr·fps</span>
       </div>
       <div class="rc-out-row total">
         <span class="rc-out-lbl">Total recoil momentum</span>
-        <span class="rc-out-val" data-output="total-momentum">—</span>
+        <span class="rc-out-val" data-output="total-momentum">…</span>
         <span class="rc-out-unit">gr·fps</span>
       </div>
       <div class="rc-out-row primary">
         <span class="rc-out-lbl">Recoil velocity (V<sub>gun</sub>)</span>
-        <span class="rc-out-val" data-output="v-gun">—</span>
+        <span class="rc-out-val" data-output="v-gun">…</span>
         <span class="rc-out-unit">fps</span>
       </div>
       <div class="rc-out-row primary">
         <span class="rc-out-lbl">Free recoil energy</span>
-        <span class="rc-out-val" data-output="energy">—</span>
+        <span class="rc-out-val" data-output="energy">…</span>
         <span class="rc-out-unit">ft·lb</span>
       </div>
     </div>
@@ -85,10 +85,11 @@
   <div class="recoil-calc-bar">
     <div class="rc-bar-label">
       <span class="bar-legend-bullet">
-        Bullet <span data-output="bullet-pct">—</span>
+        Bullet <span data-output="bullet-pct">…</span>
       </span>
       <span class="bar-legend-gas" data-gas-band="green">
-        Gas <span data-output="gas-pct">—</span>
+        Gas <span data-output="gas-pct">…</span>
+        <span class="bar-legend-band" data-output="gas-band">…</span>
       </span>
     </div>
     <div class="rc-bar-track">
@@ -106,7 +107,7 @@
         fully expanded in a long barrel · <strong>≈ 1.5</strong> SAAMI handgun default
         · <strong>≈ 1.75</strong> SAAMI rifle default · <strong>≈ 1.8</strong> for
         slow powder still pressurized at the muzzle. The gas bar shifts green → amber →
-        red as the factor rises — it visualizes how much of your recoil is gas push,
+        red as the factor rises: it visualizes how much of your recoil is gas push,
         not bullet push.
       </p>
     </details>
@@ -114,14 +115,14 @@
     <details>
       <summary>Where's "burn rate"?</summary>
       <p>
-        It's already in the calculator — just split across two inputs, because burn rate
+        It's already in the calculator: just split across two inputs, because burn rate
         affects recoil through two independent quantities the equation cares about:
         <strong>charge weight</strong> (mass of powder burned) and the
         <strong>gas factor</strong> (how fast that mass exits the muzzle). Fast powders
         need less charge AND finish burning early enough that gas has room to expand,
         lowering the gas factor. Slow powders need more charge AND are still pressurized
         at the muzzle, raising it. There's no single "burn rate" knob because the
-        equation doesn't have one — moving from a fast powder to a slow one means
+        equation doesn't have one: moving from a fast powder to a slow one means
         dialing both inputs in the same direction.
       </p>
     </details>
@@ -129,14 +130,14 @@
     <details>
       <summary>What about OAL, position sensitivity, and case volume?</summary>
       <p>
-        These don't appear because free recoil is purely a momentum calculation —
+        These don't appear because free recoil is purely a momentum calculation:
         mass × velocity, summed for bullet and gas, divided by gun mass. Seating
         depth, case capacity (Federal vs. Starline vs. Win), powder column orientation,
-        primer choice — these change <strong>peak pressure, ignition consistency,
+        primer choice: these change <strong>peak pressure, ignition consistency,
         and standard deviation</strong>, not the first-order recoil momentum coming out
         the back. A 4.0 gr charge produces 4.0 × V<sub>gas</sub> of gas momentum
         regardless of which end of the case it ignited from. They matter enormously for
-        load development (9mm is uniquely sensitive — ~8–15% pressure rise per 0.010″
+        load development (9mm is uniquely sensitive: ~8–15% pressure rise per 0.010″
         deeper at near-max charges, per the SAAMI-acknowledged small case volume) but
         they're a different question from "how hard does the gun kick." Use a reloading
         manual and a chronograph for those; use this calculator for the recoil math once
@@ -173,6 +174,7 @@
       energy:          out('energy'),
       bulletPct:       out('bullet-pct'),
       gasPct:          out('gas-pct'),
+      gasBand:         out('gas-band'),
     };
 
     const bars = {
@@ -184,7 +186,7 @@
     const fmt = (n: number, d = 0) =>
       Number.isFinite(n)
         ? new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n)
-        : '—';
+        : '…';
 
     function band(f: number): Bands {
       if (f <= 1.2) return 'green';
@@ -194,7 +196,7 @@
 
     function clear() {
       for (const k of Object.keys(outputs) as (keyof typeof outputs)[]) {
-        outputs[k].textContent = '—';
+        outputs[k].textContent = '…';
       }
       bars.bullet.style.flex = '0 0 50%';
       bars.gas.style.flex = '0 0 50%';
@@ -239,6 +241,11 @@
 
       const b = band(f);
       gasBandTargets.forEach((el) => el.dataset.gasBand = b);
+      // Textual band label so the green/amber/red signal is not color-only
+      // (WCAG 1.4.1). Wording mirrors the gas-factor reference anchors in the
+      // "About the gas factor" disclosure below.
+      const bandLabel = b === 'green' ? '(low gas push)' : b === 'amber' ? '(mid gas push)' : '(high gas push)';
+      outputs.gasBand.textContent = bandLabel;
     }
 
     Object.values(inputs).forEach((el) => el.addEventListener('input', compute));
@@ -378,6 +385,14 @@
   .bar-legend-gas[data-gas-band="green"] { color: var(--green); }
   .bar-legend-gas[data-gas-band="amber"] { color: var(--accent); }
   .bar-legend-gas[data-gas-band="red"]   { color: var(--red); }
+  /* Textual band label so the green/amber/red color is not the only signal. */
+  .bar-legend-band {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-left: 4px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
 
   .rc-bar-track {
     height: 32px;
@@ -420,6 +435,11 @@
     transition: color 120ms ease;
   }
   .recoil-calc-notes summary:hover { color: var(--accent); }
+  .recoil-calc-notes summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    color: var(--accent);
+  }
   .recoil-calc-notes summary::-webkit-details-marker { display: none; }
   .recoil-calc-notes summary::before {
     content: '+';

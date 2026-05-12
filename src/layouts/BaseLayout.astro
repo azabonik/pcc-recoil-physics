@@ -14,7 +14,7 @@ interface Props {
   keywords?: string;
   /** If provided, rendered inside <head> as raw HTML (use for JSON-LD). */
   structuredDataJson?: string;
-  /** Path to an OG image relative to site root, with leading slash. Defaults to /og.png. */
+  /** Path to an OG image relative to site root, with leading slash (default: /og.png). */
   ogImage?: string;
   /** Alt text for the OG image (also used as twitter:image:alt). */
   ogImageAlt?: string;
@@ -29,7 +29,7 @@ const {
   keywords,
   structuredDataJson,
   ogImage = '/og.png',
-  ogImageAlt = 'zabs.dev — engineering writing by Anthony Zabonik',
+  ogImageAlt = 'zabs.dev: engineering writing by Anthony Zabonik',
 } = Astro.props;
 
 const canonical = new URL(canonicalPath, Astro.site).href;
@@ -80,6 +80,7 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
   )}
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <slot />
 </body>
 </html>

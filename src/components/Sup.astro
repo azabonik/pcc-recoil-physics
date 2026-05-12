@@ -5,6 +5,22 @@ interface Props {
 }
 const { refs } = Astro.props;
 const list = Array.isArray(refs) ? refs : [refs];
-const text = list.map((n) => `[${n}]`).join('');
 ---
-<sup class="sup">{text}</sup>
+<sup class="sup">{list.map((n) => (
+  <a href={`#source-${n}`} class="sup-link" aria-label={`Footnote ${n}`}>[{n}]</a>
+))}</sup>
+
+<style>
+  .sup-link {
+    color: inherit;
+    border-bottom: none;
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+  .sup-link:hover { color: var(--accent); border-bottom: none; }
+  .sup-link:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 1px;
+    border-radius: 2px;
+  }
+</style>

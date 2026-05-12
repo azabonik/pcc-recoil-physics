@@ -78,32 +78,32 @@ const structuredData = {
     <a href="/" class="site-nav-home">zabs.dev</a>
   </nav>
 
-  <article itemscope itemtype="https://schema.org/TechArticle">
-    <header class="article-header">
-      <div class="article-header-label">{headerLabel}</div>
-      <h1>
-        {title}{headlineSuffix && <>{': '}<em>{headlineSuffix}</em></>}
-      </h1>
-      <div class="article-header-sub">{headerSubtitle}</div>
-      <div class="article-header-dates">
-        <time datetime={pubDate.toISOString()} itemprop="datePublished">
-          Published {dateFmt.format(pubDate)}
-        </time>
-        {updatedDate && updatedDate.getTime() !== pubDate.getTime() && (
-          <>
-            <span class="dot">·</span>
-            <time datetime={updatedDate.toISOString()} itemprop="dateModified">
-              Updated {dateFmt.format(updatedDate)}
-            </time>
-          </>
-        )}
-      </div>
-    </header>
+  <main id="main-content">
+    <article itemscope itemtype="https://schema.org/TechArticle">
+      <header class="article-header">
+        <div class="article-header-label">{headerLabel}</div>
+        <h1>
+          {title}{headlineSuffix && <>{': '}<em>{headlineSuffix}</em></>}
+        </h1>
+        <div class="article-header-sub">{headerSubtitle}</div>
+        <div class="article-header-dates">
+          <time datetime={pubDate.toISOString()} itemprop="datePublished">
+            Published {dateFmt.format(pubDate)}
+          </time>
+          {updatedDate && updatedDate.getTime() !== pubDate.getTime() && (
+            <>
+              <span class="dot">·</span>
+              <time datetime={updatedDate.toISOString()} itemprop="dateModified">
+                Updated {dateFmt.format(updatedDate)}
+              </time>
+            </>
+          )}
+        </div>
+      </header>
 
-    <main>
       <slot />
-    </main>
-  </article>
+    </article>
+  </main>
 
   <footer class="site-footer">
     <a href="/">← back to zabs.dev</a>
