@@ -27,3 +27,7 @@ pnpm-debug.log*
 
 # claude code session
 .claude/
+
+# browser-automation verification artifacts
+.playwright-mcp/
+audit-*.png

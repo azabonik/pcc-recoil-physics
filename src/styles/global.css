@@ -12,10 +12,13 @@
   --bg-card-alt: #181d28;
   --border: #2a3040;
   --text: #c8cdd8;
-  --text-dim: #6b7590;
+  /* Lifted from #6b7590 (4.04:1 / 3.78:1) to clear 4.5:1 on both --bg and
+     --bg-card for body text (WCAG 1.4.3). */
+  --text-dim: #7e87a2;
   --text-bright: #e8ecf4;
   --accent: #f59e0b;
-  --accent-dim: #b47008;
+  /* Lifted from #b47008 (4.46:1 on --bg-card) to clear 4.5:1 (WCAG 1.4.3). */
+  --accent-dim: #c47808;
   --blue: #3b82f6;
   --blue-dim: #1e40af;
   --green: #22c55e;
@@ -50,13 +53,38 @@ body {
 a {
   color: var(--accent);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 120ms ease;
+  /* Persistent underline so links are distinguishable from prose by more
+     than just color (WCAG 1.4.1). Card-style links opt out with
+     border-bottom: none in their scoped styles. */
+  border-bottom: 1px solid var(--accent);
+  transition: color 120ms ease, border-color 120ms ease;
 }
-a:hover { border-bottom-color: var(--accent); }
+a:hover { color: var(--text-bright); border-bottom-color: var(--text-bright); }
 
 /* ============================================================================
-   Article — top-level header (label / h1 / subtitle)
+   Skip link (WCAG 2.4.1 Bypass Blocks). Hidden off-screen until focused.
+   ========================================================================== */
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -48px;
+  z-index: 100;
+  padding: 8px 14px;
+  background: var(--bg);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: top 120ms ease;
+}
+.skip-link:focus-visible { top: 8px; outline: none; }
+
+/* ============================================================================
+   Article: top-level header (label / h1 / subtitle)
    ========================================================================== */
 .article-header {
   padding: 60px 48px 40px;
@@ -100,7 +128,7 @@ a:hover { border-bottom-color: var(--accent); }
 }
 
 /* ============================================================================
-   Article — numbered section
+   Article: numbered section
    ========================================================================== */
 .section {
   padding: 44px 48px;
@@ -340,7 +368,7 @@ a:hover { border-bottom-color: var(--accent); }
 .calc-table td.bold-bright { font-weight: 700; color: var(--text-bright); }
 
 /* ============================================================================
-   Priority list — ranked items with prose descriptions.
+   Priority list: ranked items with prose descriptions.
    Used for the "optimization hierarchy" in the PCC recoil article. Replaces
    what used to be a calc-table; tables are wrong for prose-heavy content
    because the global mobile rule (display:block + nowrap) made the prose
@@ -473,7 +501,7 @@ a:hover { border-bottom-color: var(--accent); }
 }
 
 /* ============================================================================
-   Responsive — tablet
+   Responsive: tablet
    ========================================================================== */
 @media (max-width: 900px) {
   .article-header h1 { font-size: 28px; }
@@ -489,7 +517,7 @@ a:hover { border-bottom-color: var(--accent); }
 }
 
 /* ============================================================================
-   Responsive — mobile
+   Responsive: mobile
    ========================================================================== */
 @media (max-width: 600px) {
   body { font-size: 14px; }
@@ -521,23 +549,12 @@ a:hover { border-bottom-color: var(--accent); }
   .barrel-bullet-label { font-size: 8px !important; }
   .barrel-bullet { right: -24px !important; }
 
-  /* Wide tables horizontally scroll on mobile. Force a thin always-visible
-     scrollbar so readers know they can pan — otherwise the rightmost columns
-     (often the answer columns) feel cut off. */
-  .calc-table {
-    font-size: 11px;
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent-dim) var(--bg-card);
-  }
-  .calc-table::-webkit-scrollbar { height: 6px; }
-  .calc-table::-webkit-scrollbar-thumb {
-    background: var(--accent-dim);
-    border-radius: 3px;
-  }
-  .calc-table::-webkit-scrollbar-track { background: var(--bg-card); }
+  /* Wide tables scroll horizontally via their <DataTable> wrapper. The table
+     itself keeps native semantics (was display:block, which strips the table
+     role in some screen readers). nowrap on cells preserves the "rightmost
+     columns shouldn't reflow under viewport" behavior; the wrapper handles
+     pan via overflow-x. */
+  .calc-table { font-size: 11px; white-space: nowrap; }
   .calc-table th, .calc-table td { padding: 8px; }
   .calc-table th:first-child, .calc-table td:first-child { white-space: normal; min-width: 120px; }
 

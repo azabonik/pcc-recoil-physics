@@ -1,0 +1,195 @@
+---
+// Side-by-side pressure-time curves contrasting a light/fast bullet ("snap")
+// against a heavy/slow bullet ("push") at equal Power Factor. The curve areas
+// are drawn equal (same impulse = same momentum at equal PF); only the shape
+// differs. Hand-tuned narrative visualization (not a measured curve).
+---
+<figure class="pcurves">
+  <h3 class="pcurves-title">Pressure-time curves at 130 PF: same area, different shape</h3>
+
+  <div class="pcurves-grid">
+    <article class="pcurve amber">
+      <header>
+        <div class="pcurve-tag">115 gr · 1,130 fps</div>
+        <div class="pcurve-verdict">SHORT, TALL · "Snap"</div>
+      </header>
+      <svg
+        viewBox="0 0 400 200"
+        role="img"
+        aria-label="Pressure-time curve for a 115gr bullet at 1,130 fps (short, tall peak)"
+        preserveAspectRatio="none"
+      >
+        {/* axes */}
+        <line x1="30" y1="170" x2="380" y2="170" style="stroke: var(--border); stroke-width: 1;" />
+        <line x1="30" y1="20"  x2="30"  y2="170" style="stroke: var(--border); stroke-width: 1;" />
+
+        {/* axis labels. CSS custom properties only resolve inside style=,
+           not in raw SVG presentation attributes. */}
+        <text x="380" y="190" text-anchor="end" style="font-family: var(--font-mono); font-size: 9px; fill: var(--text-dim);">Time →</text>
+        <text x="22"  y="22"  text-anchor="end" transform="rotate(-90 22 22)" style="font-family: var(--font-mono); font-size: 9px; fill: var(--text-dim);">Pressure ↑</text>
+
+        {/* filled area */}
+        <path
+          d="M 80,170 C 130,170 150,50 180,50 C 210,50 230,170 280,170 Z"
+          fill="rgba(245,158,11,0.20)"
+          stroke="none"
+        />
+        {/* curve */}
+        <path
+          d="M 80,170 C 130,170 150,50 180,50 C 210,50 230,170 280,170"
+          fill="none"
+          style="stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round;"
+        />
+
+        {/* peak marker */}
+        <line x1="180" y1="50" x2="180" y2="170"
+              stroke-dasharray="3,3"
+              style="stroke: var(--accent); stroke-width: 1; opacity: 0.5;" />
+        <circle cx="180" cy="50" r="3" style="fill: var(--accent);" />
+        <text x="186" y="46" style="font-family: var(--font-mono); font-size: 10px; font-weight: 600; fill: var(--accent);">
+          higher peak
+        </text>
+      </svg>
+      <div class="pcurve-body">
+        Light bullet at high velocity requires <strong>high peak pressure quickly</strong>. The
+        pressure curve is tall and narrow. Recoil is delivered as a short, sharp spike: the
+        gun jerks.
+      </div>
+    </article>
+
+    <article class="pcurve blue">
+      <header>
+        <div class="pcurve-tag">147 gr · 884 fps</div>
+        <div class="pcurve-verdict">LONGER, LOWER · "Push"</div>
+      </header>
+      <svg
+        viewBox="0 0 400 200"
+        role="img"
+        aria-label="Pressure-time curve for a 147gr bullet at 884 fps (wider, lower peak)"
+        preserveAspectRatio="none"
+      >
+        <line x1="30" y1="170" x2="380" y2="170" style="stroke: var(--border); stroke-width: 1;" />
+        <line x1="30" y1="20"  x2="30"  y2="170" style="stroke: var(--border); stroke-width: 1;" />
+
+        <text x="380" y="190" text-anchor="end" style="font-family: var(--font-mono); font-size: 9px; fill: var(--text-dim);">Time →</text>
+        <text x="22"  y="22"  text-anchor="end" transform="rotate(-90 22 22)" style="font-family: var(--font-mono); font-size: 9px; fill: var(--text-dim);">Pressure ↑</text>
+
+        {/* filled area: wider, lower */}
+        <path
+          d="M 40,170 C 100,170 140,90 180,90 C 220,90 260,170 320,170 Z"
+          fill="rgba(59,130,246,0.20)"
+          stroke="none"
+        />
+        <path
+          d="M 40,170 C 100,170 140,90 180,90 C 220,90 260,170 320,170"
+          fill="none"
+          style="stroke: var(--blue); stroke-width: 2.5; stroke-linecap: round;"
+        />
+
+        <line x1="180" y1="90" x2="180" y2="170"
+              stroke-dasharray="3,3"
+              style="stroke: var(--blue); stroke-width: 1; opacity: 0.5;" />
+        <circle cx="180" cy="90" r="3" style="fill: var(--blue);" />
+        <text x="186" y="86" style="font-family: var(--font-mono); font-size: 10px; font-weight: 600; fill: var(--blue);">
+          lower peak
+        </text>
+      </svg>
+      <div class="pcurve-body">
+        Heavy bullet at lower velocity can be driven by <strong>lower peak pressure sustained
+        longer</strong>. Same total impulse (same PF), but spread wider. The gun pushes,
+        rather than snaps.
+      </div>
+    </article>
+  </div>
+
+  <figcaption class="pcurves-foot">
+    Area under each curve = impulse = total momentum. At equal Power Factor, the two areas are
+    equal: only the shape differs. The hand integrates force over time but is most sensitive
+    to peak force. A 15–30% shorter impulse with the same total momentum implies a 15–30% higher
+    peak force, which is why the lighter bullet feels harder even when the math is nearly
+    identical.
+  </figcaption>
+</figure>
+
+<style>
+  .pcurves {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 28px 32px;
+    margin: 28px 0;
+  }
+  .pcurves-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+  .pcurves-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .pcurve {
+    background: var(--bg-card-alt);
+    border-radius: 6px;
+    border-top: 3px solid var(--border);
+    padding: 16px 18px 18px;
+  }
+  .pcurve.amber { border-top-color: var(--accent); }
+  .pcurve.blue  { border-top-color: var(--blue); }
+  .pcurve header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .pcurve-tag {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .pcurve.amber .pcurve-tag { color: var(--accent); }
+  .pcurve.blue  .pcurve-tag { color: var(--blue); }
+  .pcurve-verdict {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+  }
+  .pcurve svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 4px 0 12px;
+  }
+  .pcurve-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .pcurve-body strong { color: var(--text); }
+
+  .pcurves-foot {
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: var(--bg-card-alt);
+    border-radius: 4px;
+    border-left: 2px solid var(--accent);
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    max-width: 850px;
+  }
+
+  @media (max-width: 600px) {
+    .pcurves { padding: 20px 16px; }
+    .pcurves-grid { grid-template-columns: 1fr; }
+  }
+</style>
