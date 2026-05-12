@@ -88,7 +88,7 @@
         Bullet <span data-output="bullet-pct">—</span>
       </span>
       <span class="bar-legend-gas" data-gas-band="green">
-        Gas <span data-output="gas-pct">—</span>
+        Gas <span data-output="gas-pct">—</span> <span data-output="gas-band"></span>
       </span>
     </div>
     <div class="rc-bar-track">
@@ -149,6 +149,60 @@
 <script>
   type Bands = 'green' | 'amber' | 'red';
 
+  type LoadInputs = {
+    bullet: number;    // grains
+    velocity: number;  // fps
+    charge: number;    // grains
+    f: number;         // gas factor
+    gun: number;       // pounds
+  };
+
+  type LoadOutputs = {
+    pf: number;
+    bulletMomentum: number;
+    vGas: number;
+    gasMomentum: number;
+    totalMomentum: number;
+    vGun: number;
+    energy: number;
+    bulletPct: number;
+    gasPct: number;
+    gasBand: Bands;
+  };
+
+  function bandFor(f: number): Bands {
+    if (f <= 1.2) return 'green';
+    if (f <= 1.6) return 'amber';
+    return 'red';
+  }
+
+  function isValid(i: LoadInputs): boolean {
+    return (
+      Number.isFinite(i.bullet) && i.bullet > 0 &&
+      Number.isFinite(i.velocity) && i.velocity > 0 &&
+      Number.isFinite(i.charge) && i.charge >= 0 &&
+      Number.isFinite(i.f) && i.f > 0 &&
+      Number.isFinite(i.gun) && i.gun > 0
+    );
+  }
+
+  function computeLoad(i: LoadInputs): LoadOutputs {
+    const pf = (i.bullet * i.velocity) / 1000;
+    const bulletMomentum = i.bullet * i.velocity;
+    const vGas = i.f * i.velocity;
+    const gasMomentum = i.charge * vGas;
+    const totalMomentum = bulletMomentum + gasMomentum;
+    const gunGrains = i.gun * 7000;
+    const vGun = totalMomentum / gunGrains;
+    const energy = (i.gun * vGun * vGun) / 64.348;
+    const bulletPct = (bulletMomentum / totalMomentum) * 100;
+    const gasPct = 100 - bulletPct;
+    return {
+      pf, bulletMomentum, vGas, gasMomentum, totalMomentum,
+      vGun, energy, bulletPct, gasPct, gasBand: bandFor(i.f),
+    };
+  }
+
   function setup(root: HTMLElement) {
     const $ = <T extends Element = HTMLElement>(sel: string) =>
       root.querySelector(sel) as T | null;
@@ -173,6 +227,7 @@
       energy:          out('energy'),
       bulletPct:       out('bullet-pct'),
       gasPct:          out('gas-pct'),
+      gasBand:         out('gas-band'),
     };
 
     const bars = {
@@ -186,12 +241,6 @@
         ? new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n)
         : '—';
 
-    function band(f: number): Bands {
-      if (f <= 1.2) return 'green';
-      if (f <= 1.6) return 'amber';
-      return 'red';
-    }
-
     function clear() {
       for (const k of Object.keys(outputs) as (keyof typeof outputs)[]) {
         outputs[k].textContent = '—';
@@ -201,44 +250,40 @@
     }
 
     function compute() {
-      const bullet = parseFloat(inputs.bullet.value);
-      const velocity = parseFloat(inputs.velocity.value);
-      const charge = parseFloat(inputs.charge.value);
-      const f = parseFloat(inputs.f.value);
-      const gunLbs = parseFloat(inputs.gun.value);
+      const li: LoadInputs = {
+        bullet:   parseFloat(inputs.bullet.value),
+        velocity: parseFloat(inputs.velocity.value),
+        charge:   parseFloat(inputs.charge.value),
+        f:        parseFloat(inputs.f.value),
+        gun:      parseFloat(inputs.gun.value),
+      };
 
-      if (![bullet, velocity, charge, f, gunLbs].every(Number.isFinite) || bullet <= 0 || velocity <= 0 || gunLbs <= 0) {
+      if (!isValid(li)) {
         clear();
         return;
       }
 
-      const pf = (bullet * velocity) / 1000;          // PF (USPSA / IPSC convention)
-      const bulletMomentum = bullet * velocity;       // gr·fps
-      const vGas = f * velocity;                      // fps
-      const gasMomentum = charge * vGas;              // gr·fps
-      const totalMomentum = bulletMomentum + gasMomentum;
-      const gunGrains = gunLbs * 7000;                // 1 lb = 7000 gr
-      const vGun = totalMomentum / gunGrains;         // fps
-      const energy = (gunLbs * vGun * vGun) / 64.348; // ft·lb (g = 32.174 fps²)
+      const o = computeLoad(li);
 
-      const bulletPct = (bulletMomentum / totalMomentum) * 100;
-      const gasPct = 100 - bulletPct;
+      outputs.pf.textContent             = fmt(o.pf, 1);
+      outputs.bulletMomentum.textContent = fmt(o.bulletMomentum);
+      outputs.gasVelocity.textContent    = fmt(o.vGas);
+      outputs.gasMomentum.textContent    = fmt(o.gasMomentum);
+      outputs.totalMomentum.textContent  = fmt(o.totalMomentum);
+      outputs.vGun.textContent           = fmt(o.vGun, 2);
+      outputs.energy.textContent         = fmt(o.energy, 2);
+      outputs.bulletPct.textContent      = fmt(o.bulletPct, 1) + '%';
+      outputs.gasPct.textContent         = fmt(o.gasPct, 1) + '%';
 
-      outputs.pf.textContent             = fmt(pf, 1);
-      outputs.bulletMomentum.textContent = fmt(bulletMomentum);
-      outputs.gasVelocity.textContent    = fmt(vGas);
-      outputs.gasMomentum.textContent    = fmt(gasMomentum);
-      outputs.totalMomentum.textContent  = fmt(totalMomentum);
-      outputs.vGun.textContent           = fmt(vGun, 2);
-      outputs.energy.textContent         = fmt(energy, 2);
-      outputs.bulletPct.textContent      = fmt(bulletPct, 1) + '%';
-      outputs.gasPct.textContent         = fmt(gasPct, 1) + '%';
+      bars.bullet.style.flex = `0 0 ${o.bulletPct}%`;
+      bars.gas.style.flex    = `0 0 ${o.gasPct}%`;
 
-      bars.bullet.style.flex = `0 0 ${bulletPct}%`;
-      bars.gas.style.flex    = `0 0 ${gasPct}%`;
-
-      const b = band(f);
-      gasBandTargets.forEach((el) => el.dataset.gasBand = b);
+      gasBandTargets.forEach((el) => el.dataset.gasBand = o.gasBand);
+      const bandLbl =
+        o.gasBand === 'green' ? '(low gas push)' :
+        o.gasBand === 'amber' ? '(mid gas push)' :
+                                '(high gas push)';
+      outputs.gasBand.textContent = bandLbl;
     }
 
     Object.values(inputs).forEach((el) => el.addEventListener('input', compute));
