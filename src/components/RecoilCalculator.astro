@@ -22,6 +22,11 @@
     </button>
   </div>
 
+  <section class="recoil-calc-cmp" data-cmp hidden aria-live="polite" aria-label="Side-by-side comparison">
+    <h4 class="recoil-calc-cmp-title">Comparison</h4>
+    <div class="recoil-calc-cmp-body" data-cmp-body></div>
+  </section>
+
   <div class="recoil-calc-notes">
     <details open>
       <summary>About the gas factor</summary>
@@ -285,6 +290,60 @@
     return String.fromCharCode(65 + i); // 0 -> 'A', 1 -> 'B', ...
   }
 
+  type Metric = { key: 'pf' | 'vGun' | 'energy'; label: string; unit: string; decimals: number };
+
+  const METRICS: Metric[] = [
+    { key: 'pf',     label: 'Power Factor',       unit: 'PF',    decimals: 1 },
+    { key: 'vGun',   label: 'Recoil velocity',    unit: 'fps',   decimals: 2 },
+    { key: 'energy', label: 'Free recoil energy', unit: 'ft·lb', decimals: 2 },
+  ];
+
+  function makeEl(tag: string, className?: string, text?: string): HTMLElement {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text !== undefined) el.textContent = text;
+    return el;
+  }
+
+  function renderComparison(body: HTMLElement, outs: (LoadOutputs | null)[]) {
+    body.textContent = ''; // clear existing children safely (no innerHTML)
+
+    for (const m of METRICS) {
+      const validVals = outs
+        .map((o) => (o ? o[m.key] : null))
+        .filter((v): v is number => v !== null && Number.isFinite(v));
+      const max = validVals.length ? Math.max(...validVals) : 0;
+
+      const row = makeEl('div', 'rc-cmp-row');
+      const rowLabel = makeEl('div', 'rc-cmp-row-label', `${m.label} `);
+      rowLabel.appendChild(makeEl('span', 'rc-cmp-row-unit', m.unit));
+      row.appendChild(rowLabel);
+
+      const bars = makeEl('div', 'rc-cmp-row-bars');
+
+      outs.forEach((o, i) => {
+        const value = o ? o[m.key] : null;
+        const pct = (value !== null && max > 0) ? (value / max) * 100 : 0;
+        const valueText = (value !== null && Number.isFinite(value)) ? fmt(value, m.decimals) : '…';
+
+        const seg = makeEl('div', 'rc-cmp-seg');
+        seg.appendChild(makeEl('div', 'rc-cmp-seg-label', letterFor(i)));
+
+        const track = makeEl('div', 'rc-cmp-seg-track');
+        const fill = makeEl('div', 'rc-cmp-seg-fill');
+        fill.style.width = `${pct}%`;
+        track.appendChild(fill);
+        seg.appendChild(track);
+
+        seg.appendChild(makeEl('div', 'rc-cmp-seg-value', valueText));
+        bars.appendChild(seg);
+      });
+
+      row.appendChild(bars);
+      body.appendChild(row);
+    }
+  }
+
   function setup(root: HTMLElement) {
     const list = root.querySelector<HTMLOListElement>('[data-loads]')!;
     const tpl  = document.querySelector<HTMLTemplateElement>('[data-load-template]')!;
@@ -303,6 +362,7 @@
       const load = loads[i];
       const out = isValid(load) ? computeLoad(load) : null;
       renderCard(cards[i], out);
+      syncComparison();
     }
 
     function attachInputListeners(card: HTMLElement) {
@@ -349,6 +409,19 @@
       });
     }
 
+    const cmp = root.querySelector<HTMLElement>('[data-cmp]')!;
+    const cmpBody = root.querySelector<HTMLElement>('[data-cmp-body]')!;
+
+    function syncComparison() {
+      if (loads.length < 2) {
+        cmp.hidden = true;
+        return;
+      }
+      const outs = loads.map((li) => isValid(li) ? computeLoad(li) : null);
+      cmp.hidden = false;
+      renderComparison(cmpBody, outs);
+    }
+
     function addLoad() {
       if (loads.length >= MAX_LOADS) return;
       const copy: LoadInputs = { ...loads[loads.length - 1] };
@@ -368,6 +441,7 @@
       card.remove();
       relabel();
       syncControls();
+      syncComparison();
     }
 
     const addBtn = root.querySelector<HTMLButtonElement>('[data-add]')!;
@@ -382,6 +456,7 @@
       relabel();
       syncControls();
       cards.forEach((_, i) => recomputeAt(i));
+      syncComparison();
     }
 
     init();
@@ -676,6 +751,80 @@
   }
   .recoil-calc-notes p em { color: var(--accent); font-style: italic; font-family: var(--font-serif); }
   .recoil-calc-notes p strong { color: var(--text); font-weight: 600; }
+
+  .recoil-calc-cmp {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    margin: 0 0 20px;
+    background: var(--bg-card-alt);
+  }
+  .recoil-calc-cmp[hidden] { display: none; }
+  .recoil-calc-cmp-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+  .recoil-calc-cmp-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .rc-cmp-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .rc-cmp-row-label {
+    font-size: 13px;
+    color: var(--text);
+  }
+  .rc-cmp-row-unit {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-left: 4px;
+  }
+  .rc-cmp-row-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .rc-cmp-seg {
+    display: grid;
+    grid-template-columns: 18px 1fr 72px;
+    gap: 10px;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .rc-cmp-seg-label {
+    color: var(--text-dim);
+    font-weight: 600;
+    text-align: center;
+  }
+  .rc-cmp-seg-track {
+    height: 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .rc-cmp-seg-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 180ms ease;
+  }
+  .rc-cmp-seg-value {
+    color: var(--text-bright);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
 
   @media (max-width: 760px) {
     .recoil-calc { padding: 22px 18px; }
