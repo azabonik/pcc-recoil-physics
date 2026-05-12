@@ -20,15 +20,171 @@ keywords: "9mm recoil calculator, free recoil calculator, V_gun, free recoil ene
 
 import Section from '../../components/Section.astro';
 import RecoilCalculator from '../../components/RecoilCalculator.astro';
+import FactorGrid from '../../components/FactorGrid.astro';
+import FactorCard from '../../components/FactorCard.astro';
+import Callout from '../../components/Callout.astro';
 
 <Section>
   <RecoilCalculator />
+</Section>
+
+<Section heading="Reading the three primary outputs">
+  <p>
+    The calculator returns seven numbers. Three carry most of the practical
+    meaning: Power Factor and the bullet/gas split describe what's coming out
+    the muzzle, but it's the three below that describe what's coming out the
+    back, and how it feels.
+  </p>
+
+  <FactorGrid>
+    <FactorCard accent="red" title="Total recoil momentum" verdict="Set by the ammo. Tune the gas half.">
+      The full backward impulse the gun must absorb, in gr·fps. Bullet
+      momentum is locked by Power Factor; gas momentum is the only piece a
+      handloader directly controls. Independent of gun weight: a heavier
+      gun absorbs the same impulse, just at a lower speed.
+    </FactorCard>
+    <FactorCard accent="amber" title="Recoil velocity" verdict="Set by the platform. Heavier gun, slower gun.">
+      How fast the gun moves backward, in fps. Total momentum divided by
+      gun mass: same ammo, half the gun weight, double the gun speed.
+      V<sub>gun</sub> drives the impulse your hand redirects and how
+      quickly the sights return for the follow-up.
+    </FactorCard>
+    <FactorCard accent="blue" title="Free recoil energy" verdict="The compound result. Mass × tuning.">
+      The kinetic energy of the gun moving backward, in ft·lb (½ m V<sub>gun</sub>²).
+      The single most useful comparison metric: it folds speed and mass
+      into one number for what your grip, wrists, and shoulders dissipate
+      per shot.
+    </FactorCard>
+  </FactorGrid>
+
+  <h3>How to lower total recoil momentum</h3>
 
   <p>
-    For the physics behind the equation — what the gas factor really represents,
-    why fast powder in a long barrel produces less felt recoil at the same Power
-    Factor, and the perceptual factors (blast, sound, impulse shape) that the
-    momentum math doesn't capture — see
+    Bullet momentum is the floor: whatever the rules require, that's the
+    bottom of the chart. Below it, gas momentum is the part you have real
+    leverage over. For typical 9mm loads it's 3% to 8% of total momentum;
+    for a comped Major load it can exceed 20%.
+  </p>
+
+  <ul>
+    <li>
+      <strong>Run the lightest charge that meets PF.</strong> Faster powders
+      develop the same peak pressure with less mass, so the gas half of the
+      equation shrinks.
+    </li>
+    <li>
+      <strong>Lower the gas factor.</strong> SAAMI publishes a single
+      f = 1.50 for "Pistol &amp; revolvers" with no breakdown by powder
+      type or barrel length (2018 SAAMI Free Recoil Energy technical
+      document, derived from the British Textbook of Small Arms 1929 range
+      of 1 to 2). Fast powder in a longer barrel pulls f toward the lower
+      bound of that range because gas has more expansion length and less
+      residual pressure at the muzzle; slow powder in a short barrel
+      pulls it toward the upper bound. The specific sub-1.50 anchors you'll
+      see quoted on this site (≈ 1.0 for fully expanded fast powder in a
+      long barrel) are analytical estimates bounded by the British range,
+      not measurements. 9mm doesn't reach SAAMI's rifle anchor of 1.75
+      because rifle-burn-rate powders aren't loaded in 9mm cases.
+    </li>
+    <li>
+      <strong>Heavier bullet at lower velocity, same PF.</strong> Bullet
+      momentum doesn't change. But the slower acceleration usually needs
+      less powder and gives the gas more time to expand, so the gas half
+      shrinks.
+    </li>
+  </ul>
+
+  <h3>How to lower recoil velocity</h3>
+
+  <p>
+    V<sub>gun</sub> is where gun mass enters the math. It scales linearly
+    with mass: doubling the gun weight halves V<sub>gun</sub> for the same
+    ammo.
+  </p>
+
+  <ul>
+    <li>
+      <strong>Heavier gun.</strong> A 7.5 lb PCC firing the same ammo as a
+      2.5 lb subcompact moves backward at one-third the speed. This is most
+      of why PCCs feel near-recoilless even with full-power loads.
+    </li>
+    <li>
+      <strong>Add muzzle weight on a pistol.</strong> Tungsten guide rods,
+      heavier slides, comp-plus-weight setups. They don't change PF or the
+      ammo, but every ounce added lowers V<sub>gun</sub> in proportion to
+      the new total mass.
+    </li>
+    <li>
+      <strong>Reduce total momentum.</strong> The handload levers above
+      show up linearly here: a 5% drop in total momentum is a 5% drop in
+      V<sub>gun</sub>.
+    </li>
+  </ul>
+
+  <h3>How to lower free recoil energy</h3>
+
+  <p>
+    The squared relationship in ½ m V<sub>gun</sub>² is the most important
+    fact about this output. It cuts two ways depending on which lever
+    you're pulling:
+  </p>
+
+  <ul>
+    <li>
+      <strong>Ammo-side reductions compound.</strong> A drop in total
+      momentum appears linearly in V<sub>gun</sub>, then gets squared into
+      energy. A 5% reduction in total momentum from charge and gas-factor
+      tuning yields roughly a 10% reduction in free recoil energy.
+    </li>
+    <li>
+      <strong>Gun-side reductions are linear, but the multiplier is large.</strong>
+      Doubling gun mass halves V<sub>gun</sub>, and the squared term in the
+      energy formula cancels against the leading mass, so energy also halves.
+      Tripling gun mass cuts energy to one-third.
+    </li>
+  </ul>
+
+  <p>
+    The two stack. A tuned load in a heavy gun is the lowest energy figure
+    you can reach without dropping below the PF floor. Gun mass is set once
+    when you pick the platform; it's the single biggest lever. Charge and
+    powder choice is the per-load tuning that wrings the last 10% to 20%
+    out of whatever platform you're shooting.
+  </p>
+
+  <Callout title="Same load, three guns">
+    <p>
+      124 gr at 1050 fps, 4.0 gr charge, gas factor 1.5 (a typical 130 PF
+      Minor load):
+    </p>
+    <ul>
+      <li>
+        <strong>2.5 lb subcompact:</strong> V<sub>gun</sub> ≈ 7.8 fps,
+        energy ≈ 2.36 ft·lb.
+      </li>
+      <li>
+        <strong>3.0 lb full-size pistol:</strong> V<sub>gun</sub> ≈ 6.5 fps,
+        energy ≈ 1.97 ft·lb. 17% less energy for 0.5 lb more gun.
+      </li>
+      <li>
+        <strong>7.5 lb PCC:</strong> V<sub>gun</sub> ≈ 2.6 fps,
+        energy ≈ 0.79 ft·lb. 66% less energy than the subcompact, same ammo.
+      </li>
+    </ul>
+    <p>
+      The bullet did the same work in every case. The gun absorbed it very
+      differently.
+    </p>
+  </Callout>
+</Section>
+
+<Section>
+  <p>
+    For the physics behind the equation, see
     <a href="/articles/pcc-recoil-physics/">PCC Recoil Physics: Get the Gas to Atmospheric</a>.
+    That article covers what the gas factor really represents, why fast
+    powder in a long barrel produces less felt recoil at the same Power
+    Factor, and the perceptual factors (blast, sound, impulse shape) that
+    the momentum math doesn't capture.
   </p>
 </Section>
