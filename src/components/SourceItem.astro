@@ -4,6 +4,6 @@ interface Props {
 }
 const { num } = Astro.props;
 ---
-<div class="source-item">
+<div class="source-item" id={`source-${num}`}>
   <span class="ref-num">[{num}]</span> <slot />
 </div>

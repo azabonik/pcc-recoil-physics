@@ -1,0 +1,38 @@
+---
+// Scrollable wrapper for wide tables. The wrapper, not the table, holds the
+// horizontal overflow behavior so the inner <table> keeps its native semantics
+// (mobile rules previously set display:block on .calc-table, which strips
+// the table role in some screen readers). The wrapper is a focusable
+// landmark so keyboard users can scroll it with arrow keys (WCAG 2.1.1).
+interface Props {
+  /** Required accessible name describing what the table contains. */
+  label: string;
+}
+const { label } = Astro.props;
+---
+<div class="calc-table-wrap" role="region" tabindex="0" aria-label={label}>
+  <slot />
+</div>
+
+<style>
+  .calc-table-wrap {
+    margin: 24px 0;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-dim) var(--bg-card);
+  }
+  .calc-table-wrap:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  .calc-table-wrap::-webkit-scrollbar { height: 6px; }
+  .calc-table-wrap::-webkit-scrollbar-thumb {
+    background: var(--accent-dim);
+    border-radius: 3px;
+  }
+  .calc-table-wrap::-webkit-scrollbar-track { background: var(--bg-card); }
+  /* Tables inside a wrapper reset the default top margin so the wrapper
+     owns vertical spacing. */
+  .calc-table-wrap :global(table.calc-table) { margin: 0; }
+</style>

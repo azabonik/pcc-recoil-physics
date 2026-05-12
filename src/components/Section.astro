@@ -11,7 +11,7 @@ const { number, label, heading } = Astro.props;
 const showKicker = number && label;
 ---
 <section class="section">
-  {showKicker && <div class="section-number">{number} — {label}</div>}
+  {showKicker && <div class="section-number">{number}: {label}</div>}
   {heading && <h2>{heading}</h2>}
   <slot />
 </section>

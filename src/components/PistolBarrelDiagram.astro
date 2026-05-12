@@ -1,0 +1,200 @@
+---
+// Two-row gas-state visualization for a ~4" pistol barrel: fast powder vs slow
+// powder. Both end well above atmospheric: the visual point is that powder
+// choice changes the burn-zone extent but not the qualitative outcome.
+// Hand-tuned widths express the burn-vs-expansion ratio narratively, not from data.
+---
+<figure class="pbarrel-diagram">
+  <h3>4″ Pistol Barrel: Gas pressure state when the bullet exits</h3>
+
+  <div class="pbarrel-row">
+    <div class="pbarrel-label warn">Fast<br />Powder</div>
+    <div class="pbarrel-visual" aria-hidden="true" style="background: #1e1810;">
+      <div
+        class="pbarrel-burn"
+        style="width: 75%; background: linear-gradient(90deg, #fbbf24, #f59e0b);"
+      >
+        BURN
+      </div>
+      <div
+        class="pbarrel-expansion"
+        style="left: 75%; right: 6px; background: rgba(245,158,11,0.10);"
+      >
+        <span style="color: rgba(245,158,11,0.6); font-size:9px;">~1″<br />gap</span>
+      </div>
+      <div class="pbarrel-muzzle-zone" style="background: rgba(245,158,11,0.45);"></div>
+      <div class="pbarrel-bullet">
+        <div class="pbarrel-bullet-pip"></div>
+        <div class="pbarrel-bullet-label">◀ BULLET</div>
+      </div>
+    </div>
+    <div class="pbarrel-desc">
+      <strong style="color:var(--accent);">Far above atmospheric</strong><br />
+      Powder finishes at ~3″<br />
+      ~1″ of expansion before muzzle<br />
+      Gas exits hot, fast, loud
+    </div>
+  </div>
+
+  <div class="pbarrel-row">
+    <div class="pbarrel-label slow">Slow<br />Powder</div>
+    <div class="pbarrel-visual" aria-hidden="true" style="background: #201010;">
+      <div
+        class="pbarrel-burn"
+        style="width: 87%; background: linear-gradient(90deg, #ef4444, #f87171, #ef4444);"
+      >
+        ACTIVE COMBUSTION
+      </div>
+      <div
+        class="pbarrel-expansion"
+        style="left: 87%; right: 6px; background: rgba(239,68,68,0.10);"
+      >
+        <span style="color: rgba(239,68,68,0.5); font-size:9px;">tiny</span>
+      </div>
+      <div class="pbarrel-muzzle-zone" style="background: rgba(239,68,68,0.6);"></div>
+      <div class="pbarrel-bullet">
+        <div class="pbarrel-bullet-pip"></div>
+        <div class="pbarrel-bullet-label">◀ BULLET</div>
+      </div>
+    </div>
+    <div class="pbarrel-desc">
+      <strong style="color:var(--red);">Even further above atmospheric</strong><br />
+      Still generating pressure at the muzzle<br />
+      Effectively no expansion zone
+    </div>
+  </div>
+
+  <figcaption class="pbarrel-note">
+    Both diagrams show the same instant: the bullet leaving the muzzle of a 4″ pistol barrel.
+    Regardless of powder choice, the gas exits well above atmospheric. The fast-vs-slow
+    distinction barely registers in felt recoil because both loads are already in the
+    "still pressurized" regime (the gas term doesn't get a chance to shrink).
+  </figcaption>
+</figure>
+
+<style>
+  .pbarrel-diagram {
+    margin: 32px 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 32px;
+  }
+  .pbarrel-diagram h3 {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .pbarrel-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 20px;
+  }
+  .pbarrel-row:last-of-type { margin-bottom: 0; }
+  .pbarrel-label {
+    width: 100px;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: right;
+    line-height: 1.4;
+  }
+  .pbarrel-label.warn { color: var(--accent); }
+  .pbarrel-label.slow { color: var(--red); }
+
+  .pbarrel-visual {
+    flex: 1;
+    height: 48px;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .pbarrel-burn {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: rgba(0, 0, 0, 0.75);
+  }
+  .pbarrel-expansion {
+    position: absolute;
+    top: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+  .pbarrel-muzzle-zone {
+    position: absolute;
+    top: -6px; bottom: -6px; right: -2px;
+    width: 6px;
+    border-radius: 0 3px 3px 0;
+  }
+  .pbarrel-bullet {
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .pbarrel-bullet-pip {
+    width: 10px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 2px 6px 6px 2px;
+  }
+  .pbarrel-bullet-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .pbarrel-desc {
+    width: 220px;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-left: 52px;
+  }
+
+  .pbarrel-note {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-style: italic;
+    line-height: 1.6;
+    max-width: 850px;
+  }
+
+  @media (max-width: 600px) {
+    .pbarrel-diagram { padding: 18px 16px; }
+    .pbarrel-row { flex-wrap: wrap; gap: 8px; }
+    .pbarrel-label { width: 64px; font-size: 9px; }
+    .pbarrel-visual { min-height: 40px; }
+    .pbarrel-desc { width: 100%; margin-left: 0; font-size: 11px; }
+    .pbarrel-bullet { display: none; }
+    .pbarrel-expansion span { display: none; }
+  }
+</style>

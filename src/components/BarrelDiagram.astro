@@ -2,12 +2,12 @@
 // Side-by-side fast vs slow powder visualization for a 13" PCC barrel.
 // Hand-tuned widths express the burn-vs-expansion ratio narratively, not from data.
 ---
-<div class="barrel-diagram">
-  <h3>13″ PCC Barrel — Gas pressure state when the bullet exits</h3>
+<figure class="barrel-diagram">
+  <h3>13″ PCC Barrel: Gas pressure state when the bullet exits</h3>
 
   <div class="barrel-row">
     <div class="barrel-label fast">Fast<br />Powder</div>
-    <div class="barrel-visual" style="background: #1a2010;">
+    <div class="barrel-visual" aria-hidden="true" style="background: #1a2010;">
       <div
         class="barrel-burn"
         style="width: 26%; background: linear-gradient(90deg, #4ade80, #22c55e);"
@@ -35,7 +35,7 @@
 
   <div class="barrel-row">
     <div class="barrel-label slow">Slow<br />Powder</div>
-    <div class="barrel-visual" style="background: #201010;">
+    <div class="barrel-visual" aria-hidden="true" style="background: #201010;">
       <div
         class="barrel-burn"
         style="width: 78%; background: linear-gradient(90deg, #ef4444, #f87171, #ef4444);"
@@ -61,12 +61,12 @@
     </div>
   </div>
 
-  <div class="barrel-note">
-    Both diagrams show the same instant — the bullet leaving the muzzle at 130 PF. The bullet
+  <figcaption class="barrel-note">
+    Both diagrams show the same instant: the bullet leaving the muzzle at 130 PF. The bullet
     position and speed are identical. What's different is the gas pressure behind it:
     near-atmospheric (quiet exit) vs far above atmospheric (violent exit).
-  </div>
-</div>
+  </figcaption>
+</figure>
 
 <style>
   .barrel-diagram {
@@ -188,8 +188,8 @@
     .barrel-visual { min-height: 40px; }
     .barrel-desc { width: 100%; margin-left: 0; font-size: 11px; }
     /* Decorative bullet pip + "EXPANDING TOWARD ATMOSPHERIC →" overflow at
-       narrow widths. Hide them on mobile — the burn/expand color zones still
-       carry the visual story. */
+       narrow widths. Hide them on mobile (the burn/expand color zones still
+       carry the visual story). */
     .barrel-bullet { display: none; }
     .barrel-expansion span { display: none; }
   }

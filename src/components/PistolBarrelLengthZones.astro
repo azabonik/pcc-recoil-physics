@@ -1,0 +1,293 @@
+---
+// Pistol-range version of BarrelLengthZones (3.0–5.5″+). Includes
+// reference-platform tick markers on the gradient bar so readers can map the
+// six pistols in this article to a zone at a glance.
+// Hand-tuned to the pistol burn-vs-expansion narrative; not directly data-driven.
+---
+<figure class="pzones-card">
+  <h3 class="pzones-title">Barrel Length Zones: 9mm Pistol (3.0″ to 5.5″+)</h3>
+
+  <div
+    class="pzones-bar-wrap"
+    role="img"
+    aria-label="Barrel-length scale from 3.0 to 5.5 inches, with platform markers: Glock 43 at 3.4 inches, Glock 19 at 4.02 inches, Glock 17 at 4.49 inches, CZ Shadow 2 at 4.89 inches, Glock 34 at 5.31 inches."
+  >
+    <div class="pzones-bar" aria-hidden="true">
+      <div class="pzones-bar-fill"></div>
+      <div class="pzones-platform" style="left:16%;">
+        <div class="pzones-platform-tick"></div>
+        <div class="pzones-platform-label">
+          <span class="pzones-platform-name">G43</span>
+          <span class="pzones-platform-len">3.4″</span>
+        </div>
+      </div>
+      <div class="pzones-platform" style="left:40.8%;">
+        <div class="pzones-platform-tick"></div>
+        <div class="pzones-platform-label">
+          <span class="pzones-platform-name">G19</span>
+          <span class="pzones-platform-len">4.02″</span>
+        </div>
+      </div>
+      <div class="pzones-platform" style="left:59.6%;">
+        <div class="pzones-platform-tick"></div>
+        <div class="pzones-platform-label">
+          <span class="pzones-platform-name">G17</span>
+          <span class="pzones-platform-len">4.49″</span>
+        </div>
+      </div>
+      <div class="pzones-platform" style="left:75.6%;">
+        <div class="pzones-platform-tick"></div>
+        <div class="pzones-platform-label">
+          <span class="pzones-platform-name">Shadow&nbsp;2</span>
+          <span class="pzones-platform-len">4.89″</span>
+        </div>
+      </div>
+      <div class="pzones-platform" style="left:92.4%;">
+        <div class="pzones-platform-tick"></div>
+        <div class="pzones-platform-label">
+          <span class="pzones-platform-name">G34</span>
+          <span class="pzones-platform-len">5.31″</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pzones-marks" aria-hidden="true">
+    <div class="pzones-mark" style="left:0%;">3.0″</div>
+    <div class="pzones-mark" style="left:20%;">3.5″</div>
+    <div class="pzones-mark" style="left:40%;">4.0″</div>
+    <div class="pzones-mark" style="left:60%;">4.5″</div>
+    <div class="pzones-mark" style="left:80%;">5.0″</div>
+    <div class="pzones-mark" style="left:100%;">5.5″+</div>
+  </div>
+
+  <div class="pzones-grid">
+    <div class="pzone red">
+      <div class="pzone-label">3.0–3.5″ · SUBCOMPACT</div>
+      <div class="pzone-sub">Glock 43, P365, Shield</div>
+      <div class="pzone-body">
+        Minimal expansion after burn. Muzzle pressure is at its highest. Velocity loss of
+        ~55–100 fps vs. a 4.5″ barrel means standard charges may <strong>fail to make Minor PF</strong>.
+        Every load feels sharper and louder: not because total momentum is much different, but
+        because the pressure-time curve is compressed (higher peak pressure) and uncorking
+        pressure is higher.
+      </div>
+    </div>
+
+    <div class="pzone amber">
+      <div class="pzone-label">3.5–4.2″ · COMPACT</div>
+      <div class="pzone-sub">Glock 19 Gen5 MOS, P320 Compact, M&amp;P 2.0 Compact</div>
+      <div class="pzone-body">
+        The 4.02″ G19 is the most popular pistol barrel in practical shooting. Velocity loss
+        is ~20–40 fps vs. a G17. You can make Minor PF with standard charges, but with less
+        margin. Muzzle pressure is still high. The difference between fast and slow powder is
+        marginally perceptible in flash and report, <strong>but not in felt recoil momentum</strong>.
+      </div>
+    </div>
+
+    <div class="pzone green">
+      <div class="pzone-label">4.4–5.0″ · FULL SIZE</div>
+      <div class="pzone-sub">Glock 17 Gen5 MOS, CZ Shadow 2 OR, MPA DS9 LOC v1/v2</div>
+      <div class="pzone-body">
+        The sweet spot for pistol competition. The G17's 4.49″, the LOC v2's 4.6″, and the
+        Shadow 2's 4.89″ all live here. Comfortable PF margin, slightly lower uncorking
+        pressure, slightly longer barrel time. At this barrel length the internal ballistics
+        are essentially identical across platforms: <strong>what changes is how much gun mass
+        absorbs the impulse</strong>.
+      </div>
+    </div>
+
+    <div class="pzone dim">
+      <div class="pzone-label">5.0–5.5″+ · COMPETITION LONG SLIDE</div>
+      <div class="pzone-sub">Glock 34 Gen5 MOS, full-size 2011s</div>
+      <div class="pzone-body">
+        The G34's 5.31″ barrel adds ~25–35 fps per inch and a small amount of additional gas
+        expansion. Beyond 5.5″ you're adding length and weight for marginal ballistic benefit
+        in a pistol. The practical advantage of the G34 over the G17 is the longer sight radius
+        and the slightly heavier slide, not a meaningfully different pressure-time curve.
+      </div>
+    </div>
+  </div>
+
+  <figcaption class="pzones-curve-note">
+    <div class="pzones-curve-title">Why diminishing returns happen fast in a pistol</div>
+    <div class="pzones-curve-body">
+      Gas expansion follows <strong>P ∝ V<sup>−γ</sup></strong> (adiabatic expansion,
+      γ ≈ 1.2–1.25 for combustion gases): the first doubling of expansion volume drops
+      pressure by ~55–60%. Every pistol barrel operates <em>before</em> the curve flattens,
+      so each additional inch produces a meaningful pressure drop. But no pistol-length
+      barrel is long enough for the gas to reach near-atmospheric, which is why every
+      pistol load, regardless of barrel length within the 3.5–5.5″ range, exits the
+      muzzle with a hot, energetic gas jet.
+    </div>
+  </figcaption>
+</figure>
+
+<style>
+  .pzones-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 28px 32px;
+    margin: 28px 0;
+  }
+  .pzones-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+
+  .pzones-bar-wrap {
+    padding-top: 38px;   /* room for platform labels above the bar */
+  }
+  .pzones-bar {
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .pzones-bar-fill {
+    height: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background:
+      linear-gradient(90deg,
+        var(--red) 0%,
+        var(--red) 12%,
+        var(--accent) 28%,
+        var(--accent) 48%,
+        var(--green) 60%,
+        var(--green) 84%,
+        var(--text-dim) 100%
+      );
+  }
+
+  /* Platform tick markers above the gradient bar */
+  .pzones-platform {
+    position: absolute;
+    top: -34px;
+    transform: translateX(-50%);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    line-height: 1.2;
+    color: var(--text);
+    pointer-events: none;
+  }
+  .pzones-platform-tick {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 14px;
+    background: var(--text-dim);
+  }
+  .pzones-platform-tick::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    background: var(--text-bright);
+    border-radius: 50%;
+  }
+  .pzones-platform-label {
+    font-weight: 600;
+    color: var(--text-bright);
+    white-space: nowrap;
+  }
+  .pzones-platform-name { display: block; }
+  .pzones-platform-len {
+    display: block;
+    font-weight: 400;
+    color: var(--text-dim);
+  }
+
+  .pzones-marks {
+    position: relative;
+    height: 14px;
+    margin-bottom: 24px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .pzones-mark {
+    position: absolute;
+    transform: translateX(-50%);
+  }
+  .pzones-mark:first-child { transform: translateX(0); }
+  .pzones-mark:last-child { transform: translateX(-100%); }
+
+  .pzones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .pzone {
+    padding: 16px;
+    background: var(--bg-card-alt);
+    border-radius: 6px;
+    border-left: 3px solid var(--border);
+  }
+  .pzone.red { border-left-color: var(--red); }
+  .pzone.amber { border-left-color: var(--accent); }
+  .pzone.green { border-left-color: var(--green); }
+  .pzone.dim { border-left-color: var(--text-dim); }
+  .pzone-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .pzone.red .pzone-label { color: var(--red); }
+  .pzone.amber .pzone-label { color: var(--accent); }
+  .pzone.green .pzone-label { color: var(--green); }
+  .pzone.dim .pzone-label { color: var(--text-dim); }
+  .pzone-sub {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .pzone-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .pzone-body strong { color: var(--text); }
+
+  .pzones-curve-note {
+    margin-top: 20px;
+    padding: 16px 20px;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+  }
+  .pzones-curve-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .pzones-curve-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  .pzones-curve-body strong { color: var(--text); }
+
+  @media (max-width: 600px) {
+    .pzones-card { padding: 20px 16px; }
+    .pzones-grid { grid-template-columns: 1fr; }
+    .pzones-platform-label { font-size: 8px; }
+    .pzones-platform { top: -32px; }
+  }
+</style>

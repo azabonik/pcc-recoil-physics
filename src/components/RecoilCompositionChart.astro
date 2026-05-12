@@ -28,12 +28,12 @@ const fmt = (n: number) => new Intl.NumberFormat('en-US').format(n);
 const colorVar = (c: WeightRow['color']) =>
   c === 'accent' ? 'var(--accent)' : c === 'cyan' ? 'var(--cyan)' : 'var(--blue)';
 ---
-<div class="gas-chart">
+<figure class="gas-chart">
   <div class="gas-chart-head">
-    <div class="gas-chart-title">Gas momentum by powder choice</div>
+    <h3 class="gas-chart-title">Gas momentum by powder choice</h3>
     <p>
       All loads here are 130 PF from a 13″ PCC. Bullet momentum is locked at
-      ~130,000 gr·fps in every row — that's what holding PF constant means.
+      ~130,000 gr·fps in every row: that's what holding PF constant means.
       The only thing that changes is how much gas exits the muzzle and how fast.
       The bars below show <strong>only the gas portion</strong>, scaled to a
       common axis so you can compare across loads at a glance.
@@ -73,19 +73,19 @@ const colorVar = (c: WeightRow['color']) =>
     </div>
   ))}
 
-  <div class="gas-chart-foot">
-    <div class="gas-foot-title">Why dramatic gas change → modest felt recoil change?</div>
+  <figcaption class="gas-chart-foot">
+    <div class="gas-foot-title">Why dramatic gas change yields only a modest felt recoil change</div>
     <p>
       Because gas momentum is only 4–10% of total recoil momentum at these loads.
       Tripling a small slice still adds up to a small slice. But your shoulder,
-      ear, and face do not weight-average like an equation does — section 5 covers
+      ear, and face do not weight-average like an equation does. Section 5 covers
       the perceptual factors (blast, sound, impulse shape) that make the felt
       difference register much larger than the ~5–6% momentum number suggests.
     </p>
-  </div>
+  </figcaption>
 
   <slot name="footer" />
-</div>
+</figure>
 
 <style>
   .gas-chart {
