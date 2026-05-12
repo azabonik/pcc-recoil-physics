@@ -290,6 +290,55 @@
     return String.fromCharCode(65 + i); // 0 -> 'A', 1 -> 'B', ...
   }
 
+  const SLOT_KEYS = ['a', 'b', 'c', 'd'] as const;
+
+  const BOUNDS: Record<keyof LoadInputs, [number, number]> = {
+    bullet:   [30, 300],
+    velocity: [100, 3000],
+    charge:   [0.5, 15],
+    f:        [0.8, 2.5],
+    gun:      [0.5, 25],
+  };
+
+  function inBounds(field: keyof LoadInputs, v: number): boolean {
+    const [lo, hi] = BOUNDS[field];
+    return Number.isFinite(v) && v >= lo && v <= hi;
+  }
+
+  function parseSlot(raw: string | null): LoadInputs | null {
+    if (!raw) return null;
+    const parts = raw.split(',');
+    if (parts.length !== 5) return null;
+    const [bullet, velocity, charge, f, gun] = parts.map((s) => parseFloat(s));
+    if (!inBounds('bullet',   bullet))   return null;
+    if (!inBounds('velocity', velocity)) return null;
+    if (!inBounds('charge',   charge))   return null;
+    if (!inBounds('f',        f))        return null;
+    if (!inBounds('gun',      gun))      return null;
+    return { bullet, velocity, charge, f, gun };
+  }
+
+  function parseHash(hash: string): LoadInputs[] {
+    const cleaned = hash.startsWith('#') ? hash.slice(1) : hash;
+    if (!cleaned) return [{ ...DEFAULT_LOAD }];
+    const params = new URLSearchParams(cleaned);
+    const out: LoadInputs[] = [];
+    for (const key of SLOT_KEYS) {
+      const parsed = parseSlot(params.get(key));
+      if (parsed) out.push(parsed);
+    }
+    return out.length > 0 ? out : [{ ...DEFAULT_LOAD }];
+  }
+
+  function serializeLoads(loads: LoadInputs[]): string {
+    const parts: string[] = [];
+    loads.slice(0, SLOT_KEYS.length).forEach((load, i) => {
+      const v = [load.bullet, load.velocity, load.charge, load.f, load.gun].join(',');
+      parts.push(`${SLOT_KEYS[i]}=${v}`);
+    });
+    return parts.join('&');
+  }
+
   type Metric = { key: 'pf' | 'vGun' | 'energy'; label: string; unit: string; decimals: number };
 
   const METRICS: Metric[] = [
@@ -348,7 +397,7 @@
     const list = root.querySelector<HTMLOListElement>('[data-loads]')!;
     const tpl  = document.querySelector<HTMLTemplateElement>('[data-load-template]')!;
 
-    const loads: LoadInputs[] = [{ ...DEFAULT_LOAD }];
+    const loads: LoadInputs[] = parseHash(window.location.hash).slice(0, MAX_LOADS);
     const cards: HTMLElement[] = [];
 
     function relabel() {
@@ -363,6 +412,7 @@
       const out = isValid(load) ? computeLoad(load) : null;
       renderCard(cards[i], out);
       syncComparison();
+      syncHash();
     }
 
     function attachInputListeners(card: HTMLElement) {
@@ -422,6 +472,13 @@
       renderComparison(cmpBody, outs);
     }
 
+    function syncHash() {
+      const encoded = serializeLoads(loads);
+      const newHash = encoded ? `#${encoded}` : '';
+      const url = `${location.pathname}${location.search}${newHash}`;
+      history.replaceState(null, '', url);
+    }
+
     function addLoad() {
       if (loads.length >= MAX_LOADS) return;
       const copy: LoadInputs = { ...loads[loads.length - 1] };
@@ -442,6 +499,7 @@
       relabel();
       syncControls();
       syncComparison();
+      syncHash();
     }
 
     const addBtn = root.querySelector<HTMLButtonElement>('[data-add]')!;
