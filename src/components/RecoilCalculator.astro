@@ -412,7 +412,6 @@
       const out = isValid(load) ? computeLoad(load) : null;
       renderCard(cards[i], out);
       syncComparison();
-      syncHash();
     }
 
     function attachInputListeners(card: HTMLElement) {
@@ -423,6 +422,7 @@
           if (i < 0) return;
           loads[i] = readCard(card);
           recomputeAt(i);
+          syncHash();
         });
       });
     }
@@ -494,6 +494,7 @@
       relabel();
       recomputeAt(cards.length - 1);
       syncControls();
+      syncHash();
     }
 
     function removeLoad(i: number) {
@@ -837,6 +838,22 @@
     flex-direction: column;
     gap: 14px;
   }
+
+  @media (max-width: 760px) {
+    .recoil-calc { padding: 22px 18px; }
+    .recoil-calc-body { grid-template-columns: 1fr; gap: 18px; }
+    .rc-row { grid-template-columns: 1fr 92px 24px; }
+    .rc-out-row { grid-template-columns: 1fr auto 50px; gap: 8px; font-size: 12px; }
+
+    .recoil-calc-card { padding: 16px; }
+    .recoil-calc-add { width: 100%; }
+  }
+</style>
+
+<style is:global>
+  /* These rules style dynamically-created comparison-strip children that
+     are built via document.createElement at runtime and therefore do not
+     receive Astro's scoped data-astro-cid attribute. */
   .rc-cmp-row {
     display: grid;
     grid-template-columns: 180px 1fr;
@@ -890,18 +907,15 @@
   }
 
   @media (max-width: 760px) {
-    .recoil-calc { padding: 22px 18px; }
-    .recoil-calc-body { grid-template-columns: 1fr; gap: 18px; }
-    .rc-row { grid-template-columns: 1fr 92px 24px; }
-    .rc-out-row { grid-template-columns: 1fr auto 50px; gap: 8px; font-size: 12px; }
-
-    .recoil-calc-card { padding: 16px; }
     .rc-cmp-row {
       grid-template-columns: 1fr;
       gap: 6px;
     }
-    .rc-cmp-row-label { font-size: 12px; }
-    .rc-cmp-seg { grid-template-columns: 18px 1fr 60px; }
-    .recoil-calc-add { width: 100%; }
+    .rc-cmp-row-label {
+      font-size: 12px;
+    }
+    .rc-cmp-seg {
+      grid-template-columns: 18px 1fr 60px;
+    }
   }
 </style>
