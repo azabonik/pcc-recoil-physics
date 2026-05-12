@@ -232,7 +232,7 @@
 
   function readCard(card: HTMLElement): LoadInputs {
     const v = (name: keyof LoadInputs) =>
-      parseFloat((card.querySelector(`[data-field="${name}"]`) as HTMLInputElement).value);
+      parseFloat(card.querySelector<HTMLInputElement>(`[data-field="${name}"]`)!.value);
     return {
       bullet: v('bullet'), velocity: v('velocity'), charge: v('charge'),
       f: v('f'), gun: v('gun'),
@@ -243,8 +243,8 @@
     card.querySelectorAll<HTMLElement>('[data-output]').forEach((el) => {
       el.textContent = '…';
     });
-    (card.querySelector('[data-bar="bullet"]') as HTMLElement).style.flex = '0 0 50%';
-    (card.querySelector('[data-bar="gas"]')    as HTMLElement).style.flex = '0 0 50%';
+    card.querySelector<HTMLElement>('[data-bar="bullet"]')!.style.flex = '0 0 50%';
+    card.querySelector<HTMLElement>('[data-bar="gas"]')!.style.flex = '0 0 50%';
   }
 
   function renderCard(card: HTMLElement, o: LoadOutputs | null) {
@@ -265,8 +265,8 @@
     set('gas-pct',         fmt(o.gasPct, 1) + '%');
     set('gas-band',        bandLabelText(o.gasBand));
 
-    (card.querySelector('[data-bar="bullet"]') as HTMLElement).style.flex = `0 0 ${o.bulletPct}%`;
-    (card.querySelector('[data-bar="gas"]')    as HTMLElement).style.flex = `0 0 ${o.gasPct}%`;
+    card.querySelector<HTMLElement>('[data-bar="bullet"]')!.style.flex = `0 0 ${o.bulletPct}%`;
+    card.querySelector<HTMLElement>('[data-bar="gas"]')!.style.flex = `0 0 ${o.gasPct}%`;
     card.querySelectorAll<HTMLElement>('[data-gas-band]').forEach((el) => {
       el.dataset.gasBand = o.gasBand;
     });
@@ -277,8 +277,8 @@
   }
 
   function setup(root: HTMLElement) {
-    const list = root.querySelector('[data-loads]') as HTMLOListElement;
-    const tpl  = document.querySelector('[data-load-template]') as HTMLTemplateElement;
+    const list = root.querySelector<HTMLOListElement>('[data-loads]')!;
+    const tpl  = document.querySelector<HTMLTemplateElement>('[data-load-template]')!;
 
     const loads: LoadInputs[] = [{ ...DEFAULT_LOAD }];
     const cards: HTMLElement[] = [];
@@ -298,7 +298,7 @@
 
     function attachInputListeners(card: HTMLElement) {
       FIELDS.forEach((field) => {
-        const el = card.querySelector(`[data-field="${field}"]`) as HTMLInputElement;
+        const el = card.querySelector<HTMLInputElement>(`[data-field="${field}"]`)!;
         el.addEventListener('input', () => {
           const i = cards.indexOf(card);
           if (i < 0) return;
@@ -310,9 +310,9 @@
 
     function createCard(initial: LoadInputs): HTMLElement {
       const frag = tpl.content.cloneNode(true) as DocumentFragment;
-      const card = frag.querySelector('[data-load]') as HTMLElement;
+      const card = frag.querySelector<HTMLElement>('[data-load]')!;
       FIELDS.forEach((field) => {
-        const el = card.querySelector(`[data-field="${field}"]`) as HTMLInputElement;
+        const el = card.querySelector<HTMLInputElement>(`[data-field="${field}"]`)!;
         el.value = String(initial[field]);
       });
       attachInputListeners(card);
