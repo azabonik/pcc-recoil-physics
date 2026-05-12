@@ -14,88 +14,7 @@
     </p>
   </div>
 
-  <div class="recoil-calc-body">
-    <div class="recoil-calc-inputs">
-      <label class="rc-row">
-        <span class="rc-lbl">Bullet weight</span>
-        <input type="number" data-input="bullet" value="124" min="60" max="200" step="1" inputmode="decimal" />
-        <span class="rc-unit">gr</span>
-      </label>
-      <label class="rc-row">
-        <span class="rc-lbl">Muzzle velocity</span>
-        <input type="number" data-input="velocity" value="1050" min="500" max="2500" step="1" inputmode="decimal" />
-        <span class="rc-unit">fps</span>
-      </label>
-      <label class="rc-row">
-        <span class="rc-lbl">Powder charge</span>
-        <input type="number" data-input="charge" value="4.0" min="1" max="10" step="0.1" inputmode="decimal" />
-        <span class="rc-unit">gr</span>
-      </label>
-      <label class="rc-row">
-        <span class="rc-lbl">Gas factor (<em>f</em>)</span>
-        <input type="number" data-input="f" value="1.5" min="1.0" max="2.0" step="0.05" inputmode="decimal" />
-        <span class="rc-unit">×</span>
-      </label>
-      <label class="rc-row">
-        <span class="rc-lbl">Gun weight</span>
-        <input type="number" data-input="gun" value="7.5" min="1.5" max="15" step="0.1" inputmode="decimal" />
-        <span class="rc-unit">lb</span>
-      </label>
-    </div>
-
-    <div class="recoil-calc-out">
-      <div class="rc-out-row">
-        <span class="rc-out-lbl">Power Factor</span>
-        <span class="rc-out-val" data-output="pf">—</span>
-        <span class="rc-out-unit">PF</span>
-      </div>
-      <div class="rc-out-row">
-        <span class="rc-out-lbl">Bullet momentum</span>
-        <span class="rc-out-val" data-output="bullet-momentum">—</span>
-        <span class="rc-out-unit">gr·fps</span>
-      </div>
-      <div class="rc-out-row">
-        <span class="rc-out-lbl">Gas exit speed (V<sub>gas</sub>)</span>
-        <span class="rc-out-val" data-output="gas-velocity">—</span>
-        <span class="rc-out-unit">fps</span>
-      </div>
-      <div class="rc-out-row">
-        <span class="rc-out-lbl">Gas momentum</span>
-        <span class="rc-out-val" data-output="gas-momentum">—</span>
-        <span class="rc-out-unit">gr·fps</span>
-      </div>
-      <div class="rc-out-row total">
-        <span class="rc-out-lbl">Total recoil momentum</span>
-        <span class="rc-out-val" data-output="total-momentum">—</span>
-        <span class="rc-out-unit">gr·fps</span>
-      </div>
-      <div class="rc-out-row primary">
-        <span class="rc-out-lbl">Recoil velocity (V<sub>gun</sub>)</span>
-        <span class="rc-out-val" data-output="v-gun">—</span>
-        <span class="rc-out-unit">fps</span>
-      </div>
-      <div class="rc-out-row primary">
-        <span class="rc-out-lbl">Free recoil energy</span>
-        <span class="rc-out-val" data-output="energy">—</span>
-        <span class="rc-out-unit">ft·lb</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="recoil-calc-bar">
-    <div class="rc-bar-label">
-      <span class="bar-legend-bullet">
-        Bullet <span data-output="bullet-pct">—</span>
-      </span>
-      <span class="bar-legend-gas" data-gas-band="green">
-        Gas <span data-output="gas-pct">—</span> <span data-output="gas-band"></span>
-      </span>
-    </div>
-    <div class="rc-bar-track">
-      <div class="rc-bar-bullet" data-bar="bullet"></div>
-      <div class="rc-bar-gas" data-bar="gas" data-gas-band="green"></div>
-    </div>
-  </div>
+  <ol class="recoil-calc-loads" data-loads aria-label="Cartridge loads"></ol>
 
   <div class="recoil-calc-notes">
     <details open>
@@ -106,7 +25,7 @@
         fully expanded in a long barrel · <strong>≈ 1.5</strong> SAAMI handgun default
         · <strong>≈ 1.75</strong> SAAMI rifle default · <strong>≈ 1.8</strong> for
         slow powder still pressurized at the muzzle. The gas bar shifts green → amber →
-        red as the factor rises — it visualizes how much of your recoil is gas push,
+        red as the factor rises: it visualizes how much of your recoil is gas push,
         not bullet push.
       </p>
     </details>
@@ -114,14 +33,14 @@
     <details>
       <summary>Where's "burn rate"?</summary>
       <p>
-        It's already in the calculator — just split across two inputs, because burn rate
+        It's already in the calculator: just split across two inputs, because burn rate
         affects recoil through two independent quantities the equation cares about:
         <strong>charge weight</strong> (mass of powder burned) and the
         <strong>gas factor</strong> (how fast that mass exits the muzzle). Fast powders
         need less charge AND finish burning early enough that gas has room to expand,
         lowering the gas factor. Slow powders need more charge AND are still pressurized
         at the muzzle, raising it. There's no single "burn rate" knob because the
-        equation doesn't have one — moving from a fast powder to a slow one means
+        equation doesn't have one: moving from a fast powder to a slow one means
         dialing both inputs in the same direction.
       </p>
     </details>
@@ -129,14 +48,14 @@
     <details>
       <summary>What about OAL, position sensitivity, and case volume?</summary>
       <p>
-        These don't appear because free recoil is purely a momentum calculation —
+        These don't appear because free recoil is purely a momentum calculation:
         mass × velocity, summed for bullet and gas, divided by gun mass. Seating
         depth, case capacity (Federal vs. Starline vs. Win), powder column orientation,
-        primer choice — these change <strong>peak pressure, ignition consistency,
+        primer choice: these change <strong>peak pressure, ignition consistency,
         and standard deviation</strong>, not the first-order recoil momentum coming out
         the back. A 4.0 gr charge produces 4.0 × V<sub>gas</sub> of gas momentum
         regardless of which end of the case it ignited from. They matter enormously for
-        load development (9mm is uniquely sensitive — ~8–15% pressure rise per 0.010″
+        load development (9mm is uniquely sensitive: ~8–15% pressure rise per 0.010″
         deeper at near-max charges, per the SAAMI-acknowledged small case volume) but
         they're a different question from "how hard does the gun kick." Use a reloading
         manual and a chronograph for those; use this calculator for the recoil math once
@@ -146,15 +65,106 @@
   </div>
 </section>
 
+<template data-load-template>
+  <li class="recoil-calc-card" data-load>
+    <div class="recoil-calc-card-head">
+      <h4 class="recoil-calc-card-label" data-load-label>Load A</h4>
+    </div>
+    <div class="recoil-calc-body">
+      <div class="recoil-calc-inputs">
+        <label class="rc-row">
+          <span class="rc-lbl">Bullet weight</span>
+          <input type="number" data-field="bullet" value="124" min="60" max="200" step="1" inputmode="decimal" />
+          <span class="rc-unit">gr</span>
+        </label>
+        <label class="rc-row">
+          <span class="rc-lbl">Muzzle velocity</span>
+          <input type="number" data-field="velocity" value="1050" min="500" max="2500" step="1" inputmode="decimal" />
+          <span class="rc-unit">fps</span>
+        </label>
+        <label class="rc-row">
+          <span class="rc-lbl">Powder charge</span>
+          <input type="number" data-field="charge" value="4.0" min="1" max="10" step="0.1" inputmode="decimal" />
+          <span class="rc-unit">gr</span>
+        </label>
+        <label class="rc-row">
+          <span class="rc-lbl">Gas factor (<em>f</em>)</span>
+          <input type="number" data-field="f" value="1.5" min="1.0" max="2.0" step="0.05" inputmode="decimal" />
+          <span class="rc-unit">×</span>
+        </label>
+        <label class="rc-row">
+          <span class="rc-lbl">Gun weight</span>
+          <input type="number" data-field="gun" value="7.5" min="1.5" max="15" step="0.1" inputmode="decimal" />
+          <span class="rc-unit">lb</span>
+        </label>
+      </div>
+
+      <div class="recoil-calc-out" aria-live="polite" aria-atomic="false" aria-label="Calculator results">
+        <div class="rc-out-row">
+          <span class="rc-out-lbl">Power Factor</span>
+          <span class="rc-out-val" data-output="pf">…</span>
+          <span class="rc-out-unit">PF</span>
+        </div>
+        <div class="rc-out-row">
+          <span class="rc-out-lbl">Bullet momentum</span>
+          <span class="rc-out-val" data-output="bullet-momentum">…</span>
+          <span class="rc-out-unit">gr·fps</span>
+        </div>
+        <div class="rc-out-row">
+          <span class="rc-out-lbl">Gas exit speed (V<sub>gas</sub>)</span>
+          <span class="rc-out-val" data-output="gas-velocity">…</span>
+          <span class="rc-out-unit">fps</span>
+        </div>
+        <div class="rc-out-row">
+          <span class="rc-out-lbl">Gas momentum</span>
+          <span class="rc-out-val" data-output="gas-momentum">…</span>
+          <span class="rc-out-unit">gr·fps</span>
+        </div>
+        <div class="rc-out-row total">
+          <span class="rc-out-lbl">Total recoil momentum</span>
+          <span class="rc-out-val" data-output="total-momentum">…</span>
+          <span class="rc-out-unit">gr·fps</span>
+        </div>
+        <div class="rc-out-row primary">
+          <span class="rc-out-lbl">Recoil velocity (V<sub>gun</sub>)</span>
+          <span class="rc-out-val" data-output="v-gun">…</span>
+          <span class="rc-out-unit">fps</span>
+        </div>
+        <div class="rc-out-row primary">
+          <span class="rc-out-lbl">Free recoil energy</span>
+          <span class="rc-out-val" data-output="energy">…</span>
+          <span class="rc-out-unit">ft·lb</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="recoil-calc-bar">
+      <div class="rc-bar-label">
+        <span class="bar-legend-bullet">
+          Bullet <span data-output="bullet-pct">…</span>
+        </span>
+        <span class="bar-legend-gas" data-gas-band="green">
+          Gas <span data-output="gas-pct">…</span>
+          <span class="bar-legend-band" data-output="gas-band">…</span>
+        </span>
+      </div>
+      <div class="rc-bar-track">
+        <div class="rc-bar-bullet" data-bar="bullet"></div>
+        <div class="rc-bar-gas" data-bar="gas" data-gas-band="green"></div>
+      </div>
+    </div>
+  </li>
+</template>
+
 <script>
   type Bands = 'green' | 'amber' | 'red';
 
   type LoadInputs = {
-    bullet: number;    // grains
-    velocity: number;  // fps
-    charge: number;    // grains
-    f: number;         // gas factor
-    gun: number;       // pounds
+    bullet: number;
+    velocity: number;
+    charge: number;
+    f: number;
+    gun: number;
   };
 
   type LoadOutputs = {
@@ -170,6 +180,12 @@
     gasBand: Bands;
   };
 
+  const FIELDS: (keyof LoadInputs)[] = ['bullet', 'velocity', 'charge', 'f', 'gun'];
+
+  const DEFAULT_LOAD: LoadInputs = {
+    bullet: 124, velocity: 1050, charge: 4.0, f: 1.5, gun: 7.5,
+  };
+
   function bandFor(f: number): Bands {
     if (f <= 1.2) return 'green';
     if (f <= 1.6) return 'amber';
@@ -178,11 +194,11 @@
 
   function isValid(i: LoadInputs): boolean {
     return (
-      Number.isFinite(i.bullet) && i.bullet > 0 &&
+      Number.isFinite(i.bullet)   && i.bullet   > 0 &&
       Number.isFinite(i.velocity) && i.velocity > 0 &&
-      Number.isFinite(i.charge) && i.charge >= 0 &&
-      Number.isFinite(i.f) && i.f > 0 &&
-      Number.isFinite(i.gun) && i.gun > 0
+      Number.isFinite(i.charge)   && i.charge   >= 0 &&
+      Number.isFinite(i.f)        && i.f        > 0 &&
+      Number.isFinite(i.gun)      && i.gun      > 0
     );
   }
 
@@ -203,91 +219,117 @@
     };
   }
 
+  const fmt = (n: number, d = 0) =>
+    Number.isFinite(n)
+      ? new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n)
+      : '…';
+
+  function bandLabelText(b: Bands): string {
+    return b === 'green' ? '(low gas push)' :
+           b === 'amber' ? '(mid gas push)' :
+                          '(high gas push)';
+  }
+
+  function readCard(card: HTMLElement): LoadInputs {
+    const v = (name: keyof LoadInputs) =>
+      parseFloat((card.querySelector(`[data-field="${name}"]`) as HTMLInputElement).value);
+    return {
+      bullet: v('bullet'), velocity: v('velocity'), charge: v('charge'),
+      f: v('f'), gun: v('gun'),
+    };
+  }
+
+  function blankCard(card: HTMLElement) {
+    card.querySelectorAll<HTMLElement>('[data-output]').forEach((el) => {
+      el.textContent = '…';
+    });
+    (card.querySelector('[data-bar="bullet"]') as HTMLElement).style.flex = '0 0 50%';
+    (card.querySelector('[data-bar="gas"]')    as HTMLElement).style.flex = '0 0 50%';
+  }
+
+  function renderCard(card: HTMLElement, o: LoadOutputs | null) {
+    if (o === null) { blankCard(card); return; }
+
+    const set = (name: string, text: string) => {
+      const el = card.querySelector(`[data-output="${name}"]`);
+      if (el) el.textContent = text;
+    };
+    set('pf',              fmt(o.pf, 1));
+    set('bullet-momentum', fmt(o.bulletMomentum));
+    set('gas-velocity',    fmt(o.vGas));
+    set('gas-momentum',    fmt(o.gasMomentum));
+    set('total-momentum',  fmt(o.totalMomentum));
+    set('v-gun',           fmt(o.vGun, 2));
+    set('energy',          fmt(o.energy, 2));
+    set('bullet-pct',      fmt(o.bulletPct, 1) + '%');
+    set('gas-pct',         fmt(o.gasPct, 1) + '%');
+    set('gas-band',        bandLabelText(o.gasBand));
+
+    (card.querySelector('[data-bar="bullet"]') as HTMLElement).style.flex = `0 0 ${o.bulletPct}%`;
+    (card.querySelector('[data-bar="gas"]')    as HTMLElement).style.flex = `0 0 ${o.gasPct}%`;
+    card.querySelectorAll<HTMLElement>('[data-gas-band]').forEach((el) => {
+      el.dataset.gasBand = o.gasBand;
+    });
+  }
+
+  function letterFor(i: number): string {
+    return String.fromCharCode(65 + i); // 0 -> 'A', 1 -> 'B', ...
+  }
+
   function setup(root: HTMLElement) {
-    const $ = <T extends Element = HTMLElement>(sel: string) =>
-      root.querySelector(sel) as T | null;
-    const $$ = (sel: string) => Array.from(root.querySelectorAll(sel)) as HTMLElement[];
+    const list = root.querySelector('[data-loads]') as HTMLOListElement;
+    const tpl  = document.querySelector('[data-load-template]') as HTMLTemplateElement;
 
-    const inputs = {
-      bullet:   $<HTMLInputElement>('[data-input="bullet"]')!,
-      velocity: $<HTMLInputElement>('[data-input="velocity"]')!,
-      charge:   $<HTMLInputElement>('[data-input="charge"]')!,
-      f:        $<HTMLInputElement>('[data-input="f"]')!,
-      gun:      $<HTMLInputElement>('[data-input="gun"]')!,
-    };
+    const loads: LoadInputs[] = [{ ...DEFAULT_LOAD }];
+    const cards: HTMLElement[] = [];
 
-    const out = (name: string) => $<HTMLElement>(`[data-output="${name}"]`)!;
-    const outputs = {
-      pf:              out('pf'),
-      bulletMomentum:  out('bullet-momentum'),
-      gasVelocity:     out('gas-velocity'),
-      gasMomentum:     out('gas-momentum'),
-      totalMomentum:   out('total-momentum'),
-      vGun:            out('v-gun'),
-      energy:          out('energy'),
-      bulletPct:       out('bullet-pct'),
-      gasPct:          out('gas-pct'),
-      gasBand:         out('gas-band'),
-    };
-
-    const bars = {
-      bullet: $<HTMLElement>('[data-bar="bullet"]')!,
-      gas:    $<HTMLElement>('[data-bar="gas"]')!,
-    };
-    const gasBandTargets = $$('[data-gas-band]');
-
-    const fmt = (n: number, d = 0) =>
-      Number.isFinite(n)
-        ? new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n)
-        : '—';
-
-    function clear() {
-      for (const k of Object.keys(outputs) as (keyof typeof outputs)[]) {
-        outputs[k].textContent = '—';
-      }
-      bars.bullet.style.flex = '0 0 50%';
-      bars.gas.style.flex = '0 0 50%';
+    function relabel() {
+      cards.forEach((card, i) => {
+        const lbl = card.querySelector('[data-load-label]');
+        if (lbl) lbl.textContent = `Load ${letterFor(i)}`;
+      });
     }
 
-    function compute() {
-      const li: LoadInputs = {
-        bullet:   parseFloat(inputs.bullet.value),
-        velocity: parseFloat(inputs.velocity.value),
-        charge:   parseFloat(inputs.charge.value),
-        f:        parseFloat(inputs.f.value),
-        gun:      parseFloat(inputs.gun.value),
-      };
-
-      if (!isValid(li)) {
-        clear();
-        return;
-      }
-
-      const o = computeLoad(li);
-
-      outputs.pf.textContent             = fmt(o.pf, 1);
-      outputs.bulletMomentum.textContent = fmt(o.bulletMomentum);
-      outputs.gasVelocity.textContent    = fmt(o.vGas);
-      outputs.gasMomentum.textContent    = fmt(o.gasMomentum);
-      outputs.totalMomentum.textContent  = fmt(o.totalMomentum);
-      outputs.vGun.textContent           = fmt(o.vGun, 2);
-      outputs.energy.textContent         = fmt(o.energy, 2);
-      outputs.bulletPct.textContent      = fmt(o.bulletPct, 1) + '%';
-      outputs.gasPct.textContent         = fmt(o.gasPct, 1) + '%';
-
-      bars.bullet.style.flex = `0 0 ${o.bulletPct}%`;
-      bars.gas.style.flex    = `0 0 ${o.gasPct}%`;
-
-      gasBandTargets.forEach((el) => el.dataset.gasBand = o.gasBand);
-      const bandLbl =
-        o.gasBand === 'green' ? '(low gas push)' :
-        o.gasBand === 'amber' ? '(mid gas push)' :
-                                '(high gas push)';
-      outputs.gasBand.textContent = bandLbl;
+    function recomputeAt(i: number) {
+      const load = loads[i];
+      const out = isValid(load) ? computeLoad(load) : null;
+      renderCard(cards[i], out);
     }
 
-    Object.values(inputs).forEach((el) => el.addEventListener('input', compute));
-    compute();
+    function attachInputListeners(card: HTMLElement) {
+      FIELDS.forEach((field) => {
+        const el = card.querySelector(`[data-field="${field}"]`) as HTMLInputElement;
+        el.addEventListener('input', () => {
+          const i = cards.indexOf(card);
+          if (i < 0) return;
+          loads[i] = readCard(card);
+          recomputeAt(i);
+        });
+      });
+    }
+
+    function createCard(initial: LoadInputs): HTMLElement {
+      const frag = tpl.content.cloneNode(true) as DocumentFragment;
+      const card = frag.querySelector('[data-load]') as HTMLElement;
+      FIELDS.forEach((field) => {
+        const el = card.querySelector(`[data-field="${field}"]`) as HTMLInputElement;
+        el.value = String(initial[field]);
+      });
+      attachInputListeners(card);
+      return card;
+    }
+
+    function init() {
+      loads.forEach((load) => {
+        const card = createCard(load);
+        cards.push(card);
+        list.appendChild(card);
+      });
+      relabel();
+      cards.forEach((_, i) => recomputeAt(i));
+    }
+
+    init();
   }
 
   document.querySelectorAll<HTMLElement>('[data-recoil-calc]').forEach(setup);
@@ -327,11 +369,40 @@
     margin: 0;
   }
 
+  .recoil-calc-loads {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .recoil-calc-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    background: var(--bg-card-alt);
+  }
+  .recoil-calc-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .recoil-calc-card-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+  }
+
   .recoil-calc-body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
-    margin-bottom: 20px;
   }
 
   /* INPUTS */
